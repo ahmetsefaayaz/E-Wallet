@@ -1,0 +1,103 @@
+{
+  "version": 4,
+  "targets": {
+    "net8.0": {
+      "BuildingBlocks/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/BuildingBlocks.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BuildingBlocks.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      }
+    }
+  },
+  "libraries": {
+    "BuildingBlocks/1.0.0": {
+      "type": "project",
+      "path": "../../../BuildingBlocks/BuildingBlocks/BuildingBlocks.csproj",
+      "msbuildProject": "../../../BuildingBlocks/BuildingBlocks/BuildingBlocks.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "BuildingBlocks >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\ayaza\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\Services\\Notification\\Notification.Api\\Notification.Api.csproj",
+      "projectName": "Notification.Api",
+      "projectPath": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\Services\\Notification\\Notification.Api\\Notification.Api.csproj",
+      "packagesPath": "C:\\Users\\ayaza\\.nuget\\packages\\",
+      "outputPath": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\Services\\Notification\\Notification.Api\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\ayaza\\AppData\\Roaming\\NuGet\\NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "framework": "net8.0",
+          "targetAlias": "net8.0",
+          "projectReferences": {
+            "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\BuildingBlocks.csproj": {
+              "projectPath": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\BuildingBlocks.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "10.0.300"
+    },
+    "frameworks": {
+      "net8.0": {
+        "framework": "net8.0",
+        "targetAlias": "net8.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.AspNetCore.App": {
+            "privateAssets": "none"
+          },
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
