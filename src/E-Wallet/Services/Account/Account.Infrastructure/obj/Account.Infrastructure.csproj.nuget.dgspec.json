@@ -4,70 +4,6 @@
     "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\Services\\Account\\Account.Infrastructure\\Account.Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\BuildingBlocks.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\BuildingBlocks.csproj",
-        "projectName": "BuildingBlocks",
-        "projectPath": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\BuildingBlocks.csproj",
-        "packagesPath": "C:\\Users\\ayaza\\.nuget\\packages\\",
-        "outputPath": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\ayaza\\AppData\\Roaming\\NuGet\\NuGet.Config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0"
-        ],
-        "sources": {
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0": {
-            "framework": "net8.0",
-            "targetAlias": "net8.0",
-            "projectReferences": {}
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "10.0.300"
-      },
-      "frameworks": {
-        "net8.0": {
-          "framework": "net8.0",
-          "targetAlias": "net8.0",
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
     "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\Services\\Account\\Account.Application\\Account.Application.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -91,9 +27,6 @@
             "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\BuildingBlocks.csproj": {
-                "projectPath": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\BuildingBlocks.csproj"
-              },
               "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\Services\\Account\\Account.Domain\\Account.Domain.csproj": {
                 "projectPath": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\Services\\Account\\Account.Domain\\Account.Domain.csproj"
               }
@@ -220,9 +153,6 @@
             "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\BuildingBlocks.csproj": {
-                "projectPath": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\BuildingBlocks.csproj"
-              },
               "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\Services\\Account\\Account.Application\\Account.Application.csproj": {
                 "projectPath": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\Services\\Account\\Account.Application\\Account.Application.csproj"
               }
