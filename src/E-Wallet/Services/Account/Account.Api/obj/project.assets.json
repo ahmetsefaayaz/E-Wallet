@@ -6,8 +6,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
-          "Account.Domain": "1.0.0",
-          "BuildingBlocks": "1.0.0"
+          "Account.Domain": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Account.Application.dll": {}
@@ -30,8 +29,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
-          "Account.Application": "1.0.0",
-          "BuildingBlocks": "1.0.0"
+          "Account.Application": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Account.Infrastructure.dll": {}
@@ -39,19 +37,6 @@
         "runtime": {
           "bin/placeholder/Account.Infrastructure.dll": {}
         }
-      },
-      "BuildingBlocks/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "compile": {
-          "bin/placeholder/BuildingBlocks.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/BuildingBlocks.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
       }
     }
   },
@@ -70,11 +55,6 @@
       "type": "project",
       "path": "../Account.Infrastructure/Account.Infrastructure.csproj",
       "msbuildProject": "../Account.Infrastructure/Account.Infrastructure.csproj"
-    },
-    "BuildingBlocks/1.0.0": {
-      "type": "project",
-      "path": "../../../BuildingBlocks/BuildingBlocks/BuildingBlocks.csproj",
-      "msbuildProject": "../../../BuildingBlocks/BuildingBlocks/BuildingBlocks.csproj"
     }
   },
   "projectFileDependencyGroups": {
