@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Exceptions;
+using FluentValidation;
 using Identity.Api.Entities;
 using Identity.Api.Exceptions;
 using Mapster;
@@ -11,7 +12,24 @@ using Microsoft.AspNetCore.Identity;
 namespace Identity.Api.Identity.Login;
 
 
-internal record LoginCommand(string Email, string Password): ICommand<LoginResult>;
+public record LoginCommand(string Email, string Password): ICommand<LoginResult>;
+
+public class LoginValidator : AbstractValidator<LoginCommand>
+{
+    public LoginValidator()
+    {
+        RuleFor(l => l.Email)
+            .NotEmpty()
+            .WithMessage("Email is required")
+            .MaximumLength(120)
+            .WithMessage("Email cannot exceed 120");
+        RuleFor(p => p.Password)
+            .NotEmpty()
+            .WithMessage("Password is required");
+    }
+}
+
+
 
 internal record LoginResult(string Token);
 

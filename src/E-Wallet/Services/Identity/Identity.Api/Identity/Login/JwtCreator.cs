@@ -17,6 +17,7 @@ internal class JwtCreator: IJwtCreator
 
         var userClaims = await userManager.GetClaimsAsync(user);
         var roles = await userManager.GetRolesAsync(user);
+        var audiences =  configuration.GetSection("Jwt:Audiences").Get<List<string>>();
         
         var claims = new List<Claim>
         {
@@ -24,6 +25,13 @@ internal class JwtCreator: IJwtCreator
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email ?? string.Empty)
         };
+        if (audiences != null)
+        {
+            foreach (var audience in audiences)
+            {
+                claims.Add(new Claim(JwtRegisteredClaimNames.Aud, audience));
+            }
+        }
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
@@ -31,7 +39,7 @@ internal class JwtCreator: IJwtCreator
         claims.AddRange(userClaims);
         var token = new JwtSecurityToken(
             issuer: configuration["Jwt:Issuer"],
-            audience: configuration["Jwt:Audience"],
+            audience: configuration["Jwt:Audiences"],
             claims: claims,
             expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: credentials);
