@@ -1,14 +1,43 @@
 ﻿using BuildingBlocks.CQRS;
 using BuildingBlocks.Exceptions;
+using FluentValidation;
 using Identity.Api.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Api.Identity.Register;
 
-internal record RegisterCommand(string UserName, string Email, string Password, string ConfirmPassword)
+public record RegisterCommand(string UserName, string Email, string Password, string ConfirmPassword)
     : ICommand<RegisterCommandResult>;
 
 internal record RegisterCommandResult(Guid Id);
+
+public class RegisterValidator : AbstractValidator<RegisterCommand>
+{
+    public RegisterValidator()
+    {
+        RuleFor(r => r.UserName).NotEmpty().WithMessage("Username is required")
+            .MaximumLength(128).WithMessage("Username cannot exceed 128");
+        RuleFor(r => r.Email).NotEmpty().WithMessage("Email is required")
+            .MaximumLength(128).WithMessage("Email cannot exceed 128");
+        RuleFor(p => p.Password)
+            .NotEmpty()
+            .WithMessage("Password is required")
+            .MinimumLength(8)
+            .WithMessage("Password must be at least 8  characters long")
+            .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter.")
+            .Matches("[0-9]").WithMessage("Password must contain at least one digit.")
+            .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter.");
+        RuleFor(r => r.ConfirmPassword)
+            .NotEmpty()
+            .WithMessage("Password is required")
+            .MinimumLength(8)
+            .WithMessage("Password must be at least 8  characters long")
+            .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter.")
+            .Matches("[0-9]").WithMessage("Password must contain at least one digit.")
+            .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter.");
+    }
+}
+
 
 internal class RegisterCommandHandler(UserManager<User> userManager):ICommandHandler<RegisterCommand, RegisterCommandResult>
 {
