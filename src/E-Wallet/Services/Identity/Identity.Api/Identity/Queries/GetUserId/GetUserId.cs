@@ -13,6 +13,5 @@ public class GetUserId(IHttpContextAccessor accessor): IGetUserId
         if (string.IsNullOrWhiteSpace(result))
             throw new UserNotFoundException();
         return Guid.Parse(result);
-
     }
 }
