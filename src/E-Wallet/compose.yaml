@@ -12,8 +12,25 @@
       - "5433:5432"
     volumes:
       - "postgres_identity:/var/lib/postgresql/data/"
-
-
+  identityapi:
+    image: identityapi
+    build:
+      context: .
+      dockerfile: Services/Identity/Identity.Api/Dockerfile
+    depends_on:
+      - identitydb
+    ports:
+      - "6000:8080"
+      - "6060:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=identitydb;Database=IdentityDb;Username=postgres;Password=postgres;
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sifre123!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ${USERPROFILE}\.aspnet\https:/https:ro
 
 volumes:
-  postgres_identity:
+  postgres_identity: 
