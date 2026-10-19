@@ -1,4 +1,4 @@
-﻿namespace Identity.Api.Identity.GetUserId;
+﻿namespace Identity.Api.Identity.Queries.GetUserId;
 
 public interface IGetUserId
 {

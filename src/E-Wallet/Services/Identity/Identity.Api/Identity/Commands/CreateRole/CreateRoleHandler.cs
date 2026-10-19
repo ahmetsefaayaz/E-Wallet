@@ -5,7 +5,7 @@ using Identity.Api.Entities;
 using Identity.Api.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
-namespace Identity.Api.Identity.CreateRole;
+namespace Identity.Api.Identity.Commands.CreateRole;
 
 public record CreateRoleCommand(string RoleName) : ICommand<CreateRoleResult>;
 

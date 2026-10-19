@@ -2,7 +2,7 @@
 using Mapster;
 using MediatR;
 
-namespace Identity.Api.Identity.CreateClaim;
+namespace Identity.Api.Identity.Commands.CreateClaim;
 
 public record CreateClaimRequest(string Type, string Value);
 public record CreateClaimResponse(bool IsSuccess);

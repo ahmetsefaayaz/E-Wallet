@@ -1,7 +1,7 @@
 ﻿using Identity.Api.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Identity.Api.Identity.Login;
+namespace Identity.Api.Identity.Commands.Login;
 
 public interface IJwtCreator
 {

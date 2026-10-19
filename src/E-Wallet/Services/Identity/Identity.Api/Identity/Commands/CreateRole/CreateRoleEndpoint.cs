@@ -2,7 +2,7 @@
 using Mapster;
 using MediatR;
 
-namespace Identity.Api.Identity.CreateRole;
+namespace Identity.Api.Identity.Commands.CreateRole;
 
 
 
