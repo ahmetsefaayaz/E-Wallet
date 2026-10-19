@@ -3,6 +3,7 @@ using System.Text;
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.Handlers;
 using Carter;
+using FluentValidation;
 using Identity.Api.Data;
 using Identity.Api.Data.SeedData;
 using Identity.Api.Entities;
@@ -23,6 +24,7 @@ public static class DependencyInjection
         {
             options.UseNpgsql(configuration.GetConnectionString("Database"));
         });
+        services.AddValidatorsFromAssembly(typeof(Program).Assembly);
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssembly(typeof(Program).Assembly);
