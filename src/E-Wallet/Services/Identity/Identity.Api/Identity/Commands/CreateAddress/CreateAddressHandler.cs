@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.CQRS;
+using FluentValidation;
 using Identity.Api.Data;
 using Identity.Api.Dtos;
 using Identity.Api.Entities;
@@ -7,10 +8,52 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Api.Identity.Commands.CreateAddress;
 
-internal record CreateAddressCommand(Guid UserId, AddressDto Address) : ICommand<CreateAddressResult>;
+public record CreateAddressCommand(Guid UserId, AddressDto Address) : ICommand<CreateAddressResult>;
 
 internal record CreateAddressResult(bool IsSuccess);
 
+public class CreateAddressValidator : AbstractValidator<CreateAddressCommand>
+{
+    public CreateAddressValidator()
+    {
+        RuleFor(a => a.Address.AddressLine)
+            .NotEmpty()
+            .WithMessage("Please specify a valid address line")
+            .MinimumLength(3)
+            .WithMessage("3 digits required")
+            .MaximumLength(100)
+            .WithMessage("AddressLine cannot exceed 100 digits");
+        RuleFor(a => a.Address.Country)
+            .NotEmpty()
+            .WithMessage("Please specify a valid Country name")
+            .MinimumLength(3)
+            .WithMessage("3 digits required")
+            .MaximumLength(100)
+            .WithMessage("Country cannot exceed 100 digits");
+        RuleFor(a => a.Address.ZipCode)
+            .NotEmpty()
+            .WithMessage("Please specify a valid ZipCode")
+            .MinimumLength(3)
+            .WithMessage("3 digits required")
+            .MaximumLength(100)
+            .WithMessage("ZipCode cannot exceed 100 digits");
+        RuleFor(a => a.Address.City)
+            .NotEmpty()
+            .WithMessage("Please specify a valid City")
+            .MinimumLength(3)
+            .WithMessage("3 digits required")
+            .MaximumLength(100)
+            .WithMessage("City cannot exceed 100 digits");
+        RuleFor(a => a.Address.State)
+            .NotEmpty()
+            .WithMessage("Please specify a valid State")
+            .MinimumLength(3)
+            .WithMessage("3 digits required")
+            .MaximumLength(100)
+            .WithMessage("State cannot exceed 100 digits");
+
+    }
+}
 
 internal class CreateAddressCommandHandler(IdentityServiceDbContext dbContext)
     : ICommandHandler<CreateAddressCommand, CreateAddressResult>
