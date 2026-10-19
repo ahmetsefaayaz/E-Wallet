@@ -13,5 +13,13 @@ public class UserConfiguration:IEntityTypeConfiguration<User>
         builder.Property(x => x.Email).HasMaxLength(128).IsRequired();
         builder.Property(x => x.PasswordHash).IsRequired();
         builder.HasIndex(x => x.Email).IsUnique();
+        builder.OwnsOne(u => u.Address, a =>
+        {
+            a.Property(p => p.AddressLine).HasColumnName("AddressLine").HasMaxLength(100);
+            a.Property(p => p.City).HasColumnName("City").HasMaxLength(100);
+            a.Property(p => p.State).HasColumnName("State").HasMaxLength(100);
+            a.Property(p => p.ZipCode).HasColumnName("ZipCode").HasMaxLength(100);
+            a.Property(p => p.Country).HasColumnName("Country").HasMaxLength(100);
+        });
     }
 }

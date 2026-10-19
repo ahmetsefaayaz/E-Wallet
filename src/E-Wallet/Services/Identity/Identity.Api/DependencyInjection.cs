@@ -81,6 +81,12 @@ public static class DependencyInjection
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapCarter();
+        
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<IdentityServiceDbContext>();
+            dbContext.Database.Migrate();
+        }
         return app;
     }
 }
