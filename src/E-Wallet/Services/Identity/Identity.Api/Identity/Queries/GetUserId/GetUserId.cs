@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Identity.Api.Exceptions;
 
-namespace Identity.Api.Identity.GetUserId;
+namespace Identity.Api.Identity.Queries.GetUserId;
 
 public class GetUserId(IHttpContextAccessor accessor): IGetUserId
 {

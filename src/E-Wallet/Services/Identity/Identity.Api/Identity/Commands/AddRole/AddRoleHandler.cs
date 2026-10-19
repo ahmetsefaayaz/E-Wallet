@@ -6,7 +6,7 @@ using Identity.Api.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Identity.Api.Identity.AddRole;
+namespace Identity.Api.Identity.Commands.AddRole;
 
 
 public record AddRoleCommand(Guid UserId, string RoleName): ICommand<AddRoleResult>;

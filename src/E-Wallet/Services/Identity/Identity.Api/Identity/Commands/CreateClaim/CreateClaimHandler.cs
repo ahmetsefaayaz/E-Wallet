@@ -6,7 +6,7 @@ using Identity.Api.Entities;
 using Identity.Api.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
-namespace Identity.Api.Identity.CreateClaim;
+namespace Identity.Api.Identity.Commands.CreateClaim;
 
 public record CreateClaimCommand(Guid UserId, string Type, string Value): ICommand<CreateClaimResult>;
 

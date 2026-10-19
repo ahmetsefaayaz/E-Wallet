@@ -2,7 +2,7 @@
 using Mapster;
 using MediatR;
 
-namespace Identity.Api.Identity.Register;
+namespace Identity.Api.Identity.Commands.Register;
 
 public record RegisterRequest(string UserName, string Email, string Password, string ConfirmPassword);
 public class RegisterEndpoint:ICarterModule

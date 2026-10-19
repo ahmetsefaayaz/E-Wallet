@@ -4,7 +4,7 @@ using FluentValidation;
 using Identity.Api.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Identity.Api.Identity.Register;
+namespace Identity.Api.Identity.Commands.Register;
 
 public record RegisterCommand(string UserName, string Email, string Password, string ConfirmPassword)
     : ICommand<RegisterCommandResult>;
@@ -55,6 +55,7 @@ internal class RegisterCommandHandler(UserManager<User> userManager):ICommandHan
         };
         var result = await userManager.CreateAsync(user, command.Password);
         if (!result.Succeeded) throw new InternalServerException("User could not created");
+        await userManager.AddToRoleAsync(user, "User");
         return new RegisterCommandResult(user.Id);
     }
 }

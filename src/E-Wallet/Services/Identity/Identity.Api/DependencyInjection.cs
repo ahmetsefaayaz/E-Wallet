@@ -1,16 +1,13 @@
-﻿using System.Security.Claims;
-using System.Text;
+﻿using System.Text;
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.Handlers;
 using Carter;
 using FluentValidation;
 using Identity.Api.Data;
-using Identity.Api.Data.SeedData;
 using Identity.Api.Entities;
-using Identity.Api.Identity.GetUserId;
-using Identity.Api.Identity.Login;
+using Identity.Api.Identity.Queries.GetUserId;
+using Identity.Api.Identity.Commands.Login;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 

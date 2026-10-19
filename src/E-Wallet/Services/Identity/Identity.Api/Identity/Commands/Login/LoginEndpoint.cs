@@ -2,7 +2,7 @@
 using Mapster;
 using MediatR;
 
-namespace Identity.Api.Identity.Login;
+namespace Identity.Api.Identity.Commands.Login;
 
 public record LoginRequest(string Email, string Password);
 public record LoginResponse(string Token);

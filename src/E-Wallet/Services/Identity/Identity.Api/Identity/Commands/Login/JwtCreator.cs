@@ -5,7 +5,7 @@ using Identity.Api.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Identity.Api.Identity.Login;
+namespace Identity.Api.Identity.Commands.Login;
 
 
 internal class JwtCreator: IJwtCreator
