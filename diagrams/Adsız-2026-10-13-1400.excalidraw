@@ -1352,16 +1352,20 @@
         "type": 3
       },
       "seed": 469116661,
-      "version": 219,
-      "versionNonce": 1233486613,
+      "version": 220,
+      "versionNonce": 1803525182,
       "isDeleted": false,
       "boundElements": [
         {
           "id": "5K1mgoOfVBpUnEX0DkEtS",
           "type": "arrow"
+        },
+        {
+          "id": "U4kI4RtfqY7zgW2BLCJhy",
+          "type": "arrow"
         }
       ],
-      "updated": 1791893478640,
+      "updated": 1792574151701,
       "created": 1791892771181,
       "link": null,
       "locked": false
@@ -2506,6 +2510,143 @@
       "startArrowhead": null,
       "endArrowhead": "arrow",
       "elbowed": false
+    },
+    {
+      "id": "pdwMwnlZggdk55pwSN-5-",
+      "type": "rectangle",
+      "x": 689.0000457763672,
+      "y": 734.9000434875488,
+      "width": 243.20007324218753,
+      "height": 44,
+      "angle": 0,
+      "strokeColor": "#ffffff",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0d",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 651451426,
+      "version": 130,
+      "versionNonce": 1472772990,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "U4kI4RtfqY7zgW2BLCJhy",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792574192538,
+      "created": 1792574139042,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "U4kI4RtfqY7zgW2BLCJhy",
+      "type": "arrow",
+      "x": 769.4277832908256,
+      "y": 698.1999816894531,
+      "width": 2.063982623053903,
+      "height": 30.700061798095703,
+      "angle": 0,
+      "strokeColor": "#ffffff",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0e",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 696914814,
+      "version": 63,
+      "versionNonce": 1348508606,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1792574192538,
+      "created": 1792574151699,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -2.063982623053903,
+          30.700061798095703
+        ]
+      ],
+      "startBinding": {
+        "elementId": "NMccjtqCyTQptLLasPyCj",
+        "mode": "orbit",
+        "fixedPoint": [
+          0.24216128677745785,
+          0.7578387132225392
+        ]
+      },
+      "endBinding": {
+        "elementId": "pdwMwnlZggdk55pwSN-5-",
+        "mode": "orbit",
+        "fixedPoint": [
+          0.31670838383010597,
+          0.3167083838301091
+        ]
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false,
+      "moveMidPointsWithElement": false
+    },
+    {
+      "id": "1AdnTet_5lsnV3vh_PvJs",
+      "type": "text",
+      "x": 691.4000701904297,
+      "y": 743.9999580383301,
+      "width": 229.4998321533203,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#ffffff",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0f",
+      "roundness": null,
+      "seed": 133588322,
+      "version": 48,
+      "versionNonce": 1930795106,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1792574185069,
+      "created": 1792574160667,
+      "link": null,
+      "locked": false,
+      "text": "TransactionType(Enum)",
+      "fontSize": 20,
+      "baseFontSize": null,
+      "fontFamily": 5,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "TransactionType(Enum)",
+      "autoResize": true,
+      "lineHeight": 1.25,
+      "labelPosition": null
     }
   ],
   "appState": {
