@@ -1,3 +1,16 @@
-﻿namespace Account.Domain.ValueObjects;
+﻿using Account.Domain.Exceptions;
 
-public record CardExpiryDate(string Value);
+namespace Account.Domain.ValueObjects;
+
+public record CardExpiryDate
+{
+    public string Value { get; init; }
+    private CardExpiryDate(string value) => Value = value;
+
+    public static CardExpiryDate Of(string value)
+    {
+        if(String.IsNullOrWhiteSpace(value))
+            throw new DomainException("CardExpiryDate cannot be empty");
+        return new CardExpiryDate(value);
+    }
+}
