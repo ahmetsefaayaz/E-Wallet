@@ -5,15 +5,17 @@ namespace Account.Domain.Models;
 
 public class Transaction: Entity<TransactionId>
 {
-    internal Transaction(AccountId accountId, TransactionType transactionType, Status status, decimal amount)
+    internal Transaction(AccountId accountId, CardId cardId, TransactionType transactionType, Status status, decimal amount)
     {
         Id = TransactionId.Of(Guid.NewGuid());
+        CardId = cardId;
         AccountId = accountId;
         TransactionType = transactionType;
         Status = status;
         Amount = amount;
     }
     public AccountId AccountId { get; private set; }
+    public CardId CardId { get; private set; }
     public TransactionType TransactionType { get; private set; }
     public Status Status { get; private set; }
     public decimal Amount { get; private set; }

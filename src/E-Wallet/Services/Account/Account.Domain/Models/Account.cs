@@ -26,7 +26,7 @@ public class Account : Aggregate<AccountId>
         if(amount < 0) throw new DomainException("Amount cannot be negative");
         if (amount > 1000000) throw new DomainException("Amount cannot be greater than 1000000");
     }
-    public Transaction CreateTransaction(TransactionType transactionType, decimal amount)
+    public Transaction CreateTransaction(CardId cardId, TransactionType transactionType, decimal amount)
     {
         if (transactionType == TransactionType.Withdrawal || transactionType == TransactionType.OutgoingTransfer)
         {
@@ -40,6 +40,7 @@ public class Account : Aggregate<AccountId>
         var transaction = new Transaction
         (
             Id,
+            cardId,
             transactionType,
             Status.Pending,
             amount

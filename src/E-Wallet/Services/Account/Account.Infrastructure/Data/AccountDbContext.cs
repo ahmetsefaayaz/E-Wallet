@@ -1,0 +1,17 @@
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Account.Infrastructure.Data;
+
+public class AccountDbContext: DbContext
+{
+    public AccountDbContext(DbContextOptions<AccountDbContext> options): base(options) {}
+    
+    public DbSet<Domain.Models.Account> Accounts { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+    }
+    
+}

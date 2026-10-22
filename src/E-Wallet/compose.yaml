@@ -12,6 +12,18 @@
       - "5433:5432"
     volumes:
       - "postgres_identity:/var/lib/postgresql/data/"
+  accountdb:
+    image: postgres:17
+    container_name: accountdb
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: AccountDb
+    ports: 
+      - "5434:5432"
+    volumes:
+      - "postgres_account:/var/lib/postgresql/data/"
   identityapi:
     image: identityapi
     build:
@@ -34,3 +46,4 @@
 
 volumes:
   postgres_identity: 
+  postgres_account:

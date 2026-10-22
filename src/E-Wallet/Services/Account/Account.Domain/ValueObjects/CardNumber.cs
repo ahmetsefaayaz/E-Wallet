@@ -1,3 +1,16 @@
-﻿namespace Account.Domain.ValueObjects;
+﻿using Account.Domain.Exceptions;
 
-public record CardNumber(string Value);
+namespace Account.Domain.ValueObjects;
+
+public record CardNumber
+{
+    public string Value { get; init; }
+    private CardNumber(string value) => Value = value;
+
+    public static CardNumber Of(string value)
+    {
+        if(String.IsNullOrWhiteSpace(value))
+            throw new DomainException("CardNumber cannot be empty");
+        return new CardNumber(value);
+    }
+}
