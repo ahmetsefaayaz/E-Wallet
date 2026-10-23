@@ -5,7 +5,10 @@ using Account.Infrastructure.Data.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddInfrastructureServices(builder.Configuration).AddApiServices().AddApplicationServices();
+builder.Services
+    .AddApplicationServices()
+    .AddInfrastructureServices(builder.Configuration)
+    .AddApiServices();
 
 
 var app = builder.Build();
