@@ -14,6 +14,9 @@
                   <Item>
                     <option name="path" value="Services/Identity/Identity.Api/appsettings.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="Services/Account/Account.Api/appsettings.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>

@@ -1,5 +1,7 @@
 ﻿using Account.Infrastructure.Data;
+using Account.Infrastructure.Data.Interceptors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,9 +11,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-
-        services.AddDbContext<AccountDbContext>(options =>
+        services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, AuditableInterceptor>();
+        services.AddDbContext<AccountDbContext>((sp, options) =>
         {
+            options.AddInterceptors(sp.GetRequiredService<ISaveChangesInterceptor>());
             options.UseNpgsql(configuration.GetConnectionString("Database"));
         });
         
