@@ -12,6 +12,9 @@ public class AccountConfiguration: IEntityTypeConfiguration<Domain.Models.Accoun
         builder.Property(a => a.Id).HasConversion(
             aId => aId.Value,
             dbId => AccountId.Of(dbId));
+        builder.Property(a => a.UserId).HasConversion(
+            uId => uId.Value,
+            dbId => UserId.Of(dbId)).IsRequired();
         builder.Property(a => a.AccountBalance).IsRequired();
     }
 }

@@ -9,11 +9,11 @@ public static class SeedData
     public static IEnumerable<Domain.Models.Account> SeedAccounts=>
         new List<Domain.Models.Account>
         {
-            new Domain.Models.Account(accountBalance: 500)
+            new Domain.Models.Account(UserId.Of(Guid.NewGuid()), accountBalance: 500)
             {
                 Id = AccountId.Of(Guid.NewGuid())
             },
-            new Domain.Models.Account()
+            new Domain.Models.Account(UserId.Of(Guid.NewGuid()))
             {
                 Id = AccountId.Of(Guid.NewGuid())
             }

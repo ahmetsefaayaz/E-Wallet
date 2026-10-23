@@ -1,9 +1,10 @@
 ﻿using System.Reflection;
+using Account.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Account.Infrastructure.Data;
 
-public class AccountDbContext: DbContext
+public class AccountDbContext: DbContext, IAccountDbContext
 {
     public AccountDbContext(DbContextOptions<AccountDbContext> options): base(options) {}
     

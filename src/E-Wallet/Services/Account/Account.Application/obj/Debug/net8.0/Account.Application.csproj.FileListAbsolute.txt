@@ -14,3 +14,5 @@ C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Application\obj\Debu
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Application\obj\Debug\net8.0\refint\Account.Application.dll
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Application\obj\Debug\net8.0\Account.Application.pdb
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Application\obj\Debug\net8.0\ref\Account.Application.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Application\bin\Debug\net8.0\BuildingBlocks.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Application\bin\Debug\net8.0\BuildingBlocks.pdb
