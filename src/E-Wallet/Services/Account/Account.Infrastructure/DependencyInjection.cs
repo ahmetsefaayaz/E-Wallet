@@ -1,4 +1,5 @@
-﻿using Account.Infrastructure.Data;
+﻿using Account.Application.Interfaces;
+using Account.Infrastructure.Data;
 using Account.Infrastructure.Data.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -13,6 +14,7 @@ public static class DependencyInjection
     {
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, AuditableInterceptor>();
+        services.AddScoped<IAccountDbContext, AccountDbContext>();
         services.AddDbContext<AccountDbContext>((sp, options) =>
         {
             options.AddInterceptors(sp.GetRequiredService<ISaveChangesInterceptor>());

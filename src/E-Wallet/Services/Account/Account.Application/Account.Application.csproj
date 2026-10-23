@@ -8,7 +8,20 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks\BuildingBlocks.csproj" />
       <ProjectReference Include="..\Account.Domain\Account.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Account\EventHandlers\Domain\" />
+      <Folder Include="Account\Queries\GetAccountById\" />
+      <Folder Include="Account\Queries\GetAccounts\" />
+      <Folder Include="Account\Queries\GetCardsByAccountId\" />
+      <Folder Include="Account\Queries\GetTransactionsByAccountId\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.32" />
     </ItemGroup>
 
 </Project>

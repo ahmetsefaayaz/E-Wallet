@@ -602,7 +602,9 @@
       },
       "Account.Application/1.0.0": {
         "dependencies": {
-          "Account.Domain": "1.0.0"
+          "Account.Domain": "1.0.0",
+          "BuildingBlocks": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "8.0.32"
         },
         "runtime": {
           "Account.Application.dll": {
