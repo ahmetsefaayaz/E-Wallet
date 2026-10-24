@@ -13,14 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Account\EventHandlers\Domain\" />
-      <Folder Include="Account\Queries\GetAccountById\" />
-      <Folder Include="Account\Queries\GetAccounts\" />
-      <Folder Include="Account\Queries\GetCardsByAccountId\" />
-      <Folder Include="Account\Queries\GetTransactionsByAccountId\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.32" />
     </ItemGroup>
 

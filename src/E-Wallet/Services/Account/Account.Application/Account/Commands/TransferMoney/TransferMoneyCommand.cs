@@ -2,12 +2,12 @@
 using BuildingBlocks.CQRS;
 using FluentValidation;
 
-namespace Account.Application.Account.Commands.OutgoingTransaction;
+namespace Account.Application.Account.Commands.TransferMoney;
 
-public record OutgoingTransactionCommand(Guid AccountId, Guid ReceiverAccountId,
+public record TransferMoneyCommand(Guid AccountId, Guid ReceiverAccountId,
     Guid CardId, decimal Amount): ICommand<OutgoingTransactionResult>;
 
-public class OutgoingTransactionValidator : AbstractValidator<OutgoingTransactionCommand>
+public class OutgoingTransactionValidator : AbstractValidator<TransferMoneyCommand>
 {
     public OutgoingTransactionValidator()
     {
