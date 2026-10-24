@@ -9,10 +9,23 @@
       "Account.Api/1.0.0": {
         "dependencies": {
           "Account.Infrastructure": "1.0.0",
+          "Carter": "8.1.0",
           "Microsoft.EntityFrameworkCore.Design": "8.0.32"
         },
         "runtime": {
           "Account.Api.dll": {}
+        }
+      },
+      "Carter/8.1.0": {
+        "dependencies": {
+          "FluentValidation": "11.8.0",
+          "Microsoft.Extensions.DependencyModel": "8.0.2"
+        },
+        "runtime": {
+          "lib/net8.0/Carter.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.1.0.0"
+          }
         }
       },
       "FluentValidation/11.8.0": {
@@ -619,7 +632,6 @@
       "Account.Infrastructure/1.0.0": {
         "dependencies": {
           "Account.Application": "1.0.0",
-          "BuildingBlocks": "1.0.0",
           "Microsoft.EntityFrameworkCore": "8.0.32",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.11"
         },
@@ -652,6 +664,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Carter/8.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/fCVe54KxiTin+yGOIQ9wb4f57Y1bbTOp4zDDIYsm+lcHqDTC6ogQgKfjujEFT6PRXwbwX48o+9Gr5H7xpE5Cg==",
+      "path": "carter/8.1.0",
+      "hashPath": "carter.8.1.0.nupkg.sha512"
     },
     "FluentValidation/11.8.0": {
       "type": "package",

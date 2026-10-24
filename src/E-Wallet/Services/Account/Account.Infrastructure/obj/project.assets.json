@@ -2633,7 +2633,6 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "Account.Application >= 1.0.0",
-      "BuildingBlocks >= 1.0.0",
       "Microsoft.EntityFrameworkCore >= 8.0.32",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.32",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 8.0.11"
@@ -2665,9 +2664,6 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\BuildingBlocks.csproj": {
-              "projectPath": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\BuildingBlocks\\BuildingBlocks\\BuildingBlocks.csproj"
-            },
             "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\Services\\Account\\Account.Application\\Account.Application.csproj": {
               "projectPath": "C:\\Code\\Code\\E-Wallet\\src\\E-Wallet\\Services\\Account\\Account.Application\\Account.Application.csproj"
             }

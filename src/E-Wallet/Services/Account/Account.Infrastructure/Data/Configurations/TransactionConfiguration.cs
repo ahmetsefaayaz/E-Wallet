@@ -17,7 +17,7 @@ public class TransactionConfiguration: IEntityTypeConfiguration<Transaction>
         
         builder.Property(t => t.CardId).HasConversion(
             cId => cId.Value,
-            dbId => CardId.Of(dbId)).IsRequired();
+            dbId => CardId.Of(dbId));
         
         builder.Property(t => t.AccountId).HasConversion(
             aId => aId.Value,

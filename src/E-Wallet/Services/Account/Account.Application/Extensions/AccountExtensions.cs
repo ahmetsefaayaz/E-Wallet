@@ -9,6 +9,7 @@ public static class AccountExtensions
         return accounts.Select(a => new GetAccountDto
         (
             a.Id.Value,
+            a.UserId.Value,
             a.AccountBalance,
             a.Cards.ToGetCardsDto(),
             a.Transactions.ToTransactionsDto()
@@ -18,7 +19,7 @@ public static class AccountExtensions
 
     public static GetAccountDto ToGetAccountDto(this Domain.Models.Account account)
     {
-        return new GetAccountDto(account.Id.Value, account.AccountBalance,
+        return new GetAccountDto(account.Id.Value, account.UserId.Value, account.AccountBalance,
             account.Cards.ToGetCardsDto(), account.Transactions.ToTransactionsDto());
     }
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Account.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20261023150509_Initial")]
+    [Migration("20261024145546_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -107,7 +107,7 @@ namespace Account.Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<Guid>("CardId")
+                    b.Property<Guid?>("CardId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")

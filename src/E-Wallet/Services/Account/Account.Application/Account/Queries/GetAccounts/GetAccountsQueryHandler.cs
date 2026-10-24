@@ -18,7 +18,7 @@ public class GetAccountsQueryHandler(IAccountDbContext dbContext)
             .Include (a => a.Cards)
             .Include (a => a.Transactions)
             .Skip(query.PaginationRequest.PageSize * query.PaginationRequest.PageIndex)
-            .Take(query.PaginationRequest.PageIndex)
+            .Take(query.PaginationRequest.PageSize)
             .ToListAsync(cancellationToken);
         return new GetAccountsResult(new PaginatedResult<GetAccountDto>
             (query.PaginationRequest.PageIndex, query.PaginationRequest.PageSize,
