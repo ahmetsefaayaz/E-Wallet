@@ -4,12 +4,12 @@ using Account.Domain.ValueObjects;
 using BuildingBlocks.CQRS;
 using Microsoft.EntityFrameworkCore;
 
-namespace Account.Application.Account.Commands.OutgoingTransaction;
+namespace Account.Application.Account.Commands.TransferMoney;
 
-public class OutgoingTransactionCommandHandler(IAccountDbContext dbContext)
-    : ICommandHandler<OutgoingTransactionCommand, OutgoingTransactionResult>
+public class TransferMoneyCommandHandler(IAccountDbContext dbContext)
+    : ICommandHandler<TransferMoneyCommand, OutgoingTransactionResult>
 {
-    public async Task<OutgoingTransactionResult> Handle(OutgoingTransactionCommand command, CancellationToken cancellationToken)
+    public async Task<OutgoingTransactionResult> Handle(TransferMoneyCommand command, CancellationToken cancellationToken)
     {
         var accountId = AccountId.Of(command.AccountId);
         var outgoingAccount = await dbContext.Accounts

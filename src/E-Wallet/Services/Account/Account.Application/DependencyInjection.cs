@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using BuildingBlocks.Behaviors;
 using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Account.Application;
