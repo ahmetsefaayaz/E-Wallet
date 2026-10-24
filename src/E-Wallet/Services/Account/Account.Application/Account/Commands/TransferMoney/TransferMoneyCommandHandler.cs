@@ -13,12 +13,14 @@ public class TransferMoneyCommandHandler(IAccountDbContext dbContext)
     {
         var accountId = AccountId.Of(command.AccountId);
         var outgoingAccount = await dbContext.Accounts
+            .Include(a => a.Cards)
             .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken)
             ?? throw new AccountNotFoundException(accountId.Value.ToString());
         if (!outgoingAccount.Cards.Any(c => c.Id == CardId.Of(command.CardId)))
             throw new CardNotFoundException(command.CardId.ToString());
         var incomingAccountId = AccountId.Of(command.ReceiverAccountId);
         var incomingAccount = await dbContext.Accounts
+            .Include(a => a.Cards)
             .FirstOrDefaultAsync(a => a.Id == incomingAccountId, cancellationToken)
             ?? throw new AccountNotFoundException(incomingAccountId.Value.ToString());
         outgoingAccount.CreateTransaction(CardId.Of(command.CardId), TransactionType.OutgoingTransfer, 

@@ -14,4 +14,4 @@ public class CreateAccountCommandValidator : AbstractValidator<CreateAccountComm
     }
 }
 
-public record CreateAccountResult(Guid Id);
+public record CreateAccountResult(Guid AccountId);

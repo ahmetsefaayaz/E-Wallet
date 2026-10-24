@@ -43,6 +43,25 @@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
       - ${USERPROFILE}\.aspnet\https:/https:ro
+  accountapi:
+    image: accountapi
+    build:
+      context: .
+      dockerfile: Services/Account/Account.Api/Dockerfile
+    depends_on:
+      - accountdb
+    ports:
+      - "6001:8080"
+      - "6061:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=accountdb;Database=AccountDb;Username=postgres;Password=postgres;
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sifre123!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ${USERPROFILE}\.aspnet\https:/https:ro
 
 volumes:
   postgres_identity: 

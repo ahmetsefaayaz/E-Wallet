@@ -9,7 +9,7 @@ public static class TransactionExtensions
         transactions.Select(t => new TransactionDto(
             t.Id.Value,
             t.AccountId.Value,
-            t.CardId!.Value,
+            t.CardId?.Value,
             t.TransactionType,
             t.Status,
             t.Amount

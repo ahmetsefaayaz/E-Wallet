@@ -104,7 +104,7 @@ namespace Account.Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<Guid>("CardId")
+                    b.Property<Guid?>("CardId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")

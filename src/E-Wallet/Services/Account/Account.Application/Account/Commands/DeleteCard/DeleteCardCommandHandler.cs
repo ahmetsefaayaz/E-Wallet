@@ -13,6 +13,7 @@ public class DeleteCardCommandHandler(IAccountDbContext dbContext):
     {
         var accountId = AccountId.Of(command.AccountId);
         var account = await dbContext.Accounts
+            .Include(a => a.Cards)
             .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken)
             ?? throw new AccountNotFoundException(command.AccountId.ToString());
         account.RemoveCard(CardId.Of(command.CardId));

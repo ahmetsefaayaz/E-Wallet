@@ -13,7 +13,9 @@ public class UpdateCardCommandHandler(IAccountDbContext dbContext)
     {
         
         var accountId = AccountId.Of(command.AccountId);
-        var account = await dbContext.Accounts.FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken)
+        var account = await dbContext.Accounts
+                          .Include(t => t.Cards)
+                          .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken)
             ?? throw new AccountNotFoundException(command.AccountId.ToString());
         account.UpdateCard(CardId.Of(command.CardId), CardHolderName.Of(command.Card.CardHolderName), CardNumber.Of(command.Card.CardNumber),
             CardExpiryDate.Of(command.Card.CardExpiryDate), CardSecurityNumber.Of(command.Card.CardSecurityNumber));
