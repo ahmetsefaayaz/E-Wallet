@@ -129,3 +129,9 @@ C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Api\bin\Debug\net8.0
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Api\bin\Debug\net8.0\Carter.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Api\bin\Debug\net8.0\MassTransit.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Api\bin\Debug\net8.0\MassTransit.Abstractions.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Api\bin\Debug\net8.0\MassTransit.RabbitMqTransport.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Api\bin\Debug\net8.0\RabbitMQ.Client.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Api\bin\Debug\net8.0\BuildingBlocks.Messaging.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Api\bin\Debug\net8.0\BuildingBlocks.Messaging.pdb

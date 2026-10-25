@@ -17,7 +17,7 @@ public static class DependencyInjection
         services.AddScoped<IAccountDbContext, AccountDbContext>();
         services.AddDbContext<AccountDbContext>((sp, options) =>
         {
-            options.AddInterceptors(sp.GetRequiredService<ISaveChangesInterceptor>());
+            options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
             options.UseNpgsql(configuration.GetConnectionString("Database"));
         });
         

@@ -1,15 +1,26 @@
 ﻿using Account.Domain.Events;
+using BuildingBlocks.Messaging.Events;
+using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Account.Application.Account.EventHandlers.Domain;
 
-public class CardCreatedEventHandler(ILogger<CardCreatedEventHandler> logger)
+public class CardCreatedEventHandler(ILogger<CardCreatedEventHandler> logger, IPublishEndpoint publishEndpoint)
     : INotificationHandler<CardCreatedEvent>
 {
-    public Task Handle(CardCreatedEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(CardCreatedEvent notification, CancellationToken cancellationToken)
     {
+        var cardIntegrationEvent = new CardCreatedIntegrationEvent
+        {
+            AccountId = notification.Card.AccountId.Value,
+            CardId = notification.Card.Id.Value,
+            CardHolderName = notification.Card.CardHolderName.Value,
+            CardNumber = notification.Card.CardNumber.Value,
+            CardExpiryDate = notification.Card.CardExpiryDate.Value,
+            CardSecurityNumber = notification.Card.CardSecurityNumber.Value
+        };
         logger.LogInformation("Card created {Card}", notification.Card);
-        return Task.CompletedTask;
+        await publishEndpoint.Publish(cardIntegrationEvent, cancellationToken);
     }
 }

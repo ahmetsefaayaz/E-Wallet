@@ -24,6 +24,26 @@
       - "5434:5432"
     volumes:
       - "postgres_account:/var/lib/postgresql/data/"
+  notificationdb:
+    image: mongo:latest
+    restart: always
+    container_name: notificationdb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+  messagebroker:
+    image: rabbitmq:management
+    hostname: ewallet-mq
+    container_name: messagebroker
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
   identityapi:
     image: identityapi
     build:
@@ -50,6 +70,7 @@
       dockerfile: Services/Account/Account.Api/Dockerfile
     depends_on:
       - accountdb
+      - messagebroker
     ports:
       - "6001:8080"
       - "6061:8081"
@@ -58,6 +79,9 @@
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=accountdb;Database=AccountDb;Username=postgres;Password=postgres;
+      - MessageBroker__Host=amqp://ewallet-mq:5672
+      - MessageBroker__Password=guest
+      - MessageBroker__UserName=guest
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Sifre123!
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
@@ -66,3 +90,4 @@
 volumes:
   postgres_identity: 
   postgres_account:
+  mongodb_data:
