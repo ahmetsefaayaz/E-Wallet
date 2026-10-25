@@ -20,3 +20,5 @@ C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Infrastructure\obj\D
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Infrastructure\obj\Debug\net8.0\Account.Infrastructure.pdb
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Infrastructure\obj\Debug\net8.0\Account.Infrastructure.genruntimeconfig.cache
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Infrastructure\obj\Debug\net8.0\ref\Account.Infrastructure.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Infrastructure\bin\Debug\net8.0\BuildingBlocks.Messaging.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Account\Account.Infrastructure\bin\Debug\net8.0\BuildingBlocks.Messaging.pdb

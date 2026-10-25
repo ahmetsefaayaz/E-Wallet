@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		compose.yaml = compose.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Messaging", "BuildingBlocks\BuildingBlocks.Messaging\BuildingBlocks.Messaging.csproj", "{51B394C1-50DB-47D3-94B9-9A6799246516}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,7 @@ Global
 		{84886428-5A22-4AEF-A8D9-B87707B20E05} = {A8C47037-F6FC-482D-B029-1C30A3B09BFB}
 		{6D079B31-5948-416D-A3EC-4E647B015E08} = {A8C47037-F6FC-482D-B029-1C30A3B09BFB}
 		{BE008711-5614-4092-A4D3-29F598793F53} = {ABC29526-0BB1-4082-8E76-205B9ECD3B2A}
+		{51B394C1-50DB-47D3-94B9-9A6799246516} = {ABC29526-0BB1-4082-8E76-205B9ECD3B2A}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FB0EF228-5EFA-4F5F-BB51-5F3CFA2A9361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -84,5 +87,9 @@ Global
 		{BE008711-5614-4092-A4D3-29F598793F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE008711-5614-4092-A4D3-29F598793F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE008711-5614-4092-A4D3-29F598793F53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51B394C1-50DB-47D3-94B9-9A6799246516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51B394C1-50DB-47D3-94B9-9A6799246516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51B394C1-50DB-47D3-94B9-9A6799246516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51B394C1-50DB-47D3-94B9-9A6799246516}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -17,6 +17,9 @@
                   <Item>
                     <option name="path" value="Services/Account/Account.Api/appsettings.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="Services/Notification/Notification.Api/appsettings.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>
