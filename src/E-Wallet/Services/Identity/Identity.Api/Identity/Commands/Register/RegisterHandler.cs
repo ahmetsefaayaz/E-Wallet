@@ -1,7 +1,9 @@
 ﻿using BuildingBlocks.CQRS;
 using BuildingBlocks.Exceptions;
+using BuildingBlocks.Messaging.Events;
 using FluentValidation;
 using Identity.Api.Entities;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Api.Identity.Commands.Register;
@@ -39,7 +41,8 @@ public class RegisterValidator : AbstractValidator<RegisterCommand>
 }
 
 
-internal class RegisterCommandHandler(UserManager<User> userManager):ICommandHandler<RegisterCommand, RegisterCommandResult>
+internal class RegisterCommandHandler(UserManager<User> userManager, IPublishEndpoint publishEndpoint)
+    :ICommandHandler<RegisterCommand, RegisterCommandResult>
 {
     public async Task<RegisterCommandResult> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
@@ -56,6 +59,13 @@ internal class RegisterCommandHandler(UserManager<User> userManager):ICommandHan
         var result = await userManager.CreateAsync(user, command.Password);
         if (!result.Succeeded) throw new InternalServerException("User could not created");
         await userManager.AddToRoleAsync(user, "User");
+        var integrationEvent = new UserRegisteredIntegrationEvent
+        {
+            UserId = user.Id,
+            Email = user.Email,
+            Username = user.UserName
+        };
+        await publishEndpoint.Publish(integrationEvent, cancellationToken);
         return new RegisterCommandResult(user.Id);
     }
 }

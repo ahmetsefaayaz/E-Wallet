@@ -43,7 +43,12 @@
     ports:
       - "5672:5672"
       - "15672:15672"
-  
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
   identityapi:
     image: identityapi
     build:
@@ -51,6 +56,7 @@
       dockerfile: Services/Identity/Identity.Api/Dockerfile
     depends_on:
       - identitydb
+      - messagebroker
     ports:
       - "6000:8080"
       - "6060:8081"
@@ -58,6 +64,9 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      - MessageBroker__Host=amqp://ewallet-mq:5672
+      - MessageBroker__Password=guest
+      - MessageBroker__UserName=guest
       - ConnectionStrings__Database=Server=identitydb;Database=IdentityDb;Username=postgres;Password=postgres;
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Sifre123!
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
@@ -79,6 +88,30 @@
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=accountdb;Database=AccountDb;Username=postgres;Password=postgres;
+      - MessageBroker__Host=amqp://ewallet-mq:5672
+      - MessageBroker__Password=guest
+      - MessageBroker__UserName=guest
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sifre123!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ${USERPROFILE}\.aspnet\https:/https:ro
+  notificationapi:
+    image: notificationapi
+    build:
+      context: .
+      dockerfile: Services/Notification/Notification.Api/Dockerfile
+    depends_on:
+      - notificationdb
+      - messagebroker
+    ports:
+      - "6002:8080"
+      - "6062:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__MongoDb=mongodb://notificationdb:27017
+      - SmtpSettings__Host=mailhog
       - MessageBroker__Host=amqp://ewallet-mq:5672
       - MessageBroker__Password=guest
       - MessageBroker__UserName=guest

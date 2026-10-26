@@ -13,6 +13,7 @@ public class CardCreatedEventHandler(ILogger<CardCreatedEventHandler> logger, IP
     {
         var cardIntegrationEvent = new CardCreatedIntegrationEvent
         {
+            UserId = notification.UserId.Value,
             AccountId = notification.Card.AccountId.Value,
             CardId = notification.Card.Id.Value,
             CardHolderName = notification.Card.CardHolderName.Value,

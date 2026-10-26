@@ -17,17 +17,27 @@ public class NotificationRepository: INotificationRepository
     }
     public async Task AddAsync(Entities.Notification notification, CancellationToken cancellationToken = default)
     {
-        await _notifications.InsertOneAsync(notification, cancellationToken);
+        await _notifications.InsertOneAsync(notification, null, cancellationToken);
     }
 
     public async Task<Entities.Notification> GetByIdAsync(string notificationId, CancellationToken cancellationToken = default)
     {
-        return await _notifications.Find(Builders<Entities.Notification>.Filter
-            .Eq("_id", notificationId)).FirstOrDefaultAsync(cancellationToken);
+        return await _notifications.Find(n => n.Id.ToString() == notificationId).FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IEnumerable<Entities.Notification>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await  _notifications.Find(_ => true).ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<Entities.Notification>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default)
+    {
+        return await _notifications.Find(n => n.UserId.ToString() ==  userId).ToListAsync(cancellationToken);
+    }
+
+    public async Task MarkAsReadAsync(Entities.Notification notification, CancellationToken cancellationToken = default)
+    {
+        notification.IsRead = true;
+        await _notifications.ReplaceOneAsync(n => n.Id == notification.Id, notification, cancellationToken: cancellationToken);
     }
 }

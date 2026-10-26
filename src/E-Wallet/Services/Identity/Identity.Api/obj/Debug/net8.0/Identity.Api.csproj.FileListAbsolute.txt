@@ -139,3 +139,9 @@ C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\obj\Debug\net8.0\Identity.Api.MvcApplicationPartsAssemblyInfo.cs
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\MassTransit.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\MassTransit.Abstractions.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\MassTransit.RabbitMqTransport.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\RabbitMQ.Client.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\BuildingBlocks.Messaging.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\BuildingBlocks.Messaging.pdb

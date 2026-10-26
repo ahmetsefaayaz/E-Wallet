@@ -2,6 +2,7 @@
 
 public class TransactionCreatedIntegrationEvent: IntegrationEvent
 {
+    public Guid UserId { get; set; }
     public Guid TransactionId { get; set; }
     public Guid AccountId { get; set; }
     public Guid? CardId { get; set; }

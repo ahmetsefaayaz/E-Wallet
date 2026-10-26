@@ -14,6 +14,7 @@ public class TransactionCreatedEventHandler(ILogger<TransactionCreatedEventHandl
     {
         var transactionIntegrationEvent = new TransactionCreatedIntegrationEvent
         {
+            UserId = notification.UserId.Value,
             AccountId = notification.Transaction.AccountId.Value,
             TransactionId = notification.Transaction.Id.Value,
             CardId = notification.Transaction.CardId?.Value,

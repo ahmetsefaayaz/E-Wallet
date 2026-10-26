@@ -207,6 +207,14 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
+            "Carter": {
+              "target": "Package",
+              "version": "[8.1.0, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.18.2, )"
+            },
             "MongoDB.Driver": {
               "target": "Package",
               "version": "[3.13.0, )"
