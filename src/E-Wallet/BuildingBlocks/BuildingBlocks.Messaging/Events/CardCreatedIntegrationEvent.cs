@@ -2,6 +2,7 @@
 
 public class CardCreatedIntegrationEvent: IntegrationEvent
 {
+    public Guid UserId { get; set; }
     public Guid CardId { get; set; }
     public Guid AccountId { get; set; }
     public string CardHolderName { get; set; } = default!;

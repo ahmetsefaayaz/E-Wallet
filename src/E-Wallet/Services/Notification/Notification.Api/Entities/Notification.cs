@@ -1,12 +1,14 @@
-﻿using Notification.Api.Entities.Enums;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Notification.Api.Entities.Enums;
 
 namespace Notification.Api.Entities;
 
 public class Notification
 {
-    public Notification(Guid accountId, string title, string message, NotificationType type, NotificationChannel channel,
+    public Notification(Guid userId, Guid accountId, string title, string message, string type, NotificationChannel channel,
         Guid? referenceId, DateTime createdAt)
     {
+        UserId = userId;
         AccountId = accountId;
         Title = title;
         Message = message;
@@ -15,16 +17,18 @@ public class Notification
         ReferenceId = referenceId;
         CreatedAt = createdAt;
     }
-    public Guid Id => Guid.NewGuid();
+    [BsonId]
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid UserId { get; private set; }
     public Guid AccountId { get; private set; }
     
     public string Title { get; private set; } = default!;
     public string Message { get; private set; } = default!;
     
-    public NotificationType Type { get; private set; } 
+    public string Type { get; private set; } 
     
     public NotificationChannel Channel { get; private set; }
-    
+    public bool IsRead { get; set; } = false;
     
     public Guid? ReferenceId { get; private set; }
     

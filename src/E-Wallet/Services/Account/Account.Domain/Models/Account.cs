@@ -48,7 +48,7 @@ public class Account : Aggregate<AccountId>
             amount
         );
         _transactions.Add(transaction);
-        AddDomainEvent(new TransactionCreatedEvent(transaction));
+        AddDomainEvent(new TransactionCreatedEvent(UserId, transaction));
         return transaction;
     }
 
@@ -69,7 +69,7 @@ public class Account : Aggregate<AccountId>
         if(_cards.Count > 3) throw new DomainException("maximum 3 cards supported");
         var card = new Card(Id, cardHolderName, cardNumber, cardExpiryDate, cardSecurityNumber);
         _cards.Add(card);
-        AddDomainEvent(new CardCreatedEvent(card));
+        AddDomainEvent(new CardCreatedEvent(UserId, card));
         return card;
     }
     

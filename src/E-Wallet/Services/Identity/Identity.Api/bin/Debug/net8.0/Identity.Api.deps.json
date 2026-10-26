@@ -9,6 +9,7 @@
       "Identity.Api/1.0.0": {
         "dependencies": {
           "BuildingBlocks": "1.0.0",
+          "BuildingBlocks.Messaging": "1.0.0",
           "Carter": "8.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.32",
           "Microsoft.AspNetCore.Identity": "2.3.13",
@@ -93,6 +94,41 @@
           }
         }
       },
+      "MassTransit/8.5.12": {
+        "dependencies": {
+          "MassTransit.Abstractions": "8.5.12",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Hosting.Abstractions": "8.0.1",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Options": "8.0.2"
+        },
+        "runtime": {
+          "lib/net8.0/MassTransit.dll": {
+            "assemblyVersion": "8.5.12.0",
+            "fileVersion": "8.5.12.0"
+          }
+        }
+      },
+      "MassTransit.Abstractions/8.5.12": {
+        "runtime": {
+          "lib/net8.0/MassTransit.Abstractions.dll": {
+            "assemblyVersion": "8.5.12.0",
+            "fileVersion": "8.5.12.0"
+          }
+        }
+      },
+      "MassTransit.RabbitMQ/8.5.12": {
+        "dependencies": {
+          "MassTransit": "8.5.12",
+          "RabbitMQ.Client": "7.2.2"
+        },
+        "runtime": {
+          "lib/net8.0/MassTransit.RabbitMqTransport.dll": {
+            "assemblyVersion": "8.5.12.0",
+            "fileVersion": "8.5.12.0"
+          }
+        }
+      },
       "MediatR/14.2.0": {
         "dependencies": {
           "MediatR.Contracts": "2.0.1",
@@ -159,11 +195,6 @@
           }
         }
       },
-      "Microsoft.AspNetCore.Hosting.Abstractions/2.3.12": {
-        "dependencies": {
-          "Microsoft.Extensions.Hosting.Abstractions": "8.0.1"
-        }
-      },
       "Microsoft.AspNetCore.Http/2.3.10": {
         "dependencies": {
           "Microsoft.Extensions.ObjectPool": "8.0.11",
@@ -174,7 +205,6 @@
         "dependencies": {
           "Microsoft.AspNetCore.Authentication.Cookies": "2.3.12",
           "Microsoft.AspNetCore.Cryptography.KeyDerivation": "8.0.32",
-          "Microsoft.AspNetCore.Hosting.Abstractions": "2.3.12",
           "Microsoft.Extensions.Identity.Core": "8.0.32",
           "System.Security.Cryptography.Xml": "8.0.4"
         }
@@ -704,6 +734,14 @@
           }
         }
       },
+      "RabbitMQ.Client/7.2.2": {
+        "runtime": {
+          "lib/net8.0/RabbitMQ.Client.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.2.2.0"
+          }
+        }
+      },
       "System.CodeDom/4.4.0": {
         "runtime": {
           "lib/netstandard2.0/System.CodeDom.dll": {
@@ -833,6 +871,18 @@
             "fileVersion": "1.0.0.0"
           }
         }
+      },
+      "BuildingBlocks.Messaging/1.0.0": {
+        "dependencies": {
+          "MassTransit": "8.5.12",
+          "MassTransit.RabbitMQ": "8.5.12"
+        },
+        "runtime": {
+          "BuildingBlocks.Messaging.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
       }
     }
   },
@@ -891,6 +941,27 @@
       "path": "mapster.core/10.1.0-pre03",
       "hashPath": "mapster.core.10.1.0-pre03.nupkg.sha512"
     },
+    "MassTransit/8.5.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qpesi9ZPcT3+1w7HLw4rtkS0MRiX90WSaFNp3CXdaTGKhdmZn3nIozysvEpdoVfLM4Bwq9Kx7okGxRvLBY9Qcw==",
+      "path": "masstransit/8.5.12",
+      "hashPath": "masstransit.8.5.12.nupkg.sha512"
+    },
+    "MassTransit.Abstractions/8.5.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-NauNyaQsJVfLSY3Jw/zr26POQpEnfjerHCrrK3kUmkCDIpC63PZD1AjihGFgq0KH5eGagMJ7GRHN74w8mI69Kg==",
+      "path": "masstransit.abstractions/8.5.12",
+      "hashPath": "masstransit.abstractions.8.5.12.nupkg.sha512"
+    },
+    "MassTransit.RabbitMQ/8.5.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-j8MQni+zMmUpAQ8VKIcuBakJ2ptZy0wSahd1LCVyRUvFrI8Bg0YtFsRk6w0/R1hdD3u0TuMvPKQAaNIZe8nSxQ==",
+      "path": "masstransit.rabbitmq/8.5.12",
+      "hashPath": "masstransit.rabbitmq.8.5.12.nupkg.sha512"
+    },
     "MediatR/14.2.0": {
       "type": "package",
       "serviceable": true,
@@ -939,13 +1010,6 @@
       "sha512": "sha512-uV++tjQiTB7wMjcgKsk6ijx4Kq901LavZTZUV/XuBt68r9BvR8t/7qkZJ2sXjnt8tq/dkVIuI/2AZXeDQVOl4g==",
       "path": "microsoft.aspnetcore.cryptography.keyderivation/8.0.32",
       "hashPath": "microsoft.aspnetcore.cryptography.keyderivation.8.0.32.nupkg.sha512"
-    },
-    "Microsoft.AspNetCore.Hosting.Abstractions/2.3.12": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-jSEvM9Ot0ok4VIT8R5JNOSiLTay+sFBp1vCwiqWPqaY3HuvK0EAr8YfqOkxDnWw5nqyC5Z3asJ2NuddLNVzXGA==",
-      "path": "microsoft.aspnetcore.hosting.abstractions/2.3.12",
-      "hashPath": "microsoft.aspnetcore.hosting.abstractions.2.3.12.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Http/2.3.10": {
       "type": "package",
@@ -1185,6 +1249,13 @@
       "path": "npgsql.entityframeworkcore.postgresql/8.0.11",
       "hashPath": "npgsql.entityframeworkcore.postgresql.8.0.11.nupkg.sha512"
     },
+    "RabbitMQ.Client/7.2.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-k4b6RnTXpLbsF96V93ooNYxgPMnoA2tEm24B6AXNJr1mG8wwNYdA1XJtgU66L5xqeGyveS7SJriRzlX3cbqQNA==",
+      "path": "rabbitmq.client/7.2.2",
+      "hashPath": "rabbitmq.client.7.2.2.nupkg.sha512"
+    },
     "System.CodeDom/4.4.0": {
       "type": "package",
       "serviceable": true,
@@ -1263,6 +1334,11 @@
       "hashPath": "system.security.cryptography.xml.8.0.4.nupkg.sha512"
     },
     "BuildingBlocks/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "BuildingBlocks.Messaging/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

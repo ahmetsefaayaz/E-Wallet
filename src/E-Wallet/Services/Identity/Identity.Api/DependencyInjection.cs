@@ -1,6 +1,8 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Text;
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.Handlers;
+using BuildingBlocks.Messaging.MassTransit;
 using Carter;
 using FluentValidation;
 using Identity.Api.Data;
@@ -28,7 +30,7 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(LoggingBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
-
+        services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
         services.AddCarter();
         services.AddExceptionHandler<GlobalExceptionHandler>();
         
