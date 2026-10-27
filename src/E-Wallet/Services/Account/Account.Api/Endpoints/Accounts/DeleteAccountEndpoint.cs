@@ -21,6 +21,7 @@ public class DeleteAccountEndpoint: ICarterModule
         .Produces<DeleteAccountResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithDescription("Delete account")
-        .WithSummary("Delete account");
+        .WithSummary("Delete account")
+        .RequireAuthorization("IsAdmin");
     }
 }

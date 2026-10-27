@@ -22,6 +22,7 @@ public class GetTransactionsByAccountIdEndpoint: ICarterModule
             .Produces<GetTransactionsByAccountIdResponse>()
             .WithName("GetTransactionsByAccountId")
             .WithDescription("GetTransactionsByAccountId")
-            .WithSummary("GetTransactionsByAccountId");
+            .WithSummary("GetTransactionsByAccountId")
+            .RequireAuthorization();
     }
 }

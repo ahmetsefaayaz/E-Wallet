@@ -24,6 +24,7 @@ public class UpdateCardEndpoint: ICarterModule
             .Produces<UpdateCardResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithSummary("Update card")
-            .WithDescription("Update card");
+            .WithDescription("Update card")
+            .RequireAuthorization();
     }
 }

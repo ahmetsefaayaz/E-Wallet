@@ -21,6 +21,7 @@ public class GetCardsByAccountId: ICarterModule
             .Produces<GetCardsByAccountIdResponse>()
             .WithName("GetCardsByAccountIdResponse")
             .WithDescription("GetCardsByAccountIdResponse")
-            .WithSummary("GetCardsByAccountIdResponse");
+            .WithSummary("GetCardsByAccountIdResponse")
+            .RequireAuthorization();
     }
 }

@@ -20,6 +20,7 @@ public class DeleteCardEndpoint: ICarterModule
         .WithDescription("Delete card")
         .WithSummary("Delete card")
         .Produces<DeleteCardResult>()
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("IsAdmin");
     }
 }

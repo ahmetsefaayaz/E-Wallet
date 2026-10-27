@@ -24,7 +24,8 @@ public class DepositEndpoint: ICarterModule
             .Produces<DepositResponse>()
             .WithName("Deposit Transaction")
             .WithDescription("Deposit transaction")
-            .WithSummary("Deposit transaction");
+            .WithSummary("Deposit transaction")
+            .RequireAuthorization();
     }
     
 }

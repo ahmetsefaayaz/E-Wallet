@@ -18,6 +18,7 @@ public class MarkAsReadEndpoint: ICarterModule
             .Produces<MarkAsReadResponse>()
             .WithName("MarkAsRead")
             .WithDescription("MarkAsRead")
-            .WithSummary("MarkAsRead");
+            .WithSummary("MarkAsRead")
+            .RequireAuthorization();
     }
 }

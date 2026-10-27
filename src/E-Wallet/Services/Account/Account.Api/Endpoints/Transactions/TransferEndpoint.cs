@@ -25,6 +25,7 @@ public class TransferEndpoint: ICarterModule
             .Produces<TransferRequest>()
             .WithName("TransferTransaction")
             .WithDescription("Transfer transaction")
-            .WithSummary("Transfer transaction");
+            .WithSummary("Transfer transaction")
+            .RequireAuthorization();
     }
 }

@@ -23,6 +23,7 @@ public class CreateCardEndpoint: ICarterModule
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithName("CreateCard")
         .WithDescription("Create card request")
-        .WithSummary("Create card request");
+        .WithSummary("Create card request")
+        .RequireAuthorization();
     }
 }
