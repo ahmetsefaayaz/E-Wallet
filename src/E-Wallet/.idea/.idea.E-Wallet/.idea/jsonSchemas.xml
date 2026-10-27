@@ -26,6 +26,9 @@
                   <Item>
                     <option name="path" value="ApiGateways/YarpApiGateway/appsettings.Local.Json.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="ApiGateways/YarpApiGateway/appsettings.Local.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>

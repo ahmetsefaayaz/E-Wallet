@@ -1,12 +1,10 @@
-﻿using Account.Application.Account.Commands.CreateAccount;
+﻿using System.Security.Claims;
+using Account.Application.Account.Commands.CreateAccount;
 using Carter;
 using Mapster;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
-
 namespace Account.Api.Endpoints.Accounts;
 
-public record CreateAccountRequest(Guid UserId);
 
 public record CreateAccountResponse(Guid AccountId);
 
@@ -14,9 +12,11 @@ public class CreateAccountEndpoint: ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/accounts", async (ISender sender, CreateAccountRequest request) =>
+        app.MapPost("/accounts", async (ISender sender, ClaimsPrincipal user) =>
         {
-            var result = await sender.Send(new CreateAccountCommand(request.UserId));
+            var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? user.FindFirst("sub")?.Value;
+            var result = await sender.Send(new CreateAccountCommand(Guid.Parse(userIdString!)));
             var response = result.Adapt<CreateAccountResponse>();
             return Results.Created($"/accounts/{response.AccountId}", response);
         })
