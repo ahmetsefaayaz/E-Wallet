@@ -1,0 +1,1472 @@
+{
+  "info": {
+    "_postman_id": "390cf346-b7f8-4bf9-95dc-92cd4bffce3a",
+    "name": "EWallet",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58558112",
+    "_collection_link": "https://go.postman.co/collection/58558112-390cf346-b7f8-4bf9-95dc-92cd4bffce3a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Identity",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"UserName\": \"newuser3\",\r\n    \"Email\": \"Newmail3@mail.com\",\r\n    \"Password\": \"MyPassword1\",\r\n    \"ConfirmPassword\": \"MyPassword1\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{IdentityUrl}}/users",
+              "host": [
+                "{{IdentityUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var response = pm.response.json();\r\npm.environment.set(\"JwtToken\", response.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"Email\": \"admin@mail.com\",\r\n    \"Password\": \"AdminPassword0\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{IdentityUrl}}/login",
+              "host": [
+                "{{IdentityUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Claim",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{JwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"Type\": \"NewClaimTypeYes\",\r\n    \"Value\": \"NewClaimValueSir\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{IdentityUrl}}/users/d3da86c1-fa80-4b62-9a41-b6e9e4d94429/claims",
+              "host": [
+                "{{IdentityUrl}}"
+              ],
+              "path": [
+                "users",
+                "d3da86c1-fa80-4b62-9a41-b6e9e4d94429",
+                "claims"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Role",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{JwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"RoleName\": \"Admin\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{IdentityUrl}}/users/d3da86c1-fa80-4b62-9a41-b6e9e4d94429/roles",
+              "host": [
+                "{{IdentityUrl}}"
+              ],
+              "path": [
+                "users",
+                "d3da86c1-fa80-4b62-9a41-b6e9e4d94429",
+                "roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Role",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{JwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"RoleName\": \"new role\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{IdentityUrl}}/roles",
+              "host": [
+                "{{IdentityUrl}}"
+              ],
+              "path": [
+                "roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetUsers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{JwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{IdentityUrl}}/users?PageIndex=0&PageSize=3",
+              "host": [
+                "{{IdentityUrl}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "PageIndex",
+                  "value": "0"
+                },
+                {
+                  "key": "PageSize",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetRolesByUserId",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{JwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{IdentityUrl}}/users/f1f26375-f710-4235-bf87-5fad8bcce0ee/roles",
+              "host": [
+                "{{IdentityUrl}}"
+              ],
+              "path": [
+                "users",
+                "f1f26375-f710-4235-bf87-5fad8bcce0ee",
+                "roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{JwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"address\": {\r\n    \"addressLine\": \"Atatürk Caddesi No: 123 Daire: 4\",\r\n    \"city\": \"Zonguldak\",\r\n    \"state\": \"Merkez\",\r\n    \"country\": \"Türkiye\",\r\n    \"zipCode\": \"67100\"\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{IdentityUrl}}/users/address",
+              "host": [
+                "{{IdentityUrl}}"
+              ],
+              "path": [
+                "users",
+                "address"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{JwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"address\": {\r\n    \"addressLine\": \"guney caddesi: 123 Daire: 4\",\r\n    \"city\": \"Ankara\",\r\n    \"state\": \"Sincan\",\r\n    \"country\": \"Türkiye\",\r\n    \"zipCode\": \"06000\"\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{IdentityUrl}}/users/address",
+              "host": [
+                "{{IdentityUrl}}"
+              ],
+              "path": [
+                "users",
+                "address"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notification",
+      "item": [
+        {
+          "name": "GetNotificationByUserId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{NotificationUrl}}/users/a41909e5-9f2d-492f-9564-be3fe28180fe/notifications",
+              "host": [
+                "{{NotificationUrl}}"
+              ],
+              "path": [
+                "users",
+                "a41909e5-9f2d-492f-9564-be3fe28180fe",
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetNotificationById",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{NotificationUrl}}/notifications/bdafab22-d213-4372-a65d-b88a708d8c94",
+              "host": [
+                "{{NotificationUrl}}"
+              ],
+              "path": [
+                "notifications",
+                "bdafab22-d213-4372-a65d-b88a708d8c94"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "MarkAsRead",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{NotificationUrl}}/notifications/bdafab22-d213-4372-a65d-b88a708d8c94/mark-as-read",
+              "host": [
+                "{{NotificationUrl}}"
+              ],
+              "path": [
+                "notifications",
+                "bdafab22-d213-4372-a65d-b88a708d8c94",
+                "mark-as-read"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Account",
+      "item": [
+        {
+          "name": "Accounts",
+          "item": [
+            {
+              "name": "GetAccounts",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetAccountById",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts/d4084670-858f-48d7-b8f9-b3591cc60a42",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts",
+                    "d4084670-858f-48d7-b8f9-b3591cc60a42"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "CreateAccount",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Account",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts/92302859-f59e-41a3-a2e2-5480b8471a3a",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts",
+                    "92302859-f59e-41a3-a2e2-5480b8471a3a"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Transactions",
+          "item": [
+            {
+              "name": "GetTransactionsByAccountId",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts/d4084670-858f-48d7-b8f9-b3591cc60a42/transactions",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts",
+                    "d4084670-858f-48d7-b8f9-b3591cc60a42",
+                    "transactions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Deposit",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"amount\": 100\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts/239231a3-dde7-424f-80f8-ed8cbfb532ef/cards/d3d4018c-ae8c-4545-90c9-cd4c26f44ace/deposit",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts",
+                    "239231a3-dde7-424f-80f8-ed8cbfb532ef",
+                    "cards",
+                    "d3d4018c-ae8c-4545-90c9-cd4c26f44ace",
+                    "deposit"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Withdraw",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"amount\": 150\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts/239231a3-dde7-424f-80f8-ed8cbfb532ef/cards/d3d4018c-ae8c-4545-90c9-cd4c26f44ace/withdraw",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts",
+                    "239231a3-dde7-424f-80f8-ed8cbfb532ef",
+                    "cards",
+                    "d3d4018c-ae8c-4545-90c9-cd4c26f44ace",
+                    "withdraw"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Transfer",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"receiverId\": \"6f2219a6-b663-4054-a283-c489f57233d8\",\r\n    \"amount\": 250\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts/239231a3-dde7-424f-80f8-ed8cbfb532ef/cards/709bf2c4-d6c6-4f43-9e26-d2cfafdfc69a/transfer",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts",
+                    "239231a3-dde7-424f-80f8-ed8cbfb532ef",
+                    "cards",
+                    "709bf2c4-d6c6-4f43-9e26-d2cfafdfc69a",
+                    "transfer"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Cards",
+          "item": [
+            {
+              "name": "GetCardsByAccountId",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts/d4084670-858f-48d7-b8f9-b3591cc60a42/cards",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts",
+                    "d4084670-858f-48d7-b8f9-b3591cc60a42",
+                    "cards"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "CreateCard",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"card\":\r\n    {\r\n        \"cardHolderName\" : \"new holder123asd\",\r\n        \"cardNumber\" : \"1234 54324 24332\",\r\n        \"cardExpiryDate\" : \"03/2029\",\r\n        \"cardSecurityNumber\": \"159\"\r\n\r\n    }\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts/239231a3-dde7-424f-80f8-ed8cbfb532ef/cards",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts",
+                    "239231a3-dde7-424f-80f8-ed8cbfb532ef",
+                    "cards"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "UpdateCard",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"card\":\r\n    {\r\n        \"cardHolderName\" : \"yessirr\",\r\n        \"cardNumber\" : \"1234 54324 231\",\r\n        \"cardExpiryDate\" : \"03/2029\",\r\n        \"cardSecurityNumber\": \"119\"\r\n\r\n    }\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts/d4084670-858f-48d7-b8f9-b3591cc60a42/cards/5999bb1f-f54a-443a-a203-651db8edf2dc",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts",
+                    "d4084670-858f-48d7-b8f9-b3591cc60a42",
+                    "cards",
+                    "5999bb1f-f54a-443a-a203-651db8edf2dc"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DeleteCard",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts/239231a3-dde7-424f-80f8-ed8cbfb532ef/cards/e8f807c1-ff32-41da-9281-c093003a4525",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts",
+                    "239231a3-dde7-424f-80f8-ed8cbfb532ef",
+                    "cards",
+                    "e8f807c1-ff32-41da-9281-c093003a4525"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ApiGateway",
+      "item": [
+        {
+          "name": "Account",
+          "item": [
+            {
+              "name": "Account",
+              "item": [
+                {
+                  "name": "Delete Account",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/c67d2618-fbc0-4396-ae1c-27235cc1cea4",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "c67d2618-fbc0-4396-ae1c-27235cc1cea4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "CreateAccount",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{JwtToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GetAccountById",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{JwtToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/d4084670-858f-48d7-b8f9-b3591cc60a42",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "d4084670-858f-48d7-b8f9-b3591cc60a42"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GetAccounts",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{JwtToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Card",
+              "item": [
+                {
+                  "name": "CreateCard",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"card\":\r\n    {\r\n        \"cardHolderName\" : \"new holder123asd\",\r\n        \"cardNumber\" : \"1234 54324 24332\",\r\n        \"cardExpiryDate\" : \"03/2029\",\r\n        \"cardSecurityNumber\": \"159\"\r\n\r\n    }\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/239231a3-dde7-424f-80f8-ed8cbfb532ef/cards",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "239231a3-dde7-424f-80f8-ed8cbfb532ef",
+                        "cards"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "UpdateCard",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"card\":\r\n    {\r\n        \"cardHolderName\" : \"yessirr\",\r\n        \"cardNumber\" : \"1234 54324 231\",\r\n        \"cardExpiryDate\" : \"03/2029\",\r\n        \"cardSecurityNumber\": \"119\"\r\n\r\n    }\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/239231a3-dde7-424f-80f8-ed8cbfb532ef/cards/094a4c17-6386-4125-b5f0-fa03dd396bcb",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "239231a3-dde7-424f-80f8-ed8cbfb532ef",
+                        "cards",
+                        "094a4c17-6386-4125-b5f0-fa03dd396bcb"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "DeleteCard",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/239231a3-dde7-424f-80f8-ed8cbfb532ef/cards/0262c052-1c69-4e86-bd65-c24f21af2bca",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "239231a3-dde7-424f-80f8-ed8cbfb532ef",
+                        "cards",
+                        "0262c052-1c69-4e86-bd65-c24f21af2bca"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GetCardsByAccountId",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/d4084670-858f-48d7-b8f9-b3591cc60a42/cards",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "d4084670-858f-48d7-b8f9-b3591cc60a42",
+                        "cards"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Transaction",
+              "item": [
+                {
+                  "name": "GetTransactionsByAccountId",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/d4084670-858f-48d7-b8f9-b3591cc60a42/transactions",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "d4084670-858f-48d7-b8f9-b3591cc60a42",
+                        "transactions"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Deposit",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"amount\": 100\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/239231a3-dde7-424f-80f8-ed8cbfb532ef/cards/d3d4018c-ae8c-4545-90c9-cd4c26f44ace/deposit",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "239231a3-dde7-424f-80f8-ed8cbfb532ef",
+                        "cards",
+                        "d3d4018c-ae8c-4545-90c9-cd4c26f44ace",
+                        "deposit"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Withdraw",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"amount\": 150\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/239231a3-dde7-424f-80f8-ed8cbfb532ef/cards/d3d4018c-ae8c-4545-90c9-cd4c26f44ace/withdraw",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "239231a3-dde7-424f-80f8-ed8cbfb532ef",
+                        "cards",
+                        "d3d4018c-ae8c-4545-90c9-cd4c26f44ace",
+                        "withdraw"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Transfer",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"receiverId\": \"6f2219a6-b663-4054-a283-c489f57233d8\",\r\n    \"amount\": 250\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/239231a3-dde7-424f-80f8-ed8cbfb532ef/cards/709bf2c4-d6c6-4f43-9e26-d2cfafdfc69a/transfer",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "239231a3-dde7-424f-80f8-ed8cbfb532ef",
+                        "cards",
+                        "709bf2c4-d6c6-4f43-9e26-d2cfafdfc69a",
+                        "transfer"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Notification",
+          "item": [
+            {
+              "name": "GetNotificationById",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{ApiGateway}}/notification-service/notifications/bdafab22-d213-4372-a65d-b88a708d8c94",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "notification-service",
+                    "notifications",
+                    "bdafab22-d213-4372-a65d-b88a708d8c94"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "MarkAsRead",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{ApiGateway}}/notification-service/notifications/bdafab22-d213-4372-a65d-b88a708d8c94/mark-as-read",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "notification-service",
+                    "notifications",
+                    "bdafab22-d213-4372-a65d-b88a708d8c94",
+                    "mark-as-read"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetNotificationByUserId",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{ApiGateway}}/notification-service/users/a41909e5-9f2d-492f-9564-be3fe28180fe/notifications",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "notification-service",
+                    "users",
+                    "a41909e5-9f2d-492f-9564-be3fe28180fe",
+                    "notifications"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Identity",
+          "item": [
+            {
+              "name": "Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var response = pm.response.json();\r\npm.environment.set(\"JwtToken\", response.token);"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"Email\": \"Newmail5@mail.com\",\r\n    \"Password\": \"MyPassword1\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{ApiGateway}}/identity-service/login",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "identity-service",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Claim",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"Type\": \"Department\",\r\n    \"Value\": \"Notification\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{ApiGateway}}/identity-service/users/50223e5e-49a9-44d7-b64d-512185c19be1/claims",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "identity-service",
+                    "users",
+                    "50223e5e-49a9-44d7-b64d-512185c19be1",
+                    "claims"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Register",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"UserName\": \"newuser5\",\r\n    \"Email\": \"Newmail5@mail.com\",\r\n    \"Password\": \"MyPassword1\",\r\n    \"ConfirmPassword\": \"MyPassword1\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{ApiGateway}}/identity-service/users",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "identity-service",
+                    "users"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Add Role",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"RoleName\": \"Admin\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{ApiGateway}}/identity-service/users/50223e5e-49a9-44d7-b64d-512185c19be1/roles",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "identity-service",
+                    "users",
+                    "50223e5e-49a9-44d7-b64d-512185c19be1",
+                    "roles"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Role",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"RoleName\": \"new role\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{ApiGateway}}/identity-service/roles",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "identity-service",
+                    "roles"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetUsers",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{ApiGateway}}/identity-service/users?PageIndex=0&PageSize=3",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "identity-service",
+                    "users"
+                  ],
+                  "query": [
+                    {
+                      "key": "PageIndex",
+                      "value": "0"
+                    },
+                    {
+                      "key": "PageSize",
+                      "value": "3"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetRolesByUserId",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{ApiGateway}}/identity-service/users/50223e5e-49a9-44d7-b64d-512185c19be1/roles",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "identity-service",
+                    "users",
+                    "50223e5e-49a9-44d7-b64d-512185c19be1",
+                    "roles"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Address",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"address\": {\r\n    \"addressLine\": \"Atatürk Caddesi No: 123 Daire: 4\",\r\n    \"city\": \"Zonguldak\",\r\n    \"state\": \"Merkez\",\r\n    \"country\": \"Türkiye\",\r\n    \"zipCode\": \"67100\"\r\n  }\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{ApiGateway}}/identity-service/users/address",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "identity-service",
+                    "users",
+                    "address"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Address",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"address\": {\r\n    \"addressLine\": \"guney caddesi: 123 Daire: 4\",\r\n    \"city\": \"Ankara\",\r\n    \"state\": \"Sincan\",\r\n    \"country\": \"Türkiye\",\r\n    \"zipCode\": \"06000\"\r\n  }\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{ApiGateway}}/identity-service/users/address",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "identity-service",
+                    "users",
+                    "address"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
