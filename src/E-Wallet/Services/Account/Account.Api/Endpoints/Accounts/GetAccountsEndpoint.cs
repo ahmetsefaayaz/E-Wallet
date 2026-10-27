@@ -21,6 +21,7 @@ public class GetAccountsEndpoint: ICarterModule
             .Produces<GetAccountsResponse>()
             .WithName("GetAccounts")
             .WithDescription("GetAccounts")
-            .WithSummary("GetAccounts");
+            .WithSummary("GetAccounts")
+            .RequireAuthorization();
     }
 }

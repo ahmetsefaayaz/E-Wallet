@@ -18,7 +18,8 @@ public class GetNotificationByIdEndpoint: ICarterModule
         .Produces<GetNotificationByIdResponse>()
         .WithName("GetNotificationById")
         .WithDescription("Gets a notification by id")
-        .WithSummary("Gets a notification by id");
+        .WithSummary("Gets a notification by id")
+        .RequireAuthorization();
         
     }
 }

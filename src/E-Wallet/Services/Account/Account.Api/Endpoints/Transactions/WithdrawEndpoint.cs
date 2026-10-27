@@ -24,6 +24,7 @@ public class WithdrawEndpoint: ICarterModule
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithName("Withdraw")
             .WithSummary("withdraw")
-            .WithDescription("withdraw");
+            .WithDescription("withdraw")
+            .RequireAuthorization();
     }
 }

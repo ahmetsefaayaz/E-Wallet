@@ -20,6 +20,12 @@
                   <Item>
                     <option name="path" value="Services/Notification/Notification.Api/appsettings.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="ApiGateways/YarpApiGateway/appsettings.json" />
+                  </Item>
+                  <Item>
+                    <option name="path" value="ApiGateways/YarpApiGateway/appsettings.Local.Json.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>

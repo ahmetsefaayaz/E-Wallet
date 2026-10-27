@@ -119,7 +119,26 @@
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
       - ${USERPROFILE}\.aspnet\https:/https:ro
-
+  yarpapi:
+    image: yarpapi
+    build: 
+      context: .
+      dockerfile: ApiGateways/YarpApiGateway/Dockerfile
+    ports:
+      - "6003:8080"
+      - "6063:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sifre123!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    depends_on:
+      - identityapi
+      - accountapi
+      - notificationapi
+    volumes:
+      - ${USERPROFILE}\.aspnet\https:/https:ro
 volumes:
   postgres_identity: 
   postgres_account:

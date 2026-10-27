@@ -66,13 +66,8 @@ public static class DependencyInjection
         services.AddAuthorization(opt =>
         {
             opt.AddPolicy("IsAdmin", policy => policy.RequireRole("Admin"));
-            
-            opt.AddPolicy("AccountDepartment", policy => policy.RequireAssertion(context =>
-                context.User.HasClaim("Department", "Account") || context.User.IsInRole("Admin")));
             opt.AddPolicy("IdentityDepartment", policy => policy.RequireAssertion(context =>
                 context.User.HasClaim("Department", "Identity") || context.User.IsInRole("Admin")));
-            opt.AddPolicy("NotificationDepartment", policy => policy.RequireAssertion(context =>
-                context.User.HasClaim("Department", "Notification") || context.User.IsInRole("Admin")));
         });
         return services;
     }

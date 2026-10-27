@@ -23,6 +23,7 @@ public class CreateAccountEndpoint: ICarterModule
         .WithName("CreateAccount")
         .WithDescription("Creates a new account")
         .Produces<CreateAccountResponse>(StatusCodes.Status201Created)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization();
     }
 }

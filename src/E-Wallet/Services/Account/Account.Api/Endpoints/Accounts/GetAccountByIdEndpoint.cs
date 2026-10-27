@@ -21,6 +21,7 @@ public class GetAccountByIdEndpoint: ICarterModule
             .Produces<GetAccountByIdResponse>()
             .WithName("GetAccountById")
             .WithDescription("Get account by id")
-            .WithSummary("Get account by id");
+            .WithSummary("Get account by id")
+            .RequireAuthorization();
     }
 }
