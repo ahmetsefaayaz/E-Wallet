@@ -1,0 +1,91 @@
+﻿@page "/register"
+@using EWallet.Client.Services
+@using EWallet.Client.Models.Auth
+@using EWallet.Client.Services.Auth
+
+@inject AuthApiClient AuthApiClient
+@inject NavigationManager Navigation
+
+<PageTitle>Register</PageTitle>
+
+<h1>Create an account</h1>
+
+<EditForm Model="@registerRequest" OnValidSubmit="@HandleRegisterAsync">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label for="userName">Username</label>
+        <InputText id="userName" @bind-Value="registerRequest.UserName" />
+        <ValidationMessage For="@(() => registerRequest.UserName)" />
+    </div>
+
+    <div>
+        <label for="email">Email</label>
+        <InputText id="email" @bind-Value="registerRequest.Email" />
+        <ValidationMessage For="@(() => registerRequest.Email)" />
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <InputText
+            id="password"
+            type="password"
+            @bind-Value="registerRequest.Password" />
+        <ValidationMessage For="@(() => registerRequest.Password)" />
+    </div>
+
+    <div>
+        <label for="confirmPassword">Confirm password</label>
+        <InputText
+            id="confirmPassword"
+            type="password"
+            @bind-Value="registerRequest.ConfirmPassword" />
+        <ValidationMessage For="@(() => registerRequest.ConfirmPassword)" />
+    </div>
+
+    <button type="submit" disabled="@isSubmitting">
+        @(isSubmitting ? "Registering..." : "Register")
+    </button>
+</EditForm>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+
+@if (registrationSucceeded)
+{
+    <p role="status">
+        Registration succeeded.
+        <a href="/login">Go to login</a>
+    </p>
+}
+
+@code {
+    private readonly RegisterRequest registerRequest = new();
+
+    private bool isSubmitting;
+    private bool registrationSucceeded;
+    private string? errorMessage;
+
+    private async Task HandleRegisterAsync()
+    {
+        isSubmitting = true;
+        registrationSucceeded = false;
+        errorMessage = null;
+
+        try
+        {
+            await AuthApiClient.RegisterAsync(registerRequest);
+            registrationSucceeded = true;
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

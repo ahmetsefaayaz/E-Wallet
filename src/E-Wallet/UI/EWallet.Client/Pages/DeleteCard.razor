@@ -1,0 +1,60 @@
+@page "/accounts/{AccountId:guid}/cards/{CardId:guid}/delete"
+@attribute [Authorize(Policy = "AccountDepartment")]
+
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Accounts
+
+@inject AccountApiClient AccountApiClient
+@inject NavigationManager Navigation
+
+<PageTitle>Delete card</PageTitle>
+
+<h1>Delete card</h1>
+<p>Are you sure you want to delete this card?</p>
+
+<button type="button" @onclick="DeleteAsync" disabled="@isSubmitting">
+    @(isSubmitting ? "Deleting..." : "Delete card")
+</button>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+
+@code {
+    [Parameter] public Guid AccountId { get; set; }
+    [Parameter] public Guid CardId { get; set; }
+
+    private bool isSubmitting;
+    private string? errorMessage;
+
+    private async Task DeleteAsync()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+
+        try
+        {
+            var response = await AccountApiClient.DeleteCardAsync(
+                AccountId,
+                CardId);
+
+            if (response.IsSuccess)
+            {
+                Navigation.NavigateTo($"/accounts/{AccountId}/cards");
+            }
+            else
+            {
+                errorMessage = "The card could not be deleted.";
+            }
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

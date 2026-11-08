@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.CQRS;
+using BuildingBlocks.Exceptions;
 using FluentValidation;
 using Identity.Api.Data;
 using Identity.Api.Dtos;
@@ -63,6 +64,8 @@ internal class UpdateAddressHandler(IdentityServiceDbContext dbContext)
             .Include(u => u.Address)
             .FirstOrDefaultAsync(u => u.Id == command.UserId, cancellationToken)
             ?? throw new UserNotFoundException();
+        if (user.Address is null)
+            throw new BadRequestException("Address Not Found", "User does not have an address to update.");
         var newAddress = new Address
         {
             AddressLine = command.Address.AddressLine,

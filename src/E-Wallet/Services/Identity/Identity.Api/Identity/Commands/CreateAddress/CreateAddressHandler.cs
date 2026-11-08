@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.CQRS;
+using BuildingBlocks.Exceptions;
 using FluentValidation;
 using Identity.Api.Data;
 using Identity.Api.Dtos;
@@ -62,6 +63,10 @@ internal class CreateAddressCommandHandler(IdentityServiceDbContext dbContext)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == command.UserId, cancellationToken)
             ?? throw new UserNotFoundException();
+        if(user.Address != null)
+        {
+            throw new BadRequestException("Address Already Exists", "User already has an address. Please update the existing address instead.");
+        }
         var address = new Address
         {
             AddressLine = command.Address.AddressLine,

@@ -145,3 +145,7 @@ C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\RabbitMQ.Client.dll
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\BuildingBlocks.Messaging.dll
 C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\BuildingBlocks.Messaging.pdb
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Code\Code\E-Wallet\src\E-Wallet\Services\Identity\Identity.Api\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll

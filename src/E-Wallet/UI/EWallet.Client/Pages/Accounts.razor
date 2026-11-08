@@ -1,0 +1,64 @@
+﻿@page "/accounts"
+@attribute [Authorize(Policy = "AccountDepartment")]
+
+@using EWallet.Client.Models.Accounts
+@using EWallet.Client.Services.Accounts
+@using EWallet.Client.Services
+
+@inject AccountApiClient AccountApiClient
+
+<PageTitle>Accounts</PageTitle>
+
+<h1>Accounts</h1>
+
+@if (isLoading)
+{
+    <p>Loading accounts...</p>
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+else if (accounts.Count == 0)
+{
+    <p>No accounts were found.</p>
+}
+else
+{
+    <ul>
+        @foreach (var account in accounts)
+        {
+            <li>
+                <strong>@account.Id</strong>
+                <span>Balance: @account.AccountBalance</span>
+                <a href="@($"/accounts/{account.Id}")">Details</a>
+                <a href="@($"/accounts/{account.Id}/delete")">Delete</a>
+                <a href="@($"/accounts/{account.Id}/cards")">Cards</a>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Account> accounts = [];
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await AccountApiClient.GetAccountsAsync();
+
+            accounts = response.PaginatedResult?.Data ?? [];
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

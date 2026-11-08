@@ -1,0 +1,122 @@
+@page "/address/create"
+@attribute [Authorize]
+
+@using System.ComponentModel.DataAnnotations
+@using EWallet.Client.Models.Identity
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Identity
+
+@inject IdentityAdministrationApiClient IdentityAdministrationApiClient
+
+<PageTitle>Create address</PageTitle>
+
+<h1>Create address</h1>
+
+<EditForm Model="@address" OnValidSubmit="@HandleSubmitAsync">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label for="addressLine">Address line</label>
+        <InputText id="addressLine" @bind-Value="address.AddressLine" />
+        <ValidationMessage For="@(() => address.AddressLine)" />
+    </div>
+
+    <div>
+        <label for="city">City</label>
+        <InputText id="city" @bind-Value="address.City" />
+        <ValidationMessage For="@(() => address.City)" />
+    </div>
+
+    <div>
+        <label for="state">State</label>
+        <InputText id="state" @bind-Value="address.State" />
+        <ValidationMessage For="@(() => address.State)" />
+    </div>
+
+    <div>
+        <label for="country">Country</label>
+        <InputText id="country" @bind-Value="address.Country" />
+        <ValidationMessage For="@(() => address.Country)" />
+    </div>
+
+    <div>
+        <label for="zipCode">Zip code</label>
+        <InputText id="zipCode" @bind-Value="address.ZipCode" />
+        <ValidationMessage For="@(() => address.ZipCode)" />
+    </div>
+
+    <button type="submit" disabled="@isSubmitting">
+        @(isSubmitting ? "Saving..." : "Create address")
+    </button>
+</EditForm>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+
+@if (isSuccess)
+{
+    <p role="status">Address created successfully.</p>
+}
+
+@code {
+    private readonly AddressForm address = new();
+    private bool isSubmitting;
+    private bool isSuccess;
+    private string? errorMessage;
+
+    private async Task HandleSubmitAsync()
+    {
+        isSubmitting = true;
+        isSuccess = false;
+        errorMessage = null;
+
+        try
+        {
+            var response =
+                await IdentityAdministrationApiClient.CreateAddressAsync(
+                    new CreateAddressRequest
+                    {
+                        Address = address.ToDto()
+                    });
+
+            isSuccess = response.IsSuccess;
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private sealed class AddressForm
+    {
+        [Required]
+        public string AddressLine { get; set; } = string.Empty;
+
+        [Required]
+        public string City { get; set; } = string.Empty;
+
+        [Required]
+        public string State { get; set; } = string.Empty;
+
+        [Required]
+        public string Country { get; set; } = string.Empty;
+
+        [Required]
+        public string ZipCode { get; set; } = string.Empty;
+
+        public AddressDto ToDto() => new()
+        {
+            AddressLine = AddressLine,
+            City = City,
+            State = State,
+            Country = Country,
+            ZipCode = ZipCode
+        };
+    }
+}

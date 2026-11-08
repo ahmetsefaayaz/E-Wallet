@@ -1,0 +1,86 @@
+﻿@page "/login"
+
+@inject NavigationManager Navigation
+@using EWallet.Client.Models.Auth
+@using EWallet.Client.Services.Auth
+
+@inject AuthApiClient AuthApiClient
+@inject TokenStorage TokenStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Login</PageTitle>
+
+<h1>Login</h1>
+
+<EditForm Model="@loginRequest" OnValidSubmit="@HandleLoginAsync">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label for="email">Email</label>
+        <InputText id="email" @bind-Value="loginRequest.Email" />
+        <ValidationMessage For="@(() => loginRequest.Email)" />
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <InputText id="password" type="password" @bind-Value="loginRequest.Password" />
+        <ValidationMessage For="@(() => loginRequest.Password)" />
+    </div>
+
+    <button type="submit" disabled="@isSubmitting">
+        @(isSubmitting ? "Logging in..." : "Login")
+    </button>
+</EditForm>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+
+@if (!string.IsNullOrWhiteSpace(token))
+{
+    <p>Login succeeded. Token received.</p>
+}
+
+@code {
+    private readonly LoginRequest loginRequest = new();
+
+    private bool isSubmitting;
+    private string? errorMessage;
+    private string? token;
+
+    private async Task HandleLoginAsync()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+        token = null;
+
+        try
+        {
+            var response = await AuthApiClient.LoginAsync(loginRequest);
+            token = response.Token;
+            await TokenStorage.SetTokenAsync(token);
+            ((JwtAuthenticationStateProvider)AuthenticationStateProvider)
+                .NotifyUserAuthentication(token);
+            Navigation.NavigateTo("/");
+        }
+        catch (HttpRequestException)
+        {
+            errorMessage = "The login request failed. Check the gateway and your credentials.";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticationState =
+            await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (authenticationState.User.Identity?.IsAuthenticated == true)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+}

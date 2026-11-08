@@ -1,0 +1,99 @@
+@page "/accounts/{AccountId:guid}/cards/create"
+@attribute [Authorize]
+
+@using System.ComponentModel.DataAnnotations
+@using EWallet.Client.Models.Accounts
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Accounts
+
+@inject AccountApiClient AccountApiClient
+
+<PageTitle>Create card</PageTitle>
+
+<h1>Create card</h1>
+
+<EditForm Model="@form" OnValidSubmit="@HandleSubmitAsync">
+    <DataAnnotationsValidator />
+    <div>
+        <label for="holder">Card holder name</label>
+        <InputText id="holder" @bind-Value="form.CardHolderName" />
+        <ValidationMessage For="@(() => form.CardHolderName)" />
+    </div>
+    <div>
+        <label for="number">Card number</label>
+        <InputText id="number" @bind-Value="form.CardNumber" />
+        <ValidationMessage For="@(() => form.CardNumber)" />
+    </div>
+    <div>
+        <label for="expiry">Expiry date</label>
+        <InputText id="expiry" @bind-Value="form.CardExpiryDate" />
+        <ValidationMessage For="@(() => form.CardExpiryDate)" />
+    </div>
+    <div>
+        <label for="security">Security number</label>
+        <InputText id="security" @bind-Value="form.CardSecurityNumber" />
+        <ValidationMessage For="@(() => form.CardSecurityNumber)" />
+    </div>
+    <button type="submit" disabled="@isSubmitting">
+        @(isSubmitting ? "Creating..." : "Create card")
+    </button>
+</EditForm>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+
+@if (createdCardId is not null)
+{
+    <p role="status">Card created: @createdCardId</p>
+}
+
+@code {
+    [Parameter]
+    public Guid AccountId { get; set; }
+
+    private readonly CardForm form = new();
+    private bool isSubmitting;
+    private Guid? createdCardId;
+    private string? errorMessage;
+
+    private async Task HandleSubmitAsync()
+    {
+        isSubmitting = true;
+        createdCardId = null;
+        errorMessage = null;
+
+        try
+        {
+            var response = await AccountApiClient.CreateCardAsync(
+                AccountId,
+                new CreateCardRequest { Card = form.ToInput() });
+            createdCardId = response.CardId;
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private sealed class CardForm
+    {
+        [Required] public string CardHolderName { get; set; } = string.Empty;
+        [Required] public string CardNumber { get; set; } = string.Empty;
+        [Required] public string CardExpiryDate { get; set; } = string.Empty;
+        [Required] public string CardSecurityNumber { get; set; } = string.Empty;
+
+        public CardInput ToInput() => new()
+        {
+            CardHolderName = CardHolderName,
+            CardNumber = CardNumber,
+            CardExpiryDate = CardExpiryDate,
+            CardSecurityNumber = CardSecurityNumber
+        };
+    }
+}

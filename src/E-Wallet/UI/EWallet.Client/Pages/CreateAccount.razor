@@ -1,0 +1,52 @@
+@page "/accounts/create"
+@attribute [Authorize]
+
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Accounts
+
+@inject AccountApiClient AccountApiClient
+
+<PageTitle>Create account</PageTitle>
+
+<h1>Create account</h1>
+
+<button type="button" @onclick="CreateAccountAsync" disabled="@isSubmitting">
+    @(isSubmitting ? "Creating..." : "Create account")
+</button>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+
+@if (createdAccountId is not null)
+{
+    <p role="status">Account created: @createdAccountId</p>
+}
+
+@code {
+    private bool isSubmitting;
+    private Guid? createdAccountId;
+    private string? errorMessage;
+
+    private async Task CreateAccountAsync()
+    {
+        isSubmitting = true;
+        createdAccountId = null;
+        errorMessage = null;
+
+        try
+        {
+            var response = await AccountApiClient.CreateAccountAsync();
+            createdAccountId = response.AccountId;
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}
