@@ -1,0 +1,91 @@
+@page "/users"
+@attribute [Authorize(Policy = "IdentityDepartment")]
+
+@using EWallet.Client.Models.Identity
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Identity
+
+@inject UsersApiClient UsersApiClient
+
+<PageTitle>Users</PageTitle>
+
+<h1>Users</h1>
+
+@if (isLoading)
+{
+    <p>Loading users...</p>
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+else if (users.Count == 0)
+{
+    <p>No users were found.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>User ID</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@user.UserId</td>
+                    <td>
+                        @if (Guid.TryParse(user.UserId, out var userId))
+                        {
+                            <a href="@($"/users/{userId}/roles")">View roles</a>
+                            <span> | </span>
+                            <a href="@($"/users/{userId}/claims/create")">
+                                Create claim
+                            </a>
+                            <span> | </span>
+                            <a href="@($"/users/{userId}/roles/add")">
+                                Add role
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p>Showing @users.Count of @totalItemCount users.</p>
+}
+
+@code {
+    private List<User> users = [];
+    private long totalItemCount;
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await UsersApiClient.GetUsersAsync();
+            var paginatedUsers = response.Users;
+
+            users = paginatedUsers?.Data ?? [];
+            totalItemCount = paginatedUsers?.TotalItemCount ?? 0;
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

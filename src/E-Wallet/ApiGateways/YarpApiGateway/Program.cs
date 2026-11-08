@@ -6,7 +6,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClientApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
+        policy.WithOrigins(
+                "http://localhost:3000",
+                "http://localhost:5173",
+                "http://localhost:5154",
+                "https://localhost:7106")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();

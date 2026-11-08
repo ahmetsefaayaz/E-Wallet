@@ -11,6 +11,8 @@ public static class DependencyInjection
         services.AddCarter();
         services.AddAuthentication();
         services.AddAuthorization();
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
         return services;
     }
 

@@ -1,0 +1,93 @@
+@page "/users/{UserId:guid}/claims/create"
+@attribute [Authorize(Policy = "IdentityDepartment")]
+
+@using System.ComponentModel.DataAnnotations
+@using EWallet.Client.Models.Identity
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Identity
+
+@inject IdentityAdministrationApiClient IdentityAdministrationApiClient
+
+<PageTitle>Create claim</PageTitle>
+
+<h1>Create claim</h1>
+
+<p>User ID: @UserId</p>
+
+<EditForm Model="@request" OnValidSubmit="@HandleSubmitAsync">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label for="claimType">Type</label>
+        <InputText id="claimType" @bind-Value="request.Type" />
+        <ValidationMessage For="@(() => request.Type)" />
+    </div>
+
+    <div>
+        <label for="claimValue">Value</label>
+        <InputText id="claimValue" @bind-Value="request.Value" />
+        <ValidationMessage For="@(() => request.Value)" />
+    </div>
+
+    <button type="submit" disabled="@isSubmitting">
+        @(isSubmitting ? "Creating..." : "Create claim")
+    </button>
+</EditForm>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+
+@if (isSuccess)
+{
+    <p role="status">Claim created successfully.</p>
+}
+
+@code {
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    private readonly CreateClaimForm request = new();
+    private bool isSubmitting;
+    private bool isSuccess;
+    private string? errorMessage;
+
+    private async Task HandleSubmitAsync()
+    {
+        isSubmitting = true;
+        isSuccess = false;
+        errorMessage = null;
+
+        try
+        {
+            var response =
+                await IdentityAdministrationApiClient.CreateClaimAsync(
+                    UserId,
+                    new CreateClaimRequest
+                    {
+                        Type = request.Type,
+                        Value = request.Value
+                    });
+
+            isSuccess = response.IsSuccess;
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private sealed class CreateClaimForm
+    {
+        [Required]
+        public string Type { get; set; } = string.Empty;
+
+        [Required]
+        public string Value { get; set; } = string.Empty;
+    }
+}

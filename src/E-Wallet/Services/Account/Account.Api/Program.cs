@@ -18,6 +18,8 @@ app.UseApiServices();
 if (app.Environment.IsDevelopment())
 {
     await app.InitializeDatabaseAsync();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.Run();

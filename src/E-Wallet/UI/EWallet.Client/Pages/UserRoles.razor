@@ -1,0 +1,61 @@
+@page "/users/{UserId:guid}/roles"
+@attribute [Authorize(Policy = "IdentityDepartment")]
+
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Identity
+
+@inject UsersApiClient UsersApiClient
+
+<PageTitle>User roles</PageTitle>
+
+<h1>User roles</h1>
+
+<p>User ID: @UserId</p>
+
+@if (isLoading)
+{
+    <p>Loading roles...</p>
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+else if (roles.Count == 0)
+{
+    <p>This user has no roles.</p>
+}
+else
+{
+    <ul>
+        @foreach (var role in roles)
+        {
+            <li>@role</li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    private List<string> roles = [];
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await UsersApiClient.GetRolesByUserIdAsync(UserId);
+            roles = response.Roles;
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

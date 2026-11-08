@@ -1,0 +1,62 @@
+@page "/accounts/{AccountId:guid}"
+@attribute [Authorize(Policy = "AccountDepartment")]
+
+@using EWallet.Client.Models.Accounts
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Accounts
+
+@inject AccountApiClient AccountApiClient
+
+<PageTitle>Account details</PageTitle>
+
+<h1>Account details</h1>
+
+@if (isLoading)
+{
+    <p>Loading account...</p>
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+else if (account is null)
+{
+    <p>Account was not found.</p>
+}
+else
+{
+    <dl>
+        <dt>Account ID</dt>
+        <dd>@account.Id</dd>
+        <dt>User ID</dt>
+        <dd>@account.UserId</dd>
+        <dt>Balance</dt>
+        <dd>@account.AccountBalance</dd>
+    </dl>
+}
+
+@code {
+    [Parameter]
+    public Guid AccountId { get; set; }
+
+    private Account? account;
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await AccountApiClient.GetAccountByIdAsync(AccountId);
+            account = response.Account;
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

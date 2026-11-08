@@ -1,0 +1,77 @@
+@page "/roles/create"
+@attribute [Authorize(Policy = "IdentityDepartment")]
+
+@using System.ComponentModel.DataAnnotations
+@using EWallet.Client.Models.Identity
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Identity
+
+@inject IdentityAdministrationApiClient IdentityAdministrationApiClient
+
+<PageTitle>Create role</PageTitle>
+
+<h1>Create role</h1>
+
+<EditForm Model="@request" OnValidSubmit="@HandleSubmitAsync">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label for="roleName">Role name</label>
+        <InputText id="roleName" @bind-Value="request.RoleName" />
+        <ValidationMessage For="@(() => request.RoleName)" />
+    </div>
+
+    <button type="submit" disabled="@isSubmitting">
+        @(isSubmitting ? "Creating..." : "Create role")
+    </button>
+</EditForm>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+
+@if (isSuccess)
+{
+    <p role="status">Role created successfully.</p>
+}
+
+@code {
+    private readonly CreateRoleForm request = new();
+    private bool isSubmitting;
+    private bool isSuccess;
+    private string? errorMessage;
+
+    private async Task HandleSubmitAsync()
+    {
+        isSubmitting = true;
+        isSuccess = false;
+        errorMessage = null;
+
+        try
+        {
+            var response =
+                await IdentityAdministrationApiClient.CreateRoleAsync(
+                    new CreateRoleRequest
+                    {
+                        RoleName = request.RoleName
+                    });
+
+            isSuccess = response.IsSuccess;
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private sealed class CreateRoleForm
+    {
+        [Required]
+        public string RoleName { get; set; } = string.Empty;
+    }
+}
