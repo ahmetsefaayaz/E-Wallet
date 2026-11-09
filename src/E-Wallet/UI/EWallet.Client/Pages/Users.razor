@@ -9,63 +9,109 @@
 
 <PageTitle>Users</PageTitle>
 
-<h1>Users</h1>
+<div class="ew-page">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <span class="ew-badge badge-soft-purple mb-2">Identity Administration</span>
+            <h1 class="ew-page-title">Users</h1>
+            <p class="ew-page-subtitle">Manage registered platform members, roles, security claims, and notifications</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            @if (!isLoading && users.Count > 0)
+            {
+                <span class="ew-badge badge-soft-info px-3 py-2">
+                    Showing @users.Count of @totalItemCount users
+                </span>
+            }
+            <a href="/roles/create" class="btn btn-ew-primary text-white text-decoration-none">
+                + Create Role
+            </a>
+        </div>
+    </div>
 
-@if (isLoading)
-{
-    <p>Loading users...</p>
-}
-else if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
-}
-else if (users.Count == 0)
-{
-    <p>No users were found.</p>
-}
-else
-{
-    <table>
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>User ID</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    @if (isLoading)
+    {
+        <div class="ew-card ew-empty-state">
+            <div class="spinner-border text-primary mb-3" role="status"></div>
+            <p class="text-muted mb-0">Loading users...</p>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3" role="alert">
+            <span class="ew-badge badge-soft-danger">Error</span>
+            <span>@errorMessage</span>
+        </div>
+    }
+    else if (users.Count == 0)
+    {
+        <div class="ew-card ew-empty-state">
+            <span class="ew-badge badge-soft-secondary mb-2">Empty Directory</span>
+            <p class="text-muted mb-0">No users were found.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-4">
+            @{ var memberIdx = 0; }
             @foreach (var user in users)
             {
-                <tr>
-                    <td>@user.UserName</td>
-                    <td>@user.Email</td>
-                    <td>@user.UserId</td>
-                    <td>
-                        @if (Guid.TryParse(user.UserId, out var userId))
-                        {
-                            <a href="@($"/users/{userId}/roles")">View roles</a>
-                            <span> | </span>
-                            <a href="@($"/users/{userId}/claims/create")">
-                                Create claim
-                            </a>
-                            <span> | </span>
-                            <a href="@($"/users/{userId}/roles/add")">
-                                Add role
-                            </a>
-                            <span> | </span>
-                            <a href="@($"/users/{userId}/notifications")">
-                                Notifications
-                            </a>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                memberIdx++;
+                var hasGuid = Guid.TryParse(user.UserId, out var userId);
+                var userCode = hasGuid
+                    ? BitConverter.ToUInt16(userId.ToByteArray(), 0) % 9000 + 1000
+                    : 1000 + memberIdx;
+                var initial = string.IsNullOrWhiteSpace(user.UserName)
+                    ? "U"
+                    : user.UserName[..1].ToUpperInvariant();
 
-    <p>Showing @users.Count of @totalItemCount users.</p>
-}
+                <div class="col">
+                    <div class="ew-card ew-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="ew-avatar">@initial</div>
+                                    <div>
+                                        <h5 class="fw-bold mb-0">@(string.IsNullOrWhiteSpace(user.UserName) ? $"Member {memberIdx}" : user.UserName)</h5>
+                                        <div class="text-muted small">@user.Email</div>
+                                    </div>
+                                </div>
+                                <span class="ew-badge badge-soft-success">
+                                    <span class="ew-badge-dot"></span>
+                                    Active
+                                </span>
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="ew-badge badge-soft-secondary">Member #@userCode</span>
+                            </div>
+                        </div>
+
+                        @if (hasGuid)
+                        {
+                            <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+                                <a href="@($"/users/{userId}/roles")" class="btn btn-sm btn-ew-light flex-grow-1 text-decoration-none">
+                                    View roles
+                                </a>
+                                <a href="@($"/users/{userId}/roles/add")" class="btn btn-sm btn-ew-light flex-grow-1 text-decoration-none">
+                                    Add role
+                                </a>
+                                <a href="@($"/users/{userId}/claims/create")" class="btn btn-sm btn-ew-light flex-grow-1 text-decoration-none">
+                                    Create claim
+                                </a>
+                                <a href="@($"/users/{userId}/notifications")" class="btn btn-sm btn-ew-primary text-white flex-grow-1 text-decoration-none">
+                                    Notifications
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <p class="text-muted small text-center mb-0">Showing @users.Count of @totalItemCount users.</p>
+    }
+</div>
 
 @code {
     private List<User> users = [];

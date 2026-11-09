@@ -10,89 +10,152 @@
 
 <PageTitle>Transaction requests</PageTitle>
 
-<h1>Transaction requests</h1>
-
-<p>Choose an operation, one of your accounts, and a card from that account.</p>
-
-<div>
-    <label for="operation">Operation</label>
-    <select id="operation" @bind="selectedOperation">
-        <option value="@Operation.Deposit">Deposit</option>
-        <option value="@Operation.Withdraw">Withdraw</option>
-        <option value="@Operation.Transfer">Transfer</option>
-    </select>
-</div>
-
-<div>
-    <label for="account">Account</label>
-    <select id="account" value="@selectedAccountId"
-            @onchange="HandleAccountChangedAsync"
-            disabled="@isLoadingAccounts">
-        <option value="">Choose an account</option>
-        @foreach (var account in accounts)
-        {
-            <option value="@account.Id">@account.Id (@account.AccountBalance)</option>
-        }
-    </select>
-</div>
-
-@if (isLoadingCards)
-{
-    <p>Loading cards...</p>
+@{
+    var opBadgeClass = selectedOperation switch
+    {
+        Operation.Deposit => "badge-soft-success",
+        Operation.Withdraw => "badge-soft-warning",
+        Operation.Transfer => "badge-soft-primary",
+        _ => "badge-soft-secondary"
+    };
 }
-else if (selectedAccountId is not null && cards.Count == 0)
-{
-    <p>No cards were found for the selected account.</p>
-}
-else if (selectedAccountId is not null)
-{
-    <EditForm Model="@form" OnValidSubmit="@SubmitAsync">
-        <DataAnnotationsValidator />
 
-        <div>
-            <label for="card">Card</label>
-            <InputSelect id="card" @bind-Value="form.CardId">
-                <option value="">Choose a card</option>
-                @foreach (var card in cards)
-                {
-                    <option value="@card.Id">
-                        @card.CardHolderName (@card.CardNumber)
-                    </option>
-                }
-            </InputSelect>
-            <ValidationMessage For="@(() => form.CardId)" />
-        </div>
-
-        <div>
-            <label for="amount">Amount</label>
-            <InputNumber id="amount" @bind-Value="form.Amount" />
-            <ValidationMessage For="@(() => form.Amount)" />
-        </div>
-
-        @if (selectedOperation == Operation.Transfer)
-        {
+<div class="ew-page-narrow">
+    <div class="ew-card p-4 p-md-5">
+        <div class="d-flex justify-content-between align-items-start gap-2 mb-4">
             <div>
-                <label for="receiver">Receiver account ID</label>
-                <InputText id="receiver" @bind-Value="form.ReceiverId" />
-                <ValidationMessage For="@(() => form.ReceiverId)" />
+                <span class="ew-badge @opBadgeClass mb-2">
+                    <span class="ew-badge-dot"></span>
+                    @selectedOperation Mode
+                </span>
+                <h1 class="ew-page-title h3">Transaction requests</h1>
+                <p class="ew-page-subtitle">Choose an operation, one of your accounts, and a card from that account.</p>
+            </div>
+            <div class="ew-icon-box @opBadgeClass">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="17 1 21 5 17 9"></polyline>
+                    <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                    <polyline points="7 23 3 19 7 15"></polyline>
+                    <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                </svg>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3 mb-4 small" role="alert">
+                <span class="ew-badge badge-soft-danger">Failed</span>
+                <span>@errorMessage</span>
             </div>
         }
 
-        <button type="submit" disabled="@isSubmitting">
-            @(isSubmitting ? "Sending..." : $"Send {selectedOperation} request")
-        </button>
-    </EditForm>
-}
+        @if (!string.IsNullOrWhiteSpace(successMessage))
+        {
+            <div class="alert alert-success d-flex align-items-center gap-2 rounded-3 mb-4 small" role="status">
+                <span class="ew-badge badge-soft-success">Completed</span>
+                <span>@successMessage</span>
+            </div>
+        }
 
-@if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
-}
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label" for="operation">Operation Type</label>
+                <select id="operation" class="form-select" @bind="selectedOperation">
+                    <option value="@Operation.Deposit">Deposit (Top Up)</option>
+                    <option value="@Operation.Withdraw">Withdraw (Cash Out)</option>
+                    <option value="@Operation.Transfer">Transfer (Send Money)</option>
+                </select>
+            </div>
 
-@if (!string.IsNullOrWhiteSpace(successMessage))
-{
-    <p role="status">@successMessage</p>
-}
+            <div class="col-md-6">
+                <label class="form-label" for="account">Source Account</label>
+                <select id="account" class="form-select" value="@selectedAccountId"
+                        @onchange="HandleAccountChangedAsync"
+                        disabled="@isLoadingAccounts">
+                    <option value="">Choose an account</option>
+                    @{ var accIdx = 0; }
+                    @foreach (var account in accounts)
+                    {
+                        accIdx++;
+                        var accCode = BitConverter.ToUInt16(account.Id.ToByteArray(), 0) % 9000 + 1000;
+                        <option value="@account.Id">Account @accIdx (#@accCode) — $@account.AccountBalance.ToString("N2")</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        @if (isLoadingCards)
+        {
+            <div class="p-4 text-center rounded-3 bg-light">
+                <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                <span class="text-muted small">Loading cards...</span>
+            </div>
+        }
+        else if (selectedAccountId is not null && cards.Count == 0)
+        {
+            <div class="p-4 text-center rounded-3 bg-light border">
+                <span class="ew-badge badge-soft-warning mb-2">Card Required</span>
+                <p class="text-muted small mb-3">No cards were found for the selected account.</p>
+                <a href="@($"/my-account/{selectedAccountId}/cards/create")" class="btn btn-sm btn-ew-primary text-white text-decoration-none">
+                    Create a Card First
+                </a>
+            </div>
+        }
+        else if (selectedAccountId is not null)
+        {
+            <EditForm Model="@form" OnValidSubmit="@SubmitAsync">
+                <DataAnnotationsValidator />
+
+                <div class="p-3 p-md-4 rounded-3 bg-light border mb-4">
+                    <div class="mb-3">
+                        <label class="form-label" for="card">Linked Payment Card</label>
+                        <InputSelect id="card" class="form-select" @bind-Value="form.CardId">
+                            <option value="">Choose a card</option>
+                            @{ var cardIdx = 0; }
+                            @foreach (var card in cards)
+                            {
+                                cardIdx++;
+                                var raw = card.CardNumber ?? string.Empty;
+                                var maskedCardNum = raw.Length >= 4 ? $"•••• {raw[^4..]}" : raw;
+                                <option value="@card.Id">
+                                    Card @cardIdx — @card.CardHolderName (@maskedCardNum)
+                                </option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => form.CardId)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="amount">Amount (USD)</label>
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold bg-white">$</span>
+                            <InputNumber id="amount" class="form-control" @bind-Value="form.Amount" />
+                        </div>
+                        <ValidationMessage For="@(() => form.Amount)" />
+                    </div>
+
+                    @if (selectedOperation == Operation.Transfer)
+                    {
+                        <div class="mb-1">
+                            <label class="form-label" for="receiver">Recipient Transfer ID</label>
+                            <InputText id="receiver" class="form-control" placeholder="Paste recipient's transfer ID" @bind-Value="form.ReceiverId" />
+                            <div class="form-text">Ask the recipient to click "Copy Transfer ID" on their wallet account card.</div>
+                            <ValidationMessage For="@(() => form.ReceiverId)" />
+                        </div>
+                    }
+                </div>
+
+                <button type="submit" class="btn btn-ew-primary w-100 py-2" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    }
+                    @(isSubmitting ? "Sending..." : $"Send {selectedOperation} request")
+                </button>
+            </EditForm>
+        }
+    </div>
+</div>
 
 @code {
     private enum Operation

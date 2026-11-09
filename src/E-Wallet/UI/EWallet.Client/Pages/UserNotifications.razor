@@ -9,53 +9,125 @@
 
 <PageTitle>User notifications</PageTitle>
 
-<h1>User notifications</h1>
-<p>User ID: @UserId</p>
+@{
+    var maskedUser = BitConverter.ToUInt16(UserId.ToByteArray(), 0) % 9000 + 1000;
+}
 
-@if (isLoading)
-{
-    <p>Loading notifications...</p>
-}
-else if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
-}
-else if (notifications.Count == 0)
-{
-    <p>No notifications were found for this user.</p>
-}
-else
-{
-    <table>
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Message</th>
-                <th>Type</th>
-                <th>Channel</th>
-                <th>Account ID</th>
-                <th>Reference ID</th>
-                <th>Created</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
+<div class="ew-page">
+    <div class="mb-3">
+        <a href="/users" class="btn btn-sm btn-ew-light text-decoration-none">
+            ← Back to Users
+        </a>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <span class="ew-badge badge-soft-purple mb-2">Customer #@maskedUser</span>
+            <h1 class="ew-page-title">User notifications</h1>
+            <p class="ew-page-subtitle">Audit trail of dispatched notifications for Customer #@maskedUser</p>
+        </div>
+        @if (!isLoading && notifications.Count > 0)
+        {
+            <div class="d-flex gap-2">
+                <span class="ew-badge badge-soft-primary px-3 py-2">@notifications.Count(n => !n.IsRead) Unread</span>
+                <span class="ew-badge badge-soft-secondary px-3 py-2">@notifications.Count(n => n.IsRead) Read</span>
+            </div>
+        }
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="ew-card ew-empty-state">
+            <div class="spinner-border text-primary mb-3" role="status"></div>
+            <p class="text-muted mb-0">Loading notifications...</p>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3" role="alert">
+            <span class="ew-badge badge-soft-danger">Error</span>
+            <span>@errorMessage</span>
+        </div>
+    }
+    else if (notifications.Count == 0)
+    {
+        <div class="ew-card ew-empty-state">
+            <span class="ew-badge badge-soft-secondary mb-2">Empty Log</span>
+            <p class="text-muted mb-0">No notifications were found for this user.</p>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex flex-column gap-3">
             @foreach (var notification in notifications)
             {
-                <tr>
-                    <td>@notification.Title</td>
-                    <td>@notification.Message</td>
-                    <td>@notification.Type</td>
-                    <td>@notification.Channel</td>
-                    <td>@notification.AccountId</td>
-                    <td>@notification.ReferenceId</td>
-                    <td>@notification.CreatedAt</td>
-                    <td>@(notification.IsRead ? "Read" : "Unread")</td>
-                </tr>
+                var accMask = notification.AccountId == Guid.Empty
+                    ? "System"
+                    : $"Account #{BitConverter.ToUInt16(notification.AccountId.ToByteArray(), 0) % 9000 + 1000}";
+
+                var refMask = notification.ReferenceId is Guid refGuid
+                    ? $"Ref #{BitConverter.ToUInt16(refGuid.ToByteArray(), 0) % 9000 + 1000}"
+                    : "No Ref";
+
+                var cleanMessage = string.IsNullOrWhiteSpace(notification.Message)
+                    ? "—"
+                    : System.Text.RegularExpressions.Regex.Replace(
+                        notification.Message,
+                        @"[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}",
+                        m => $"#{BitConverter.ToUInt16(Guid.Parse(m.Value).ToByteArray(), 0) % 9000 + 1000}");
+
+                var (typeLabel, typeBadgeClass) = (notification.Type ?? string.Empty) switch
+                {
+                    "Deposit" => ("Deposit", "badge-soft-success"),
+                    "Withdrawal" => ("Withdrawal", "badge-soft-warning"),
+                    "IncomingTransfer" => ("Incoming Transfer", "badge-soft-info"),
+                    "OutgoingTransfer" => ("Outgoing Transfer", "badge-soft-primary"),
+                    "CardCreated" => ("Card Created", "badge-soft-purple"),
+                    var t when !string.IsNullOrWhiteSpace(t) => (t, "badge-soft-secondary"),
+                    _ => ("Notification", "badge-soft-secondary")
+                };
+
+                var (channelLabel, channelBadgeClass) = notification.Channel switch
+                {
+                    1 => ("Email", "badge-soft-info"),
+                    2 => ("In-App", "badge-soft-primary"),
+                    _ => ($"Channel {notification.Channel}", "badge-soft-secondary")
+                };
+
+                <div class="ew-card ew-card-hover p-3 p-md-4 @(notification.IsRead ? "" : "ew-card-unread")">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                        <div>
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                @if (notification.IsRead)
+                                {
+                                    <span class="ew-badge badge-soft-secondary">Read</span>
+                                }
+                                else
+                                {
+                                    <span class="ew-badge badge-soft-primary">
+                                        <span class="ew-badge-dot"></span>
+                                        Unread
+                                    </span>
+                                }
+                                <span class="ew-badge @typeBadgeClass">@typeLabel</span>
+                                <span class="ew-badge @channelBadgeClass">@channelLabel</span>
+                                <span class="ew-badge badge-soft-secondary">@accMask</span>
+                                <span class="ew-badge badge-soft-secondary">@refMask</span>
+                            </div>
+
+                            <h6 class="fw-bold mb-1">@(string.IsNullOrWhiteSpace(notification.Title) ? "System Notification" : notification.Title)</h6>
+                            <p class="text-muted mb-0">@cleanMessage</p>
+                        </div>
+
+                        <div class="text-md-end text-muted small flex-shrink-0">
+                            @notification.CreatedAt.ToString("MMM dd, yyyy • HH:mm")
+                        </div>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
-}
+        </div>
+    }
+</div>
 
 @code {
     [Parameter]

@@ -12,83 +12,239 @@
 
 <PageTitle>My accounts</PageTitle>
 
-<h1>My accounts</h1>
+<div class="ew-page">
+    <div class="ew-hero-card mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <div class="ew-hero-label mb-1">Total Portfolio Balance</div>
+                <div class="ew-hero-balance mb-2">$@(accounts.Sum(a => a.AccountBalance).ToString("N2"))</div>
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <span class="ew-badge" style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.35);">
+                        <span class="ew-badge-dot"></span>
+                        @accounts.Count Active @(accounts.Count == 1 ? "Account" : "Accounts")
+                    </span>
+                    <span class="ew-badge" style="background: rgba(255, 255, 255, 0.12); color: #e2e8f0;">
+                        USD Multi-Account Wallet
+                    </span>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-light fw-bold px-4 py-2 rounded-3 text-dark shadow-sm d-inline-flex align-items-center gap-2"
+                        @onclick="CreateAccountAsync"
+                        disabled="@isCreatingAccount">
+                    @if (isCreatingAccount)
+                    {
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    }
+                    else
+                    {
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    }
+                    @(isCreatingAccount ? "Creating..." : "Create account")
+                </button>
+            </div>
+        </div>
+    </div>
 
-<button type="button" @onclick="CreateAccountAsync" disabled="@isCreatingAccount">
-    @(isCreatingAccount ? "Creating..." : "Create account")
-</button>
+    @if (!string.IsNullOrWhiteSpace(createAccountErrorMessage))
+    {
+        <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3 shadow-sm mb-4" role="alert">
+            <span class="ew-badge badge-soft-danger">Error</span>
+            <span>@createAccountErrorMessage</span>
+        </div>
+    }
 
-@if (!string.IsNullOrWhiteSpace(createAccountErrorMessage))
-{
-    <p role="alert">@createAccountErrorMessage</p>
-}
+    @if (createdAccountId is not null)
+    {
+        var newAccCode = BitConverter.ToUInt16(createdAccountId.Value.ToByteArray(), 0) % 9000 + 1000;
+        <div class="alert alert-success d-flex align-items-center gap-2 rounded-3 shadow-sm mb-4" role="status">
+            <span class="ew-badge badge-soft-success">Created</span>
+            <span>New wallet account <strong>#@newAccCode</strong> has been opened and activated.</span>
+        </div>
+    }
 
-@if (createdAccountId is not null)
-{
-    <p role="status">Account created: @createdAccountId</p>
-}
-
-<p>
-    <a href="/address/create">Create address</a>
-    <span> | </span>
-    <a href="/address/update">Update address</a>
-</p>
-
-@if (address is not null)
-{
-    <h2>My address</h2>
-    <dl>
-        <dt>Address line</dt>
-        <dd>@address.AddressLine</dd>
-        <dt>City</dt>
-        <dd>@address.City</dd>
-        <dt>State</dt>
-        <dd>@address.State</dd>
-        <dt>Country</dt>
-        <dd>@address.Country</dd>
-        <dt>Zip code</dt>
-        <dd>@address.ZipCode</dd>
-    </dl>
-}
-else if (!string.IsNullOrWhiteSpace(addressErrorMessage))
-{
-    <p role="alert">@addressErrorMessage</p>
-}
-else if (!isLoadingAddress && string.IsNullOrWhiteSpace(addressErrorMessage))
-{
-    <p>No address has been added yet.</p>
-}
-
-@if (isLoading)
-{
-    <p>Loading your accounts...</p>
-}
-else if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
-}
-else if (accounts.Count == 0)
-{
-    <p>No accounts were found for the signed-in user.</p>
-}
-else
-{
-    <ul>
-        @foreach (var account in accounts)
-        {
-            <li>
-                <strong>Account: @account.Id</strong>
-                <span>Balance: @account.AccountBalance</span>
-                <a href="@($"/my-account/{account.Id}/transactions")">
-                    Transactions
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h1 class="ew-page-title h4 mb-0">My accounts</h1>
+                    <p class="ew-page-subtitle small">Select an account to view transactions or manage linked cards</p>
+                </div>
+                <a href="/transaction-requests" class="btn btn-sm btn-ew-primary text-white text-decoration-none">
+                    Send / Deposit
                 </a>
-                <a href="@($"/my-account/{account.Id}/cards")">
-                    Cards
-                </a>
-            </li>
-        }
-    </ul>
-}
+            </div>
+
+            @if (isLoading)
+            {
+                <div class="ew-card ew-empty-state">
+                    <div class="spinner-border text-primary mb-3" role="status"></div>
+                    <p class="text-muted mb-0">Loading your accounts...</p>
+                </div>
+            }
+            else if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3" role="alert">
+                    <span class="ew-badge badge-soft-danger">Error</span>
+                    <span>@errorMessage</span>
+                </div>
+            }
+            else if (accounts.Count == 0)
+            {
+                <div class="ew-card ew-empty-state">
+                    <div class="ew-icon-box badge-soft-primary mx-auto mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                            <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path>
+                            <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+                        </svg>
+                    </div>
+                    <h5 class="fw-bold">No Wallet Accounts Yet</h5>
+                    <p class="text-muted mb-0">No accounts were found for the signed-in user. Click "Create account" above to open your first digital account.</p>
+                </div>
+            }
+            else
+            {
+                <div class="row g-3">
+                    @{ var accountNumber = 0; }
+                    @foreach (var account in accounts)
+                    {
+                        accountNumber++;
+                        var maskedAccId = BitConverter.ToUInt16(account.Id.ToByteArray(), 0) % 9000 + 1000;
+                        <div class="col-md-6">
+                            <div class="ew-card ew-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="ew-icon-box ew-icon-sm badge-soft-primary">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h5 class="fw-bold mb-0">Account @accountNumber</h5>
+                                                <span class="text-muted small">Ref #@maskedAccId</span>
+                                            </div>
+                                        </div>
+                                        @if (account.AccountBalance > 0)
+                                        {
+                                            <span class="ew-badge badge-soft-success">
+                                                <span class="ew-badge-dot"></span>
+                                                Active
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="ew-badge badge-soft-secondary">Ready</span>
+                                        }
+                                    </div>
+
+                                    <div class="my-3">
+                                        <div class="ew-stat-label">Available Balance</div>
+                                        <div class="ew-stat-value">$@account.AccountBalance.ToString("N2")</div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+                                    <a href="@($"/my-account/{account.Id}/transactions")"
+                                       class="btn btn-sm btn-ew-primary text-white text-decoration-none flex-grow-1">
+                                        Transactions
+                                    </a>
+                                    <a href="@($"/my-account/{account.Id}/cards")"
+                                       class="btn btn-sm btn-ew-light text-decoration-none flex-grow-1">
+                                        Cards
+                                    </a>
+                                    <button type="button"
+                                            class="btn btn-sm btn-ew-light"
+                                            title="Copy transfer address for receiving funds"
+                                            onclick="navigator.clipboard?.writeText('@account.Id')">
+                                        Copy Transfer ID
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 fw-bold mb-0">Billing Address</h2>
+                <div class="d-flex gap-1">
+                    <a href="/address/create" class="btn btn-sm btn-ew-light text-decoration-none">Add</a>
+                    <a href="/address/update" class="btn btn-sm btn-ew-light text-decoration-none">Edit</a>
+                </div>
+            </div>
+
+            <div class="ew-card p-4">
+                @if (address is not null)
+                {
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="ew-icon-box ew-icon-sm badge-soft-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
+                        <span class="ew-badge badge-soft-success">Verified Address</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="ew-stat-label">Address Line</div>
+                        <div class="fw-semibold">@address.AddressLine</div>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <div class="ew-stat-label">City</div>
+                            <div class="fw-semibold">@address.City</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="ew-stat-label">State</div>
+                            <div class="fw-semibold">@address.State</div>
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="ew-stat-label">Country</div>
+                            <div class="fw-semibold">@address.Country</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="ew-stat-label">Zip Code</div>
+                            <div class="fw-semibold">@address.ZipCode</div>
+                        </div>
+                    </div>
+                }
+                else if (!string.IsNullOrWhiteSpace(addressErrorMessage))
+                {
+                    <div class="alert alert-warning rounded-3 small mb-3" role="alert">
+                        @addressErrorMessage
+                    </div>
+                    <a href="/address/create" class="btn btn-sm btn-ew-primary w-100 text-white text-decoration-none">Create address</a>
+                }
+                else if (!isLoadingAddress && string.IsNullOrWhiteSpace(addressErrorMessage))
+                {
+                    <div class="text-center py-3">
+                        <span class="ew-badge badge-soft-warning mb-2">Incomplete Profile</span>
+                        <p class="text-muted small mb-3">No address has been added yet.</p>
+                        <a href="/address/create" class="btn btn-sm btn-ew-primary w-100 text-white text-decoration-none">Create address</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-3 text-muted small">
+                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        Loading address...
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
     private List<Account> accounts = [];

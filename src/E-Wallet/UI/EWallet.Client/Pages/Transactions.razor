@@ -10,47 +10,158 @@
 
 <PageTitle>Transactions</PageTitle>
 
-<h1>Transactions</h1>
-<p>Account: @AccountId</p>
+@{
+    var maskedAcc = BitConverter.ToUInt16(AccountId.ToByteArray(), 0) % 9000 + 1000;
+    var totalInflow = transactions.Where(t => t.TransactionType is 2 or 3).Sum(t => t.Amount);
+    var totalOutflow = transactions.Where(t => t.TransactionType is 1 or 4).Sum(t => t.Amount);
+}
 
-@if (isLoading)
-{
-    <p>Loading transactions...</p>
-}
-else if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
-}
-else if (transactions.Count == 0)
-{
-    <p>No transactions were found.</p>
-}
-else
-{
-    <table>
-        <thead>
-            <tr>
-                <th>Transaction ID</th>
-                <th>Card ID</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Amount</th>
-            </tr>
-        </thead>
-        <tbody>
+<div class="ew-page">
+    <div class="mb-3">
+        <a href="/my-account" class="btn btn-sm btn-ew-light text-decoration-none">
+            ← Back to Accounts
+        </a>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <span class="ew-badge badge-soft-primary mb-2">Account #@maskedAcc</span>
+            <h1 class="ew-page-title">Transactions</h1>
+            <p class="ew-page-subtitle">Complete ledger of deposits, withdrawals, and transfers for Account #@maskedAcc</p>
+        </div>
+        <div>
+            <a href="/transaction-requests" class="btn btn-ew-primary text-white text-decoration-none">
+                + New Transaction
+            </a>
+        </div>
+    </div>
+
+    @if (!isLoading && transactions.Count > 0)
+    {
+        <div class="row g-3 mb-4">
+            <div class="col-sm-4">
+                <div class="ew-card p-3">
+                    <div class="ew-stat-label">Total Operations</div>
+                    <div class="ew-stat-value fs-4 mt-1">@transactions.Count</div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="ew-card p-3">
+                    <div class="ew-stat-label">Total Inflow</div>
+                    <div class="ew-stat-value fs-4 mt-1 text-success">+$@totalInflow.ToString("N2")</div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="ew-card p-3">
+                    <div class="ew-stat-label">Total Outflow</div>
+                    <div class="ew-stat-value fs-4 mt-1 text-danger">-$@totalOutflow.ToString("N2")</div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (isLoading)
+    {
+        <div class="ew-card ew-empty-state">
+            <div class="spinner-border text-primary mb-3" role="status"></div>
+            <p class="text-muted mb-0">Loading transactions...</p>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3" role="alert">
+            <span class="ew-badge badge-soft-danger">Error</span>
+            <span>@errorMessage</span>
+        </div>
+    }
+    else if (transactions.Count == 0)
+    {
+        <div class="ew-card ew-empty-state">
+            <div class="ew-icon-box badge-soft-secondary mx-auto mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+            </div>
+            <h5 class="fw-bold">No Activity Yet</h5>
+            <p class="text-muted mb-3">No transactions were found.</p>
+            <a href="/transaction-requests" class="btn btn-ew-primary text-white text-decoration-none">Make a Deposit</a>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex flex-column gap-3">
             @foreach (var transaction in transactions)
             {
-                <tr>
-                    <td>@transaction.Id</td>
-                    <td>@transaction.CardId</td>
-                    <td>@transaction.TransactionType</td>
-                    <td>@transaction.Status</td>
-                    <td>@transaction.Amount</td>
-                </tr>
+                var txCode = BitConverter.ToUInt16(transaction.Id.ToByteArray(), 0) % 9000 + 1000;
+                var cardLabel = transaction.CardId is Guid cid
+                    ? $"Card #{BitConverter.ToUInt16(cid.ToByteArray(), 0) % 9000 + 1000}"
+                    : "Direct Wallet";
+
+                var (typeLabel, typeBadgeClass, isPositive) = transaction.TransactionType switch
+                {
+                    1 => ("Withdrawal", "badge-soft-warning", false),
+                    2 => ("Deposit", "badge-soft-success", true),
+                    3 => ("Incoming Transfer", "badge-soft-info", true),
+                    4 => ("Outgoing Transfer", "badge-soft-primary", false),
+                    _ => ($"Type #{transaction.TransactionType}", "badge-soft-secondary", true)
+                };
+
+                var (statusLabel, statusBadgeClass) = transaction.Status switch
+                {
+                    1 => ("Pending", "badge-soft-warning"),
+                    2 => ("Succeeded", "badge-soft-success"),
+                    3 => ("Failed", "badge-soft-danger"),
+                    4 => ("Cancelled", "badge-soft-secondary"),
+                    _ => ("Completed", "badge-soft-info")
+                };
+
+                <div class="ew-card ew-card-hover p-3 p-md-4">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="ew-icon-box @(isPositive ? "badge-soft-success" : "badge-soft-warning")">
+                                @if (isPositive)
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <polyline points="19 12 12 19 5 12"></polyline>
+                                    </svg>
+                                }
+                                else
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <line x1="12" y1="19" x2="12" y2="5"></line>
+                                        <polyline points="5 12 12 5 19 12"></polyline>
+                                    </svg>
+                                }
+                            </div>
+
+                            <div>
+                                <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                                    <span class="fw-bold text-dark">Transaction #@txCode</span>
+                                    <span class="ew-badge @typeBadgeClass">@typeLabel</span>
+                                    <span class="ew-badge @statusBadgeClass">
+                                        <span class="ew-badge-dot"></span>
+                                        @statusLabel
+                                    </span>
+                                </div>
+                                <div class="text-muted small">
+                                    Payment Method: <strong>@cardLabel</strong> • Account #@maskedAcc
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-sm-end ps-5 ps-sm-0">
+                            <div class="fs-5 @(isPositive ? "ew-amount-positive" : "ew-amount-negative")">
+                                @(isPositive ? "+" : "-")$@transaction.Amount.ToString("N2")
+                            </div>
+                            <div class="text-muted small">USD</div>
+                        </div>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
-}
+        </div>
+    }
+</div>
 
 @code {
     [Parameter]

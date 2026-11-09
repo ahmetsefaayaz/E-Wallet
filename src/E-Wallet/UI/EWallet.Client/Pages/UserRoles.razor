@@ -8,31 +8,70 @@
 
 <PageTitle>User roles</PageTitle>
 
-<h1>User roles</h1>
+@{
+    var maskedUser = BitConverter.ToUInt16(UserId.ToByteArray(), 0) % 9000 + 1000;
+}
 
-<p>User ID: @UserId</p>
+<div class="ew-page-narrow">
+    <div class="mb-3">
+        <a href="/users" class="btn btn-sm btn-ew-light text-decoration-none">
+            ← Back to Users
+        </a>
+    </div>
 
-@if (isLoading)
-{
-    <p>Loading roles...</p>
-}
-else if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
-}
-else if (roles.Count == 0)
-{
-    <p>This user has no roles.</p>
-}
-else
-{
-    <ul>
-        @foreach (var role in roles)
+    <div class="ew-card p-4 p-md-5">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+            <div>
+                <span class="ew-badge badge-soft-purple mb-2">Member #@maskedUser</span>
+                <h1 class="ew-page-title h3">User roles</h1>
+                <p class="ew-page-subtitle">Assigned security permissions and access roles</p>
+            </div>
+            <a href="@($"/users/{UserId}/roles/add")" class="btn btn-sm btn-ew-primary text-white text-decoration-none">
+                + Add Role
+            </a>
+        </div>
+
+        @if (isLoading)
         {
-            <li>@role</li>
+            <div class="py-4 text-center">
+                <div class="spinner-border text-primary mb-2" role="status"></div>
+                <p class="text-muted mb-0">Loading roles...</p>
+            </div>
         }
-    </ul>
-}
+        else if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3" role="alert">
+                <span class="ew-badge badge-soft-danger">Error</span>
+                <span>@errorMessage</span>
+            </div>
+        }
+        else if (roles.Count == 0)
+        {
+            <div class="p-4 text-center rounded-3 bg-light">
+                <span class="ew-badge badge-soft-secondary mb-2">No Roles Assigned</span>
+                <p class="text-muted mb-0">This user has no roles.</p>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex flex-wrap gap-2">
+                @foreach (var role in roles)
+                {
+                    var badgeStyle = string.Equals(role, "Admin", StringComparison.OrdinalIgnoreCase)
+                        ? "badge-soft-danger"
+                        : "badge-soft-primary";
+
+                    <div class="p-3 rounded-3 border bg-light d-flex align-items-center gap-2">
+                        <span class="ew-badge @badgeStyle">
+                            <span class="ew-badge-dot"></span>
+                            @role
+                        </span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
 
 @code {
     [Parameter]

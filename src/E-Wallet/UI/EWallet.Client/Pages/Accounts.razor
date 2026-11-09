@@ -1,4 +1,4 @@
-﻿@page "/accounts"
+@page "/accounts"
 @attribute [Authorize(Policy = "AccountDepartment")]
 
 @using EWallet.Client.Models.Accounts
@@ -9,35 +9,106 @@
 
 <PageTitle>Accounts</PageTitle>
 
-<h1>Accounts</h1>
-
-@if (isLoading)
-{
-    <p>Loading accounts...</p>
-}
-else if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
-}
-else if (accounts.Count == 0)
-{
-    <p>No accounts were found.</p>
-}
-else
-{
-    <ul>
-        @foreach (var account in accounts)
+<div class="ew-page">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <span class="ew-badge badge-soft-purple mb-2">Treasury Administration</span>
+            <h1 class="ew-page-title">Accounts</h1>
+            <p class="ew-page-subtitle">Monitor customer wallet accounts, balances, and linked payment cards</p>
+        </div>
+        @if (!isLoading && accounts.Count > 0)
         {
-            <li>
-                <strong>@account.Id</strong>
-                <span>Balance: @account.AccountBalance</span>
-                <a href="@($"/accounts/{account.Id}")">Details</a>
-                <a href="@($"/accounts/{account.Id}/delete")">Delete</a>
-                <a href="@($"/accounts/{account.Id}/cards")">Cards</a>
-            </li>
+            <div class="d-flex gap-3">
+                <div class="ew-card px-3 py-2">
+                    <div class="ew-stat-label">Total Accounts</div>
+                    <div class="fw-bold fs-5">@accounts.Count</div>
+                </div>
+                <div class="ew-card px-3 py-2">
+                    <div class="ew-stat-label">Managed Volume</div>
+                    <div class="fw-bold fs-5 text-success">$@(accounts.Sum(a => a.AccountBalance).ToString("N2"))</div>
+                </div>
+            </div>
         }
-    </ul>
-}
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="ew-card ew-empty-state">
+            <div class="spinner-border text-primary mb-3" role="status"></div>
+            <p class="text-muted mb-0">Loading accounts...</p>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3" role="alert">
+            <span class="ew-badge badge-soft-danger">Error</span>
+            <span>@errorMessage</span>
+        </div>
+    }
+    else if (accounts.Count == 0)
+    {
+        <div class="ew-card ew-empty-state">
+            <span class="ew-badge badge-soft-secondary mb-2">Empty</span>
+            <h5 class="fw-bold">No Accounts Found</h5>
+            <p class="text-muted mb-0">No accounts were found.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+            @{ var idx = 0; }
+            @foreach (var account in accounts)
+            {
+                idx++;
+                var accMask = BitConverter.ToUInt16(account.Id.ToByteArray(), 0) % 9000 + 1000;
+                var ownerMask = BitConverter.ToUInt16(account.UserId.ToByteArray(), 0) % 9000 + 1000;
+                <div class="col">
+                    <div class="ew-card ew-card-hover p-4 h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="ew-icon-box ew-icon-sm badge-soft-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                                            <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path>
+                                            <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-0">Account @idx</h5>
+                                        <span class="text-muted small">Ref #@accMask • Owner #@ownerMask</span>
+                                    </div>
+                                </div>
+                                @if (account.AccountBalance > 0)
+                                {
+                                    <span class="ew-badge badge-soft-success">
+                                        <span class="ew-badge-dot"></span>
+                                        Funded
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="ew-badge badge-soft-secondary">Zero Balance</span>
+                                }
+                            </div>
+
+                            <div class="my-3">
+                                <div class="ew-stat-label">Account Balance</div>
+                                <div class="ew-stat-value">$@account.AccountBalance.ToString("N2")</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+                            <a href="@($"/accounts/{account.Id}")" class="btn btn-sm btn-ew-primary text-white text-decoration-none flex-grow-1">Details</a>
+                            <a href="@($"/accounts/{account.Id}/cards")" class="btn btn-sm btn-ew-light text-decoration-none flex-grow-1">Cards</a>
+                            <a href="@($"/accounts/{account.Id}/delete")" class="btn btn-sm btn-ew-danger-soft text-decoration-none">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
 
 @code {
     private List<Account> accounts = [];

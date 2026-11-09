@@ -10,55 +10,86 @@
 
 <PageTitle>Update address</PageTitle>
 
-<h1>Update address</h1>
-
-<EditForm Model="@address" OnValidSubmit="@HandleSubmitAsync">
-    <DataAnnotationsValidator />
-
-    <div>
-        <label for="addressLine">Address line</label>
-        <InputText id="addressLine" @bind-Value="address.AddressLine" />
-        <ValidationMessage For="@(() => address.AddressLine)" />
+<div class="ew-page-narrow">
+    <div class="mb-3">
+        <a href="/my-account" class="btn btn-sm btn-ew-light text-decoration-none">
+            ← Back to My Accounts
+        </a>
     </div>
 
-    <div>
-        <label for="city">City</label>
-        <InputText id="city" @bind-Value="address.City" />
-        <ValidationMessage For="@(() => address.City)" />
+    <div class="ew-card p-4 p-md-5">
+        <div class="mb-4">
+            <span class="ew-badge badge-soft-primary mb-2">Billing Profile</span>
+            <h1 class="ew-page-title h3">Update address</h1>
+            <p class="ew-page-subtitle">Keep your billing address up to date for seamless card operations</p>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3 mb-4 small" role="alert">
+                <span class="ew-badge badge-soft-danger">Error</span>
+                <span>@errorMessage</span>
+            </div>
+        }
+
+        @if (isSuccess)
+        {
+            <div class="alert alert-success d-flex align-items-center justify-content-between gap-2 rounded-3 mb-4 small" role="status">
+                <div>
+                    <span class="ew-badge badge-soft-success me-1">Updated</span>
+                    <span>Address updated successfully.</span>
+                </div>
+                <a href="/my-account" class="btn btn-sm btn-success rounded-pill px-3">Back to Wallet</a>
+            </div>
+        }
+
+        <EditForm Model="@address" OnValidSubmit="@HandleSubmitAsync">
+            <DataAnnotationsValidator />
+
+            <div class="mb-3">
+                <label class="form-label" for="addressLine">Address line</label>
+                <InputText id="addressLine" class="form-control" placeholder="123 Fintech Blvd, Suite 400" @bind-Value="address.AddressLine" />
+                <ValidationMessage For="@(() => address.AddressLine)" />
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="city">City</label>
+                    <InputText id="city" class="form-control" placeholder="New York" @bind-Value="address.City" />
+                    <ValidationMessage For="@(() => address.City)" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="state">State / Province</label>
+                    <InputText id="state" class="form-control" placeholder="NY" @bind-Value="address.State" />
+                    <ValidationMessage For="@(() => address.State)" />
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label" for="country">Country</label>
+                    <InputText id="country" class="form-control" placeholder="United States" @bind-Value="address.Country" />
+                    <ValidationMessage For="@(() => address.Country)" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="zipCode">Zip / Postal code</label>
+                    <InputText id="zipCode" class="form-control" placeholder="10001" @bind-Value="address.ZipCode" />
+                    <ValidationMessage For="@(() => address.ZipCode)" />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-ew-primary px-4 py-2" disabled="@isSubmitting">
+                @if (isSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                }
+                @(isSubmitting ? "Saving..." : "Update address")
+            </button>
+        </EditForm>
     </div>
-
-    <div>
-        <label for="state">State</label>
-        <InputText id="state" @bind-Value="address.State" />
-        <ValidationMessage For="@(() => address.State)" />
-    </div>
-
-    <div>
-        <label for="country">Country</label>
-        <InputText id="country" @bind-Value="address.Country" />
-        <ValidationMessage For="@(() => address.Country)" />
-    </div>
-
-    <div>
-        <label for="zipCode">Zip code</label>
-        <InputText id="zipCode" @bind-Value="address.ZipCode" />
-        <ValidationMessage For="@(() => address.ZipCode)" />
-    </div>
-
-    <button type="submit" disabled="@isSubmitting">
-        @(isSubmitting ? "Saving..." : "Update address")
-    </button>
-</EditForm>
-
-@if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
-}
-
-@if (isSuccess)
-{
-    <p role="status">Address updated successfully.</p>
-}
+</div>
 
 @code {
     private readonly AddressForm address = new();

@@ -9,31 +9,87 @@
 
 <PageTitle>Account details</PageTitle>
 
-<h1>Account details</h1>
+<div class="ew-page-narrow">
+    <div class="mb-3">
+        <a href="/accounts" class="btn btn-sm btn-ew-light text-decoration-none">
+            ← Back to Accounts
+        </a>
+    </div>
 
-@if (isLoading)
-{
-    <p>Loading account...</p>
-}
-else if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
-}
-else if (account is null)
-{
-    <p>Account was not found.</p>
-}
-else
-{
-    <dl>
-        <dt>Account ID</dt>
-        <dd>@account.Id</dd>
-        <dt>User ID</dt>
-        <dd>@account.UserId</dd>
-        <dt>Balance</dt>
-        <dd>@account.AccountBalance</dd>
-    </dl>
-}
+    @if (isLoading)
+    {
+        <div class="ew-card ew-empty-state">
+            <div class="spinner-border text-primary mb-3" role="status"></div>
+            <p class="text-muted mb-0">Loading account...</p>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3" role="alert">
+            <span class="ew-badge badge-soft-danger">Error</span>
+            <span>@errorMessage</span>
+        </div>
+    }
+    else if (account is null)
+    {
+        <div class="ew-card ew-empty-state">
+            <span class="ew-badge badge-soft-warning mb-2">Not Found</span>
+            <p class="text-muted mb-0">Account was not found.</p>
+        </div>
+    }
+    else
+    {
+        var accCode = BitConverter.ToUInt16(account.Id.ToByteArray(), 0) % 9000 + 1000;
+        var userCode = BitConverter.ToUInt16(account.UserId.ToByteArray(), 0) % 9000 + 1000;
+
+        <div class="ew-hero-card mb-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <span class="ew-hero-label">Account Overview</span>
+                    <h1 class="h3 fw-bold mt-1 mb-0">Account #@accCode</h1>
+                </div>
+                <span class="ew-badge badge-soft-success">
+                    <span class="ew-badge-dot"></span>
+                    @(account.AccountBalance > 0 ? "Active & Funded" : "Active")
+                </span>
+            </div>
+            <div class="mt-4">
+                <div class="ew-hero-label">Available Balance</div>
+                <div class="ew-hero-balance">$@account.AccountBalance.ToString("N2")</div>
+            </div>
+        </div>
+
+        <div class="ew-card p-4">
+            <h5 class="fw-bold mb-3">Account Metadata</h5>
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6">
+                    <div class="p-3 rounded-3 bg-light">
+                        <div class="ew-stat-label">Masked Account No</div>
+                        <div class="fw-bold mt-1">Account #@accCode</div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="p-3 rounded-3 bg-light">
+                        <div class="ew-stat-label">Account Holder</div>
+                        <div class="fw-bold mt-1">Customer #@userCode</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+                <a href="@($"/accounts/{account.Id}/transactions")" class="btn btn-ew-primary text-white text-decoration-none">
+                    View Transactions
+                </a>
+                <a href="@($"/accounts/{account.Id}/cards")" class="btn btn-ew-light text-decoration-none">
+                    Manage Cards
+                </a>
+                <a href="@($"/accounts/{account.Id}/delete")" class="btn btn-ew-danger-soft text-decoration-none ms-sm-auto">
+                    Delete Account
+                </a>
+            </div>
+        </div>
+    }
+</div>
 
 @code {
     [Parameter]
