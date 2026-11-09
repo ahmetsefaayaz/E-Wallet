@@ -1,12 +1,55 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+
+<HeadContent>
+    <link rel="stylesheet" href="css/app.css?v=20261109v3" />
+    <link rel="stylesheet" href="EWallet.Client.styles.css?v=20261109v3" />
+</HeadContent>
+
 <div class="page">
-    <div class="sidebar">
+    <div class="sidebar ew-sidebar">
         <NavMenu/>
     </div>
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <div class="d-flex align-items-center gap-2">
+                <span class="ew-badge badge-soft-success">
+                    <span class="ew-badge-dot"></span>
+                    256-Bit Secured
+                </span>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <AuthorizeView>
+                    <Authorized>
+                        <a href="/transaction-requests" class="btn btn-sm btn-primary btn-ew-primary d-none d-sm-inline-flex align-items-center gap-1 text-white text-decoration-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            New Transfer
+                        </a>
+                        <a href="/my-notifications" class="btn btn-sm btn-ew-light d-inline-flex align-items-center gap-1 text-decoration-none" title="Notifications">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <span class="d-none d-md-inline">Alerts</span>
+                        </a>
+                        <div class="d-flex align-items-center gap-2 ps-2 border-start">
+                            <div class="ew-avatar" style="width: 32px; height: 32px; font-size: 0.82rem;">
+                                @(string.IsNullOrWhiteSpace(context.User.Identity?.Name) ? "U" : context.User.Identity!.Name[..1].ToUpperInvariant())
+                            </div>
+                            <span class="fw-semibold small text-dark d-none d-md-inline">
+                                @(context.User.Identity?.Name ?? "Member")
+                            </span>
+                        </div>
+                    </Authorized>
+                    <NotAuthorized>
+                        <a href="/login" class="btn btn-sm btn-ew-light text-decoration-none">Sign In</a>
+                        <a href="/register" class="btn btn-sm btn-primary btn-ew-primary text-white text-decoration-none">Get Started</a>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
         </div>
 
         <article class="content px-4">

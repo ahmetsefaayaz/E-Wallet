@@ -211,6 +211,48 @@
         }
       }
     },
+    "/users/me/address": {
+      "get": {
+        "tags": [
+          "Identity.Api"
+        ],
+        "summary": "Gets my address",
+        "description": "Gets the authenticated user's address",
+        "operationId": "GetMyAddress",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMyAddressResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/address": {
       "put": {
         "tags": [
@@ -554,6 +596,15 @@
         "properties": {
           "isSuccess": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetMyAddressResponse": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "$ref": "#/components/schemas/AddressDto"
           }
         },
         "additionalProperties": false

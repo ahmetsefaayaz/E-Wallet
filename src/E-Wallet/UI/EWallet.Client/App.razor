@@ -1,12 +1,28 @@
-﻿<CascadingAuthenticationState>
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
                     <LayoutView Layout="@typeof(MainLayout)">
-                        <p role="alert">
-                            You do not have permission to view this page.
-                        </p>
+                        <div class="ew-page-narrow py-5">
+                            <div class="ew-card ew-empty-state">
+                                <div class="ew-icon-box badge-soft-danger mx-auto mb-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                </div>
+                                <span class="ew-badge badge-soft-danger mb-2">Access Restricted</span>
+                                <h4 class="fw-bold mt-2">Permission Required</h4>
+                                <p class="text-muted mb-4" role="alert">
+                                    You do not have permission to view this page.
+                                </p>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="/login" class="btn btn-ew-primary">Sign In</a>
+                                    <a href="/" class="btn btn-ew-light">Back to Home</a>
+                                </div>
+                            </div>
+                        </div>
                     </LayoutView>
                 </NotAuthorized>
             </AuthorizeRouteView>
@@ -15,7 +31,14 @@
         <NotFound>
             <PageTitle>Not found</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
+                <div class="ew-page-narrow py-5">
+                    <div class="ew-card ew-empty-state">
+                        <span class="ew-badge badge-soft-warning mb-2">404 Not Found</span>
+                        <h4 class="fw-bold mt-2">Page Not Found</h4>
+                        <p class="text-muted mb-4" role="alert">Sorry, there's nothing at this address.</p>
+                        <a href="/" class="btn btn-ew-primary">Return to Dashboard</a>
+                    </div>
+                </div>
             </LayoutView>
         </NotFound>
     </Router>

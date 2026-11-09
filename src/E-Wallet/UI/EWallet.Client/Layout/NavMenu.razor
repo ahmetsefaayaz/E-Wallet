@@ -1,80 +1,143 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 @using EWallet.Client.Services.Auth
 
 @inject TokenStorage TokenStorage
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">EWallet.Client</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
+<div class="ew-brand-bar">
+    <a class="ew-brand-link" href="">
+        <span class="ew-brand-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path>
+                <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+            </svg>
+        </span>
+        <span class="ew-brand-text">E-Wallet</span>
+    </a>
+    <button title="Navigation menu" class="navbar-toggler ew-nav-toggler" type="button" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 </div>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+<div class="@NavMenuCssClass ew-nav-scroll" @onclick="ToggleNavMenu">
+    <nav class="ew-nav-list">
+        <div class="ew-nav-heading ew-nav-heading-first">Overview</div>
+        <div class="ew-nav-entry">
+            <NavLink class="ew-nav-item-link" href="" Match="NavLinkMatch.All">
+                <svg class="ew-nav-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span class="ew-nav-label">Dashboard</span>
             </NavLink>
         </div>
+
         <AuthorizeView Policy="IdentityDepartment">
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="users">
-                    Users
+            <div class="ew-nav-heading">Identity Admin</div>
+            <div class="ew-nav-entry">
+                <NavLink class="ew-nav-item-link" href="users">
+                    <svg class="ew-nav-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span class="ew-nav-label">Users</span>
                 </NavLink>
             </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="roles/create">
-                    Create role
+            <div class="ew-nav-entry">
+                <NavLink class="ew-nav-item-link" href="roles/create">
+                    <svg class="ew-nav-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <span class="ew-nav-label">Create role</span>
                 </NavLink>
             </div>
         </AuthorizeView>
+
         <AuthorizeView Policy="AccountDepartment">
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="accounts">
-                    Accounts
+            <div class="ew-nav-heading">Treasury Admin</div>
+            <div class="ew-nav-entry">
+                <NavLink class="ew-nav-item-link" href="accounts">
+                    <svg class="ew-nav-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                    </svg>
+                    <span class="ew-nav-label">Accounts</span>
                 </NavLink>
             </div>
         </AuthorizeView>
+
         <AuthorizeView>
             <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="login">
-                        Login
+                <div class="ew-nav-heading">Access</div>
+                <div class="ew-nav-entry">
+                    <NavLink class="ew-nav-item-link" href="login">
+                        <svg class="ew-nav-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                            <polyline points="10 17 15 12 10 7"></polyline>
+                            <line x1="15" y1="12" x2="3" y2="12"></line>
+                        </svg>
+                        <span class="ew-nav-label">Login</span>
                     </NavLink>
                 </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="register">
-                        Register
+                <div class="ew-nav-entry">
+                    <NavLink class="ew-nav-item-link" href="register">
+                        <svg class="ew-nav-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                        </svg>
+                        <span class="ew-nav-label">Register</span>
                     </NavLink>
                 </div>
             </NotAuthorized>
 
             <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="my-account">
-                        My accounts
+                <div class="ew-nav-heading">My Wallet</div>
+                <div class="ew-nav-entry">
+                    <NavLink class="ew-nav-item-link" href="my-account">
+                        <svg class="ew-nav-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                            <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path>
+                            <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+                        </svg>
+                        <span class="ew-nav-label">My accounts</span>
                     </NavLink>
                 </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="transaction-requests">
-                        Transaction requests
+                <div class="ew-nav-entry">
+                    <NavLink class="ew-nav-item-link" href="transaction-requests">
+                        <svg class="ew-nav-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="17 1 21 5 17 9"></polyline>
+                            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                            <polyline points="7 23 3 19 7 15"></polyline>
+                            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                        </svg>
+                        <span class="ew-nav-label">Transaction requests</span>
                     </NavLink>
                 </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="my-notifications">
-                        My notifications
+                <div class="ew-nav-entry">
+                    <NavLink class="ew-nav-item-link" href="my-notifications">
+                        <svg class="ew-nav-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="ew-nav-label">My notifications</span>
                     </NavLink>
                 </div>
-                <div class="nav-item px-3">
-                    <button class="nav-link"
+                <div class="ew-nav-footer">
+                    <button class="ew-nav-item-link ew-nav-logout"
                             type="button"
                             @onclick="LogoutAsync">
-                        Logout
+                        <svg class="ew-nav-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span class="ew-nav-label">Logout</span>
                     </button>
                 </div>
             </Authorized>

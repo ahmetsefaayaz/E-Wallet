@@ -10,31 +10,55 @@
 
 <PageTitle>Create role</PageTitle>
 
-<h1>Create role</h1>
-
-<EditForm Model="@request" OnValidSubmit="@HandleSubmitAsync">
-    <DataAnnotationsValidator />
-
-    <div>
-        <label for="roleName">Role name</label>
-        <InputText id="roleName" @bind-Value="request.RoleName" />
-        <ValidationMessage For="@(() => request.RoleName)" />
+<div class="ew-page-narrow">
+    <div class="mb-3">
+        <a href="/users" class="btn btn-sm btn-ew-light text-decoration-none">
+            ← Back to Users
+        </a>
     </div>
 
-    <button type="submit" disabled="@isSubmitting">
-        @(isSubmitting ? "Creating..." : "Create role")
-    </button>
-</EditForm>
+    <div class="ew-card p-4 p-md-5">
+        <div class="mb-4">
+            <span class="ew-badge badge-soft-purple mb-2">Security Administration</span>
+            <h1 class="ew-page-title h3">Create role</h1>
+            <p class="ew-page-subtitle">Define a new platform access role that can be granted to users</p>
+        </div>
 
-@if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
-}
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3 mb-4 small" role="alert">
+                <span class="ew-badge badge-soft-danger">Error</span>
+                <span>@errorMessage</span>
+            </div>
+        }
 
-@if (isSuccess)
-{
-    <p role="status">Role created successfully.</p>
-}
+        @if (isSuccess)
+        {
+            <div class="alert alert-success d-flex align-items-center gap-2 rounded-3 mb-4 small" role="status">
+                <span class="ew-badge badge-soft-success">Created</span>
+                <span>Role created successfully.</span>
+            </div>
+        }
+
+        <EditForm Model="@request" OnValidSubmit="@HandleSubmitAsync">
+            <DataAnnotationsValidator />
+
+            <div class="mb-4">
+                <label class="form-label" for="roleName">Role name</label>
+                <InputText id="roleName" class="form-control" placeholder="e.g. Auditor" @bind-Value="request.RoleName" />
+                <ValidationMessage For="@(() => request.RoleName)" />
+            </div>
+
+            <button type="submit" class="btn btn-ew-primary px-4 py-2" disabled="@isSubmitting">
+                @if (isSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                }
+                @(isSubmitting ? "Creating..." : "Create role")
+            </button>
+        </EditForm>
+    </div>
+</div>
 
 @code {
     private readonly CreateRoleForm request = new();

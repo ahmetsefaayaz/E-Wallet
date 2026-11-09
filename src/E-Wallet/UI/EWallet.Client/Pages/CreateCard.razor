@@ -11,44 +11,112 @@
 
 <PageTitle>Create card</PageTitle>
 
-<h1>Create card</h1>
-
-<EditForm Model="@form" OnValidSubmit="@HandleSubmitAsync">
-    <DataAnnotationsValidator />
-    <div>
-        <label for="holder">Card holder name</label>
-        <InputText id="holder" @bind-Value="form.CardHolderName" />
-        <ValidationMessage For="@(() => form.CardHolderName)" />
-    </div>
-    <div>
-        <label for="number">Card number</label>
-        <InputText id="number" @bind-Value="form.CardNumber" />
-        <ValidationMessage For="@(() => form.CardNumber)" />
-    </div>
-    <div>
-        <label for="expiry">Expiry date</label>
-        <InputText id="expiry" @bind-Value="form.CardExpiryDate" />
-        <ValidationMessage For="@(() => form.CardExpiryDate)" />
-    </div>
-    <div>
-        <label for="security">Security number</label>
-        <InputText id="security" @bind-Value="form.CardSecurityNumber" />
-        <ValidationMessage For="@(() => form.CardSecurityNumber)" />
-    </div>
-    <button type="submit" disabled="@isSubmitting">
-        @(isSubmitting ? "Creating..." : "Create card")
-    </button>
-</EditForm>
-
-@if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
+@{
+    var maskedAcc = BitConverter.ToUInt16(AccountId.ToByteArray(), 0) % 9000 + 1000;
+    var previewNumber = !string.IsNullOrWhiteSpace(form.CardNumber) && form.CardNumber.Length >= 4
+        ? $"••••  ••••  ••••  {form.CardNumber[^4..]}"
+        : "••••  ••••  ••••  ••••";
 }
 
-@if (createdCardId is not null)
-{
-    <p role="status">Card created: @createdCardId</p>
-}
+<div class="ew-page">
+    <div class="mb-3">
+        <a href="@($"/my-account/{AccountId}/cards")" class="btn btn-sm btn-ew-light text-decoration-none">
+            ← Back to Cards
+        </a>
+    </div>
+
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-7">
+            <div class="ew-card p-4 p-md-5">
+                <div class="mb-4">
+                    <span class="ew-badge badge-soft-primary mb-2">Account #@maskedAcc</span>
+                    <h1 class="ew-page-title h3">Create card</h1>
+                    <p class="ew-page-subtitle">Issue a new debit or virtual payment card for this wallet account</p>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3 mb-4 small" role="alert">
+                        <span class="ew-badge badge-soft-danger">Error</span>
+                        <span>@errorMessage</span>
+                    </div>
+                }
+
+                @if (createdCardId is not null)
+                {
+                    var cardCode = BitConverter.ToUInt16(createdCardId.Value.ToByteArray(), 0) % 9000 + 1000;
+                    <div class="alert alert-success d-flex align-items-center gap-2 rounded-3 mb-4 small" role="status">
+                        <span class="ew-badge badge-soft-success">Active</span>
+                        <span>Card <strong>#@cardCode</strong> has been created and linked to Account #@maskedAcc.</span>
+                    </div>
+                }
+
+                <EditForm Model="@form" OnValidSubmit="@HandleSubmitAsync">
+                    <DataAnnotationsValidator />
+
+                    <div class="mb-3">
+                        <label class="form-label" for="holder">Card holder name</label>
+                        <InputText id="holder" class="form-control" placeholder="JOHN DOE" @bind-Value="form.CardHolderName" />
+                        <ValidationMessage For="@(() => form.CardHolderName)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="number">Card number</label>
+                        <InputText id="number" class="form-control" placeholder="4532 0000 0000 0000" @bind-Value="form.CardNumber" />
+                        <ValidationMessage For="@(() => form.CardNumber)" />
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <label class="form-label" for="expiry">Expiry date</label>
+                            <InputText id="expiry" class="form-control" placeholder="MM/YY" @bind-Value="form.CardExpiryDate" />
+                            <ValidationMessage For="@(() => form.CardExpiryDate)" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label" for="security">Security number (CVV)</label>
+                            <InputText id="security" class="form-control" placeholder="123" @bind-Value="form.CardSecurityNumber" />
+                            <ValidationMessage For="@(() => form.CardSecurityNumber)" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-ew-primary px-4 py-2" disabled="@isSubmitting">
+                        @if (isSubmitting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        }
+                        @(isSubmitting ? "Creating..." : "Create card")
+                    </button>
+                </EditForm>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="ew-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="fw-semibold small text-muted">Live Card Preview</span>
+                    <span class="ew-badge badge-soft-info">Virtual Debit</span>
+                </div>
+                <div class="ew-bank-card ew-bank-card-indigo">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="ew-card-chip"></div>
+                        <span class="badge rounded-pill" style="background: rgba(255,255,255,0.18); color: #fff;">E-WALLET</span>
+                    </div>
+                    <div class="ew-card-number">@previewNumber</div>
+                    <div class="d-flex justify-content-between align-items-end">
+                        <div>
+                            <div class="ew-card-meta-label">Card Holder</div>
+                            <div class="ew-card-meta-value text-uppercase">@(string.IsNullOrWhiteSpace(form.CardHolderName) ? "YOUR NAME" : form.CardHolderName)</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="ew-card-meta-label">Valid Thru</div>
+                            <div class="ew-card-meta-value">@(string.IsNullOrWhiteSpace(form.CardExpiryDate) ? "MM/YY" : form.CardExpiryDate)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter]

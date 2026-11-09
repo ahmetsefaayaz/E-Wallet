@@ -9,18 +9,45 @@
 
 <PageTitle>Delete account</PageTitle>
 
-<h1>Delete account</h1>
-
-<p>Are you sure you want to delete account @AccountId?</p>
-
-<button type="button" @onclick="DeleteAsync" disabled="@isSubmitting">
-    @(isSubmitting ? "Deleting..." : "Delete account")
-</button>
-
-@if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
+@{
+    var maskedAccount = BitConverter.ToUInt16(AccountId.ToByteArray(), 0) % 9000 + 1000;
 }
+
+<div class="ew-page-narrow py-3">
+    <div class="ew-card p-4 p-md-5 text-center">
+        <div class="ew-icon-box badge-soft-danger mx-auto mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+        </div>
+
+        <span class="ew-badge badge-soft-danger mb-2">Permanent Action</span>
+        <h1 class="h3 fw-bold mb-2">Delete account</h1>
+        <p class="text-muted mb-4">
+            Are you sure you want to permanently close and delete <strong>Account #@maskedAccount</strong>? This action cannot be undone.
+        </p>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger d-flex align-items-center justify-content-center gap-2 rounded-3 mb-4 small" role="alert">
+                <span class="ew-badge badge-soft-danger">Error</span>
+                <span>@errorMessage</span>
+            </div>
+        }
+
+        <div class="d-flex justify-content-center gap-2">
+            <a href="/accounts" class="btn btn-ew-light px-4 text-decoration-none">Cancel</a>
+            <button type="button" class="btn btn-danger px-4 rounded-3 fw-semibold" @onclick="DeleteAsync" disabled="@isSubmitting">
+                @if (isSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                }
+                @(isSubmitting ? "Deleting..." : "Delete account")
+            </button>
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter]

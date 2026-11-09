@@ -10,39 +10,65 @@
 
 <PageTitle>Create claim</PageTitle>
 
-<h1>Create claim</h1>
-
-<p>User ID: @UserId</p>
-
-<EditForm Model="@request" OnValidSubmit="@HandleSubmitAsync">
-    <DataAnnotationsValidator />
-
-    <div>
-        <label for="claimType">Type</label>
-        <InputText id="claimType" @bind-Value="request.Type" />
-        <ValidationMessage For="@(() => request.Type)" />
-    </div>
-
-    <div>
-        <label for="claimValue">Value</label>
-        <InputText id="claimValue" @bind-Value="request.Value" />
-        <ValidationMessage For="@(() => request.Value)" />
-    </div>
-
-    <button type="submit" disabled="@isSubmitting">
-        @(isSubmitting ? "Creating..." : "Create claim")
-    </button>
-</EditForm>
-
-@if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
+@{
+    var maskedUser = BitConverter.ToUInt16(UserId.ToByteArray(), 0) % 9000 + 1000;
 }
 
-@if (isSuccess)
-{
-    <p role="status">Claim created successfully.</p>
-}
+<div class="ew-page-narrow">
+    <div class="mb-3">
+        <a href="/users" class="btn btn-sm btn-ew-light text-decoration-none">
+            ← Back to Users
+        </a>
+    </div>
+
+    <div class="ew-card p-4 p-md-5">
+        <div class="mb-4">
+            <span class="ew-badge badge-soft-purple mb-2">Member #@maskedUser</span>
+            <h1 class="ew-page-title h3">Create claim</h1>
+            <p class="ew-page-subtitle">Assign a department or policy claim (e.g. Department = Account / Identity)</p>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3 mb-4 small" role="alert">
+                <span class="ew-badge badge-soft-danger">Error</span>
+                <span>@errorMessage</span>
+            </div>
+        }
+
+        @if (isSuccess)
+        {
+            <div class="alert alert-success d-flex align-items-center gap-2 rounded-3 mb-4 small" role="status">
+                <span class="ew-badge badge-soft-success">Created</span>
+                <span>Claim created successfully.</span>
+            </div>
+        }
+
+        <EditForm Model="@request" OnValidSubmit="@HandleSubmitAsync">
+            <DataAnnotationsValidator />
+
+            <div class="mb-3">
+                <label class="form-label" for="claimType">Claim Type</label>
+                <InputText id="claimType" class="form-control" placeholder="e.g. Department" @bind-Value="request.Type" />
+                <ValidationMessage For="@(() => request.Type)" />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label" for="claimValue">Claim Value</label>
+                <InputText id="claimValue" class="form-control" placeholder="e.g. Account" @bind-Value="request.Value" />
+                <ValidationMessage For="@(() => request.Value)" />
+            </div>
+
+            <button type="submit" class="btn btn-ew-primary px-4 py-2" disabled="@isSubmitting">
+                @if (isSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                }
+                @(isSubmitting ? "Creating..." : "Create claim")
+            </button>
+        </EditForm>
+    </div>
+</div>
 
 @code {
     [Parameter]

@@ -9,57 +9,155 @@
 
 <PageTitle>My notifications</PageTitle>
 
-<h1>My notifications</h1>
+@{
+    var unreadCount = notifications.Count(n => !n.IsRead);
+    var readCount = notifications.Count(n => n.IsRead);
+}
 
-@if (isLoading)
-{
-    <p>Loading your notifications...</p>
-}
-else if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p role="alert">@errorMessage</p>
-}
-else if (notifications.Count == 0)
-{
-    <p>You do not have any notifications.</p>
-}
-else
-{
-    <table>
-        <thead>
-            <tr>
-                <th>Message</th>
-                <th>Status</th>
-                <th>Send At</th>
-                <th>Account ID</th>
-                <th>Type</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var notification in notifications)
+<div class="ew-page">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <span class="ew-badge badge-soft-primary mb-2">Activity Feed</span>
+            <h1 class="ew-page-title">My notifications</h1>
+            <p class="ew-page-subtitle">Real-time alerts for account transactions, transfers, and card events</p>
+        </div>
+        @if (!isLoading && notifications.Count > 0)
         {
-            <tr>
-                <td>@notification.Message</td>
-                <td>@(notification.IsRead ? "Read" : "Unread")</td>
-                <td>@notification.CreatedAt</td>
-                <td>@notification.AccountId</td>
-                <td>@notification.Type</td>
-                <td>
-                    @if (!notification.IsRead)
-                    {
-                        <button type="button"
-                                disabled="@notification.IsMarkingAsRead"
-                                @onclick="() => MarkAsReadAsync(notification)">
-                            @(notification.IsMarkingAsRead ? "Reading..." : "Read")
-                        </button>
-                    }
-                </td>
-            </tr>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="ew-badge badge-soft-primary px-3 py-2">
+                    <span class="ew-badge-dot"></span>
+                    @unreadCount Unread
+                </span>
+                <span class="ew-badge badge-soft-secondary px-3 py-2">
+                    @readCount Read
+                </span>
+            </div>
         }
-        </tbody>
-    </table>
-}
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage) && notifications.Count > 0)
+    {
+        <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3 mb-3 small" role="alert">
+            <span class="ew-badge badge-soft-danger">Error</span>
+            <span>@errorMessage</span>
+        </div>
+    }
+
+    @if (isLoading)
+    {
+        <div class="ew-card ew-empty-state">
+            <div class="spinner-border text-primary mb-3" role="status"></div>
+            <p class="text-muted mb-0">Loading your notifications...</p>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(errorMessage) && notifications.Count == 0)
+    {
+        <div class="alert alert-danger d-flex align-items-center gap-2 rounded-3" role="alert">
+            <span class="ew-badge badge-soft-danger">Error</span>
+            <span>@errorMessage</span>
+        </div>
+    }
+    else if (notifications.Count == 0)
+    {
+        <div class="ew-card ew-empty-state">
+            <div class="ew-icon-box badge-soft-secondary mx-auto mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </div>
+            <h5 class="fw-bold">All Caught Up</h5>
+            <p class="text-muted mb-0">You do not have any notifications.</p>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex flex-column gap-3">
+            @foreach (var notification in notifications)
+            {
+                var accMask = notification.AccountId == Guid.Empty
+                    ? "System"
+                    : $"Account #{BitConverter.ToUInt16(notification.AccountId.ToByteArray(), 0) % 9000 + 1000}";
+
+                var cleanMessage = string.IsNullOrWhiteSpace(notification.Message)
+                    ? "Notification update received."
+                    : System.Text.RegularExpressions.Regex.Replace(
+                        notification.Message,
+                        @"[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}",
+                        m => $"#{BitConverter.ToUInt16(Guid.Parse(m.Value).ToByteArray(), 0) % 9000 + 1000}");
+
+                var (typeLabel, typeBadgeClass) = (notification.Type ?? string.Empty) switch
+                {
+                    "Deposit" => ("Deposit", "badge-soft-success"),
+                    "Withdrawal" => ("Withdrawal", "badge-soft-warning"),
+                    "IncomingTransfer" => ("Incoming Transfer", "badge-soft-info"),
+                    "OutgoingTransfer" => ("Outgoing Transfer", "badge-soft-primary"),
+                    "CardCreated" => ("Card Created", "badge-soft-purple"),
+                    var t when !string.IsNullOrWhiteSpace(t) => (t, "badge-soft-secondary"),
+                    _ => ("General", "badge-soft-secondary")
+                };
+
+                <div class="ew-card ew-card-hover p-3 p-md-4 @(notification.IsRead ? "" : "ew-card-unread")">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="ew-icon-box @(notification.IsRead ? "badge-soft-secondary" : "badge-soft-primary")">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                </svg>
+                            </div>
+
+                            <div>
+                                <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                                    @if (notification.IsRead)
+                                    {
+                                        <span class="ew-badge badge-soft-secondary">Read</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="ew-badge badge-soft-primary">
+                                            <span class="ew-badge-dot"></span>
+                                            Unread
+                                        </span>
+                                    }
+                                    <span class="ew-badge @typeBadgeClass">@typeLabel</span>
+                                    <span class="ew-badge badge-soft-secondary">@accMask</span>
+                                </div>
+
+                                @if (!string.IsNullOrWhiteSpace(notification.Title))
+                                {
+                                    <div class="fw-bold text-dark mt-1">@notification.Title</div>
+                                }
+                                <div class="@(notification.IsRead ? "text-muted" : "fw-semibold text-dark")">
+                                    @cleanMessage
+                                </div>
+                                <div class="text-muted small mt-1">
+                                    @notification.CreatedAt.ToString("MMM dd, yyyy • HH:mm")
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ps-5 ps-md-0 flex-shrink-0">
+                            @if (!notification.IsRead)
+                            {
+                                <button type="button"
+                                        class="btn btn-sm btn-ew-primary text-white"
+                                        disabled="@notification.IsMarkingAsRead"
+                                        @onclick="() => MarkAsReadAsync(notification)">
+                                    @if (notification.IsMarkingAsRead)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                    }
+                                    @(notification.IsMarkingAsRead ? "Reading..." : "Mark as Read")
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
 
 @code {
     private List<NotificationItemViewModel> notifications = [];
