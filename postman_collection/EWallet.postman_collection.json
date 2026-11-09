@@ -391,6 +391,34 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "GetMyNotifications",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{JwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{NotificationUrl}}/notifications/me",
+              "host": [
+                "{{NotificationUrl}}"
+              ],
+              "path": [
+                "notifications",
+                "me"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -494,6 +522,34 @@
                   "path": [
                     "accounts",
                     "92302859-f59e-41a3-a2e2-5480b8471a3a"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetMyAccounts",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{AccountUrl}}/accounts/me",
+                  "host": [
+                    "{{AccountUrl}}"
+                  ],
+                  "path": [
+                    "accounts",
+                    "me"
                   ]
                 }
               },
@@ -839,6 +895,35 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "GetMyAccounts",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{JwtToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/me",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "me"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ]
             },
@@ -928,17 +1013,57 @@
                 {
                   "name": "GetCardsByAccountId",
                   "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{JwtToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{ApiGateway}}/account-service/accounts/d4084670-858f-48d7-b8f9-b3591cc60a42/cards",
+                      "raw": "{{ApiGateway}}/account-service/accounts/2800af7f-87ac-436d-b097-cf27fc8a8e76/cards",
                       "host": [
                         "{{ApiGateway}}"
                       ],
                       "path": [
                         "account-service",
                         "accounts",
-                        "d4084670-858f-48d7-b8f9-b3591cc60a42",
+                        "2800af7f-87ac-436d-b097-cf27fc8a8e76",
+                        "cards"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GetMyCards",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{JwtToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{ApiGateway}}/account-service/accounts/me/cards",
+                      "host": [
+                        "{{ApiGateway}}"
+                      ],
+                      "path": [
+                        "account-service",
+                        "accounts",
+                        "me",
                         "cards"
                       ]
                     }
@@ -953,17 +1078,27 @@
                 {
                   "name": "GetTransactionsByAccountId",
                   "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{JwtToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{ApiGateway}}/account-service/accounts/d4084670-858f-48d7-b8f9-b3591cc60a42/transactions",
+                      "raw": "{{ApiGateway}}/account-service/accounts/2800af7f-87ac-436d-b097-cf27fc8a8e76/transactions",
                       "host": [
                         "{{ApiGateway}}"
                       ],
                       "path": [
                         "account-service",
                         "accounts",
-                        "d4084670-858f-48d7-b8f9-b3591cc60a42",
+                        "2800af7f-87ac-436d-b097-cf27fc8a8e76",
                         "transactions"
                       ]
                     }
@@ -1073,6 +1208,16 @@
             {
               "name": "GetNotificationById",
               "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "GET",
                 "header": [],
                 "url": {
@@ -1112,6 +1257,16 @@
             {
               "name": "GetNotificationByUserId",
               "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "GET",
                 "header": [],
                 "url": {
@@ -1124,6 +1279,35 @@
                     "users",
                     "a41909e5-9f2d-492f-9564-be3fe28180fe",
                     "notifications"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetMyNotifications",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{JwtToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{ApiGateway}}/notification-service/notifications/me",
+                  "host": [
+                    "{{ApiGateway}}"
+                  ],
+                  "path": [
+                    "notification-service",
+                    "notifications",
+                    "me"
                   ]
                 }
               },

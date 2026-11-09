@@ -1,0 +1,156 @@
+@page "/my-notifications"
+@attribute [Authorize]
+
+@using EWallet.Client.Models.Notifications
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Notifications
+
+@inject NotificationApiClient NotificationApiClient
+
+<PageTitle>My notifications</PageTitle>
+
+<h1>My notifications</h1>
+
+@if (isLoading)
+{
+    <p>Loading your notifications...</p>
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+else if (notifications.Count == 0)
+{
+    <p>You do not have any notifications.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Send At</th>
+                <th>Account ID</th>
+                <th>Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var notification in notifications)
+        {
+            <tr>
+                <td>@notification.Message</td>
+                <td>@(notification.IsRead ? "Read" : "Unread")</td>
+                <td>@notification.CreatedAt</td>
+                <td>@notification.AccountId</td>
+                <td>@notification.Type</td>
+                <td>
+                    @if (!notification.IsRead)
+                    {
+                        <button type="button"
+                                disabled="@notification.IsMarkingAsRead"
+                                @onclick="() => MarkAsReadAsync(notification)">
+                            @(notification.IsMarkingAsRead ? "Reading..." : "Read")
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<NotificationItemViewModel> notifications = [];
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response =
+                await NotificationApiClient.GetMyNotificationsAsync();
+            notifications = response.Notifications
+                .Select(notification => new NotificationItemViewModel(notification))
+                .ToList();
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task MarkAsReadAsync(NotificationItemViewModel notification)
+    {
+        notification.IsMarkingAsRead = true;
+        errorMessage = null;
+
+        try
+        {
+            var response =
+                await NotificationApiClient.MarkAsReadAsync(notification.Id);
+
+            if (response.IsSuccess)
+            {
+                notification.IsRead = true;
+            }
+            else
+            {
+                errorMessage = "The notification could not be marked as read.";
+            }
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            notification.IsMarkingAsRead = false;
+        }
+    }
+
+    private sealed class NotificationItemViewModel
+    {
+        public NotificationItemViewModel(NotificationItem notification)
+        {
+            Id = notification.Id;
+            UserId = notification.UserId;
+            AccountId = notification.AccountId;
+            Title = notification.Title;
+            Message = notification.Message;
+            Type = notification.Type;
+            Channel = notification.Channel;
+            ReferenceId = notification.ReferenceId;
+            CreatedAt = notification.CreatedAt;
+            IsRead = notification.IsRead;
+        }
+
+        public Guid Id { get; }
+
+        public Guid UserId { get; }
+
+        public Guid AccountId { get; }
+
+        public string? Title { get; }
+
+        public string? Message { get; }
+
+        public string? Type { get; }
+
+        public int Channel { get; }
+
+        public Guid? ReferenceId { get; }
+
+        public DateTime CreatedAt { get; }
+
+        public bool IsRead { get; set; }
+
+        public bool IsMarkingAsRead { get; set; }
+    }
+}

@@ -1,0 +1,114 @@
+@page "/users/{UserId:guid}/notifications"
+@attribute [Authorize(Policy = "IdentityDepartment")]
+
+@using EWallet.Client.Models.Notifications
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Notifications
+
+@inject NotificationApiClient NotificationApiClient
+
+<PageTitle>User notifications</PageTitle>
+
+<h1>User notifications</h1>
+<p>User ID: @UserId</p>
+
+@if (isLoading)
+{
+    <p>Loading notifications...</p>
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+else if (notifications.Count == 0)
+{
+    <p>No notifications were found for this user.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Message</th>
+                <th>Type</th>
+                <th>Channel</th>
+                <th>Account ID</th>
+                <th>Reference ID</th>
+                <th>Created</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var notification in notifications)
+            {
+                <tr>
+                    <td>@notification.Title</td>
+                    <td>@notification.Message</td>
+                    <td>@notification.Type</td>
+                    <td>@notification.Channel</td>
+                    <td>@notification.AccountId</td>
+                    <td>@notification.ReferenceId</td>
+                    <td>@notification.CreatedAt</td>
+                    <td>@(notification.IsRead ? "Read" : "Unread")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    private List<NotificationViewModel> notifications = [];
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response =
+                await NotificationApiClient.GetNotificationsByUserIdAsync(
+                    UserId);
+            notifications = response.Notifications
+                .Select(notification => new NotificationViewModel(notification))
+                .ToList();
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private sealed class NotificationViewModel
+    {
+        public NotificationViewModel(NotificationItem notification)
+        {
+            Id = notification.Id;
+            AccountId = notification.AccountId;
+            Title = notification.Title;
+            Message = notification.Message;
+            Type = notification.Type;
+            Channel = notification.Channel;
+            ReferenceId = notification.ReferenceId;
+            CreatedAt = notification.CreatedAt;
+            IsRead = notification.IsRead;
+        }
+
+        public Guid Id { get; }
+        public Guid AccountId { get; }
+        public string? Title { get; }
+        public string? Message { get; }
+        public string? Type { get; }
+        public int Channel { get; }
+        public Guid? ReferenceId { get; }
+        public DateTime CreatedAt { get; }
+        public bool IsRead { get; set; }
+    }
+}

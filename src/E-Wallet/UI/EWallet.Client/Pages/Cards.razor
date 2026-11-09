@@ -1,15 +1,21 @@
 @page "/accounts/{AccountId:guid}/cards"
-@attribute [Authorize(Policy = "AccountDepartment")]
+@page "/my-account/{AccountId:guid}/cards"
+@attribute [Authorize]
 
 @using EWallet.Client.Models.Accounts
 @using EWallet.Client.Services
 @using EWallet.Client.Services.Accounts
 
 @inject AccountApiClient AccountApiClient
+@inject NavigationManager Navigation
 
 <PageTitle>Cards</PageTitle>
 
 <h1>Cards</h1>
+
+<p>
+    <a href="@($"{CardsBasePath}/create")">Create card</a>
+</p>
 
 @if (isLoading)
 {
@@ -29,9 +35,13 @@ else
         @foreach (var card in cards)
         {
             <li>
-                <strong>@card.CardHolderName</strong>
-                <span>@card.CardNumber</span>
-                <a href="@($"/accounts/{AccountId}/cards/{card.Id}/update")">
+                <div>
+                    <strong>Card holder: @card.CardHolderName</strong>
+                </div>
+                <div>Card number: @card.CardNumber</div>
+                <div>Expiry date: @card.CardExpiryDate</div>
+                <div>Security number: @card.CardSecurityNumber</div>
+                <a href="@($"{CardsBasePath}/{card.Id}/update")">
                     Update
                 </a>
                 <a href="@($"/accounts/{AccountId}/cards/{card.Id}/delete")">
@@ -49,6 +59,11 @@ else
     private List<Card> cards = [];
     private bool isLoading = true;
     private string? errorMessage;
+
+    private string CardsBasePath =>
+        Navigation.Uri.Contains("/my-account/", StringComparison.OrdinalIgnoreCase)
+            ? $"/my-account/{AccountId}/cards"
+            : $"/accounts/{AccountId}/cards";
 
     protected override async Task OnInitializedAsync()
     {

@@ -564,6 +564,38 @@
           }
         }
       }
+    },
+    "/accounts/me": {
+      "get": {
+        "tags": [
+          "Account.Api"
+        ],
+        "summary": "Gets my accounts",
+        "description": "Gets the authenticated user's accounts",
+        "operationId": "GetMyAccounts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMyAccountsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -768,6 +800,19 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GetCardDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetMyAccountsResponse": {
+        "type": "object",
+        "properties": {
+          "accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAccountDto"
             },
             "nullable": true
           }

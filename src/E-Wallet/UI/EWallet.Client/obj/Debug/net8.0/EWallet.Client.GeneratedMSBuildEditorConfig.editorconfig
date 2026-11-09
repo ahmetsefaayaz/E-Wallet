@@ -51,10 +51,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FyZHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Code/Code/E-Wallet/src/E-Wallet/UI/EWallet.Client/Pages/CreateAccount.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ3JlYXRlQWNjb3VudC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Code/Code/E-Wallet/src/E-Wallet/UI/EWallet.Client/Pages/CreateAddress.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ3JlYXRlQWRkcmVzcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -91,12 +87,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTXlBY2NvdW50LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Code/Code/E-Wallet/src/E-Wallet/UI/EWallet.Client/Pages/MyCards.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTXlDYXJkcy5yYXpvcg==
+[C:/Code/Code/E-Wallet/src/E-Wallet/UI/EWallet.Client/Pages/MyNotifications.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTXlOb3RpZmljYXRpb25zLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Code/Code/E-Wallet/src/E-Wallet/UI/EWallet.Client/Pages/Register.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Code/Code/E-Wallet/src/E-Wallet/UI/EWallet.Client/Pages/TransactionRequests.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJhbnNhY3Rpb25SZXF1ZXN0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Code/Code/E-Wallet/src/E-Wallet/UI/EWallet.Client/Pages/Transactions.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJhbnNhY3Rpb25zLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Code/Code/E-Wallet/src/E-Wallet/UI/EWallet.Client/Pages/UpdateAddress.razor]
@@ -105,6 +109,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Code/Code/E-Wallet/src/E-Wallet/UI/EWallet.Client/Pages/UpdateCard.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXBkYXRlQ2FyZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Code/Code/E-Wallet/src/E-Wallet/UI/EWallet.Client/Pages/UserNotifications.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlck5vdGlmaWNhdGlvbnMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Code/Code/E-Wallet/src/E-Wallet/UI/EWallet.Client/Pages/UserRoles.razor]

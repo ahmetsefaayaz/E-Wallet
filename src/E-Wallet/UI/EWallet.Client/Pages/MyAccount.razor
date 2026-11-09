@@ -1,80 +1,117 @@
 @page "/my-account"
 @attribute [Authorize]
 
-@using System.Security.Claims
 @using EWallet.Client.Models.Accounts
+@using EWallet.Client.Models.Identity
 @using EWallet.Client.Services
 @using EWallet.Client.Services.Accounts
+@using EWallet.Client.Services.Identity
 
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject AccountApiClient AccountApiClient
+@inject IdentityAdministrationApiClient IdentityAdministrationApiClient
 
-<PageTitle>My account</PageTitle>
+<PageTitle>My accounts</PageTitle>
 
-<h1>My account</h1>
+<h1>My accounts</h1>
+
+<button type="button" @onclick="CreateAccountAsync" disabled="@isCreatingAccount">
+    @(isCreatingAccount ? "Creating..." : "Create account")
+</button>
+
+@if (!string.IsNullOrWhiteSpace(createAccountErrorMessage))
+{
+    <p role="alert">@createAccountErrorMessage</p>
+}
+
+@if (createdAccountId is not null)
+{
+    <p role="status">Account created: @createdAccountId</p>
+}
+
+<p>
+    <a href="/address/create">Create address</a>
+    <span> | </span>
+    <a href="/address/update">Update address</a>
+</p>
+
+@if (address is not null)
+{
+    <h2>My address</h2>
+    <dl>
+        <dt>Address line</dt>
+        <dd>@address.AddressLine</dd>
+        <dt>City</dt>
+        <dd>@address.City</dd>
+        <dt>State</dt>
+        <dd>@address.State</dd>
+        <dt>Country</dt>
+        <dd>@address.Country</dd>
+        <dt>Zip code</dt>
+        <dd>@address.ZipCode</dd>
+    </dl>
+}
+else if (!string.IsNullOrWhiteSpace(addressErrorMessage))
+{
+    <p role="alert">@addressErrorMessage</p>
+}
+else if (!isLoadingAddress && string.IsNullOrWhiteSpace(addressErrorMessage))
+{
+    <p>No address has been added yet.</p>
+}
 
 @if (isLoading)
 {
-    <p>Loading your account...</p>
+    <p>Loading your accounts...</p>
 }
 else if (!string.IsNullOrWhiteSpace(errorMessage))
 {
     <p role="alert">@errorMessage</p>
 }
-else if (account is null)
+else if (accounts.Count == 0)
 {
-    <p>No account was found for the signed-in user.</p>
+    <p>No accounts were found for the signed-in user.</p>
 }
 else
 {
-    <dl>
-        <dt>Account ID</dt>
-        <dd>@account.Id</dd>
-        <dt>User ID</dt>
-        <dd>@account.UserId</dd>
-        <dt>Balance</dt>
-        <dd>@account.AccountBalance</dd>
-    </dl>
+    <ul>
+        @foreach (var account in accounts)
+        {
+            <li>
+                <strong>Account: @account.Id</strong>
+                <span>Balance: @account.AccountBalance</span>
+                <a href="@($"/my-account/{account.Id}/transactions")">
+                    Transactions
+                </a>
+                <a href="@($"/my-account/{account.Id}/cards")">
+                    Cards
+                </a>
+            </li>
+        }
+    </ul>
 }
 
 @code {
-    private Account? account;
+    private List<Account> accounts = [];
+    private AddressDto? address;
     private bool isLoading = true;
+    private bool isLoadingAddress = true;
+    private bool isCreatingAccount;
+    private Guid? createdAccountId;
     private string? errorMessage;
+    private string? addressErrorMessage;
+    private string? createAccountErrorMessage;
 
     protected override async Task OnInitializedAsync()
     {
+        await Task.WhenAll(LoadAccountsAsync(), LoadAddressAsync());
+    }
+
+    private async Task LoadAccountsAsync()
+    {
         try
         {
-            var authenticationState =
-                await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-            var userIdValue =
-                authenticationState.User.FindFirst(
-                    ClaimTypes.NameIdentifier)?.Value;
-
-            if (!Guid.TryParse(userIdValue, out var userId))
-            {
-                errorMessage =
-                    "The signed-in user ID was not found in the access token.";
-                return;
-            }
-
-            var accountsResponse =
-                await AccountApiClient.GetAccountsAsync();
-
-            var userAccount = accountsResponse.PaginatedResult?.Data
-                .FirstOrDefault(candidate => candidate.UserId == userId);
-
-            if (userAccount is null)
-            {
-                return;
-            }
-
-            var accountResponse =
-                await AccountApiClient.GetAccountByIdAsync(userAccount.Id);
-
-            account = accountResponse.Account;
+            var response = await AccountApiClient.GetMyAccountsAsync();
+            accounts = response.Accounts;
         }
         catch (ApiException exception)
         {
@@ -83,6 +120,48 @@ else
         finally
         {
             isLoading = false;
+        }
+    }
+
+    private async Task LoadAddressAsync()
+    {
+        try
+        {
+            var response =
+                await IdentityAdministrationApiClient.GetMyAddressAsync();
+            address = response.Address;
+        }
+        catch (ApiException exception)
+        {
+            addressErrorMessage = exception.Message;
+        }
+        finally
+        {
+            isLoadingAddress = false;
+        }
+    }
+
+    private async Task CreateAccountAsync()
+    {
+        isCreatingAccount = true;
+        createdAccountId = null;
+        createAccountErrorMessage = null;
+
+        try
+        {
+            var response = await AccountApiClient.CreateAccountAsync();
+            createdAccountId = response.AccountId;
+
+            var accountsResponse = await AccountApiClient.GetMyAccountsAsync();
+            accounts = accountsResponse.Accounts;
+        }
+        catch (ApiException exception)
+        {
+            createAccountErrorMessage = exception.Message;
+        }
+        finally
+        {
+            isCreatingAccount = false;
         }
     }
 }

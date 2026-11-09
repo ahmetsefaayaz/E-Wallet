@@ -1,0 +1,81 @@
+@page "/accounts/{AccountId:guid}/transactions"
+@page "/my-account/{AccountId:guid}/transactions"
+@attribute [Authorize]
+
+@using EWallet.Client.Models.Accounts
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Accounts
+
+@inject AccountApiClient AccountApiClient
+
+<PageTitle>Transactions</PageTitle>
+
+<h1>Transactions</h1>
+<p>Account: @AccountId</p>
+
+@if (isLoading)
+{
+    <p>Loading transactions...</p>
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+else if (transactions.Count == 0)
+{
+    <p>No transactions were found.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Card ID</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transaction in transactions)
+            {
+                <tr>
+                    <td>@transaction.Id</td>
+                    <td>@transaction.CardId</td>
+                    <td>@transaction.TransactionType</td>
+                    <td>@transaction.Status</td>
+                    <td>@transaction.Amount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public Guid AccountId { get; set; }
+
+    private List<Transaction> transactions = [];
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response =
+                await AccountApiClient.GetTransactionsByAccountIdAsync(
+                    AccountId);
+            transactions = response.Transactions;
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

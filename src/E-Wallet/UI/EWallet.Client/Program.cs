@@ -5,6 +5,7 @@ using EWallet.Client;
 using EWallet.Client.Services.Auth;
 using EWallet.Client.Services.Accounts;
 using EWallet.Client.Services.Identity;
+using EWallet.Client.Services.Notifications;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -40,6 +41,7 @@ builder.Services.AddScoped<AuthApiClient>();
 builder.Services.AddScoped<AccountApiClient>();
 builder.Services.AddScoped<UsersApiClient>();
 builder.Services.AddScoped<IdentityAdministrationApiClient>();
+builder.Services.AddScoped<NotificationApiClient>();
 builder.Services.AddScoped(sp =>
 {
     var configuration = sp.GetRequiredService<IConfiguration>();

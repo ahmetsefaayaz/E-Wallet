@@ -129,4 +129,25 @@ public sealed class IdentityAdministrationApiClient
             ?? throw new InvalidOperationException(
                 "The update-address response was empty.");
     }
+
+    public async Task<GetMyAddressResponse> GetMyAddressAsync(
+        CancellationToken cancellationToken = default)
+    {
+        using var response = await _httpClient.GetAsync(
+            "identity-service/users/me/address",
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await ApiException.CreateAsync(response, cancellationToken);
+        }
+
+        var result =
+            await response.Content.ReadFromJsonAsync<GetMyAddressResponse>(
+                cancellationToken);
+
+        return result
+            ?? throw new InvalidOperationException(
+                "The my-address response was empty.");
+    }
 }

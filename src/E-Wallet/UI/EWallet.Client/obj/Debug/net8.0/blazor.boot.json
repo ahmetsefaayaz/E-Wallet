@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "EWallet.Client",
   "resources": {
-    "hash": "sha256-bt4JefHPhB7+HoYgJnk4R369vj3vxBOh8qDsjnKcf8g=",
+    "hash": "sha256-2HNrw4EwnaO1CmInQuPgTi7HQTJ4TTiQ4xz2xWaG9ic=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-JTswf4CBcNmmrTGm6DppxYNII8GVEmbA3iXD3bU1fcA="
     },
@@ -214,10 +214,10 @@
       "mscorlib.wasm": "sha256-xeIDrsSwymknFihcL/StdwpaVK+g6J8aGdX6I/w8nks=",
       "netstandard.wasm": "sha256-2YXcctv/4R+ape8ngskTBda7MoSFPsNz3L5yF1BhhYs=",
       "System.Private.CoreLib.wasm": "sha256-LctFzHt8SfvxyxBhDh4AeH6+opncXt0QQ0mP1GxgLW8=",
-      "EWallet.Client.wasm": "sha256-1/zij1qJmYuM3Fw8f02g0IJ3qpD1KPklQyAosmlxB8k="
+      "EWallet.Client.wasm": "sha256-7Uc23wOEsc1QCGZ/I+9FlPmR9TdmkihyT6eMem1cG1Y="
     },
     "pdb": {
-      "EWallet.Client.pdb": "sha256-iHcbu/ilA4T/EXZ2MsxM2uss0iLxBM1dqPH9UwjNvVU="
+      "EWallet.Client.pdb": "sha256-fc1PsZ2NoCIiRqPq0q3zEc+FuAMwjxllrQxZeiSvZkk="
     }
   },
   "cacheBootResources": true,

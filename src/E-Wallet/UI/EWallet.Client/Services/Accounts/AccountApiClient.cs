@@ -38,6 +38,27 @@ public sealed class AccountApiClient
                 "The accounts response was empty.");
     }
 
+    public async Task<GetMyAccountsResponse> GetMyAccountsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        using var response = await _httpClient.GetAsync(
+            "account-service/accounts/me",
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await ApiException.CreateAsync(response, cancellationToken);
+        }
+
+        var result =
+            await response.Content.ReadFromJsonAsync<GetMyAccountsResponse>(
+                cancellationToken);
+
+        return result
+            ?? throw new InvalidOperationException(
+                "The my-accounts response was empty.");
+    }
+
     public async Task<CreateAccountResponse> CreateAccountAsync(
         CancellationToken cancellationToken = default)
     {
@@ -126,6 +147,29 @@ public sealed class AccountApiClient
                 "The cards response was empty.");
     }
 
+    public async Task<GetTransactionsByAccountIdResponse>
+        GetTransactionsByAccountIdAsync(
+            Guid accountId,
+            CancellationToken cancellationToken = default)
+    {
+        using var response = await _httpClient.GetAsync(
+            $"account-service/accounts/{accountId}/transactions",
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await ApiException.CreateAsync(response, cancellationToken);
+        }
+
+        var result =
+            await response.Content.ReadFromJsonAsync<
+                GetTransactionsByAccountIdResponse>(cancellationToken);
+
+        return result
+            ?? throw new InvalidOperationException(
+                "The transactions response was empty.");
+    }
+
     public async Task<CreateCardResponse> CreateCardAsync(
         Guid accountId,
         CreateCardRequest request,
@@ -196,5 +240,80 @@ public sealed class AccountApiClient
         return result
             ?? throw new InvalidOperationException(
                 "The delete-card response was empty.");
+    }
+
+    public async Task<DepositResponse> DepositAsync(
+        Guid accountId,
+        Guid cardId,
+        DepositRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        using var response = await _httpClient.PostAsJsonAsync(
+            $"account-service/accounts/{accountId}/cards/{cardId}/deposit",
+            request,
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await ApiException.CreateAsync(response, cancellationToken);
+        }
+
+        var result =
+            await response.Content.ReadFromJsonAsync<DepositResponse>(
+                cancellationToken);
+
+        return result
+            ?? throw new InvalidOperationException(
+                "The deposit response was empty.");
+    }
+
+    public async Task<WithdrawResponse> WithdrawAsync(
+        Guid accountId,
+        Guid cardId,
+        WithdrawRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        using var response = await _httpClient.PostAsJsonAsync(
+            $"account-service/accounts/{accountId}/cards/{cardId}/withdraw",
+            request,
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await ApiException.CreateAsync(response, cancellationToken);
+        }
+
+        var result =
+            await response.Content.ReadFromJsonAsync<WithdrawResponse>(
+                cancellationToken);
+
+        return result
+            ?? throw new InvalidOperationException(
+                "The withdraw response was empty.");
+    }
+
+    public async Task<TransferRequest> TransferAsync(
+        Guid accountId,
+        Guid cardId,
+        TransferRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        using var response = await _httpClient.PostAsJsonAsync(
+            $"account-service/accounts/{accountId}/cards/{cardId}/transfer",
+            request,
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await ApiException.CreateAsync(response, cancellationToken);
+        }
+
+        var result =
+            await response.Content.ReadFromJsonAsync<TransferRequest>(
+                cancellationToken);
+
+        return result
+            ?? throw new InvalidOperationException(
+                "The transfer response was empty.");
     }
 }
