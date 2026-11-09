@@ -1059,6 +1059,6 @@ C:\Code\Code\E-Wallet\src\E-Wallet\UI\EWallet.Client\obj\Debug\net8.0\compressed
 C:\Code\Code\E-Wallet\src\E-Wallet\UI\EWallet.Client\obj\Debug\net8.0\compressed\gxprsckcgb-{0}-tyqg8yjikr-tyqg8yjikr.gz
 C:\Code\Code\E-Wallet\src\E-Wallet\UI\EWallet.Client\obj\Debug\net8.0\compressed\nfz10qal5g-{0}-2ephyk4gcn-2ephyk4gcn.gz
 C:\Code\Code\E-Wallet\src\E-Wallet\UI\EWallet.Client\obj\Debug\net8.0\compressed\uxo6j5915n-{0}-mg3y19k9xu-mg3y19k9xu.gz
-C:\Code\Code\E-Wallet\src\E-Wallet\UI\EWallet.Client\obj\Debug\net8.0\compressed\fhgr63sg3w-{0}-ckm4g48ga6-ckm4g48ga6.gz
-C:\Code\Code\E-Wallet\src\E-Wallet\UI\EWallet.Client\obj\Debug\net8.0\compressed\9b06ii9dye-{0}-09syo5aj8x-09syo5aj8x.gz
-C:\Code\Code\E-Wallet\src\E-Wallet\UI\EWallet.Client\obj\Debug\net8.0\compressed\0fgyr095zl-{0}-goni531prp-goni531prp.gz
+C:\Code\Code\E-Wallet\src\E-Wallet\UI\EWallet.Client\obj\Debug\net8.0\compressed\fhgr63sg3w-{0}-z1nhfs9fum-z1nhfs9fum.gz
+C:\Code\Code\E-Wallet\src\E-Wallet\UI\EWallet.Client\obj\Debug\net8.0\compressed\9b06ii9dye-{0}-goq6xeiu5s-goq6xeiu5s.gz
+C:\Code\Code\E-Wallet\src\E-Wallet\UI\EWallet.Client\obj\Debug\net8.0\compressed\0fgyr095zl-{0}-p316ui9ivm-p316ui9ivm.gz
