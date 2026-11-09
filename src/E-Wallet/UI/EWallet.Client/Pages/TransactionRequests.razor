@@ -1,0 +1,237 @@
+@page "/transaction-requests"
+@attribute [Authorize]
+
+@using System.ComponentModel.DataAnnotations
+@using EWallet.Client.Models.Accounts
+@using EWallet.Client.Services
+@using EWallet.Client.Services.Accounts
+
+@inject AccountApiClient AccountApiClient
+
+<PageTitle>Transaction requests</PageTitle>
+
+<h1>Transaction requests</h1>
+
+<p>Choose an operation, one of your accounts, and a card from that account.</p>
+
+<div>
+    <label for="operation">Operation</label>
+    <select id="operation" @bind="selectedOperation">
+        <option value="@Operation.Deposit">Deposit</option>
+        <option value="@Operation.Withdraw">Withdraw</option>
+        <option value="@Operation.Transfer">Transfer</option>
+    </select>
+</div>
+
+<div>
+    <label for="account">Account</label>
+    <select id="account" value="@selectedAccountId"
+            @onchange="HandleAccountChangedAsync"
+            disabled="@isLoadingAccounts">
+        <option value="">Choose an account</option>
+        @foreach (var account in accounts)
+        {
+            <option value="@account.Id">@account.Id (@account.AccountBalance)</option>
+        }
+    </select>
+</div>
+
+@if (isLoadingCards)
+{
+    <p>Loading cards...</p>
+}
+else if (selectedAccountId is not null && cards.Count == 0)
+{
+    <p>No cards were found for the selected account.</p>
+}
+else if (selectedAccountId is not null)
+{
+    <EditForm Model="@form" OnValidSubmit="@SubmitAsync">
+        <DataAnnotationsValidator />
+
+        <div>
+            <label for="card">Card</label>
+            <InputSelect id="card" @bind-Value="form.CardId">
+                <option value="">Choose a card</option>
+                @foreach (var card in cards)
+                {
+                    <option value="@card.Id">
+                        @card.CardHolderName (@card.CardNumber)
+                    </option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => form.CardId)" />
+        </div>
+
+        <div>
+            <label for="amount">Amount</label>
+            <InputNumber id="amount" @bind-Value="form.Amount" />
+            <ValidationMessage For="@(() => form.Amount)" />
+        </div>
+
+        @if (selectedOperation == Operation.Transfer)
+        {
+            <div>
+                <label for="receiver">Receiver account ID</label>
+                <InputText id="receiver" @bind-Value="form.ReceiverId" />
+                <ValidationMessage For="@(() => form.ReceiverId)" />
+            </div>
+        }
+
+        <button type="submit" disabled="@isSubmitting">
+            @(isSubmitting ? "Sending..." : $"Send {selectedOperation} request")
+        </button>
+    </EditForm>
+}
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p role="alert">@errorMessage</p>
+}
+
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <p role="status">@successMessage</p>
+}
+
+@code {
+    private enum Operation
+    {
+        Deposit,
+        Withdraw,
+        Transfer
+    }
+
+    private sealed class RequestForm
+    {
+        [Required]
+        public Guid? CardId { get; set; }
+
+        [Range(0.01, double.MaxValue)]
+        public double Amount { get; set; }
+
+        public string ReceiverId { get; set; } = string.Empty;
+    }
+
+    private readonly RequestForm form = new();
+    private readonly List<Account> accounts = [];
+    private List<Card> cards = [];
+    private Operation selectedOperation = Operation.Deposit;
+    private Guid? selectedAccountId;
+    private bool isLoadingAccounts = true;
+    private bool isLoadingCards;
+    private bool isSubmitting;
+    private string? errorMessage;
+    private string? successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await AccountApiClient.GetMyAccountsAsync();
+            accounts.AddRange(response.Accounts);
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isLoadingAccounts = false;
+        }
+    }
+
+    private async Task HandleAccountChangedAsync(ChangeEventArgs args)
+    {
+        errorMessage = null;
+        successMessage = null;
+        cards = [];
+        selectedAccountId = Guid.TryParse(args.Value?.ToString(), out var accountId)
+            ? accountId
+            : null;
+
+        if (selectedAccountId is null)
+        {
+            return;
+        }
+
+        isLoadingCards = true;
+
+        try
+        {
+            var response = await AccountApiClient.GetCardsByAccountIdAsync(
+                selectedAccountId.Value);
+            cards = response.Cards;
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isLoadingCards = false;
+        }
+    }
+
+    private async Task SubmitAsync()
+    {
+        if (selectedAccountId is null || form.CardId is null)
+        {
+            return;
+        }
+
+        isSubmitting = true;
+        errorMessage = null;
+        successMessage = null;
+
+        try
+        {
+            if (selectedOperation == Operation.Deposit)
+            {
+                var response = await AccountApiClient.DepositAsync(
+                    selectedAccountId.Value,
+                    form.CardId.Value,
+                    new DepositRequest { Amount = form.Amount });
+                successMessage = response.IsSuccess
+                    ? "Deposit request completed successfully."
+                    : "The deposit request was not successful.";
+            }
+            else if (selectedOperation == Operation.Withdraw)
+            {
+                var response = await AccountApiClient.WithdrawAsync(
+                    selectedAccountId.Value,
+                    form.CardId.Value,
+                    new WithdrawRequest { Amount = form.Amount });
+                successMessage = response.IsSuccess
+                    ? "Withdraw request completed successfully."
+                    : "The withdraw request was not successful.";
+            }
+            else
+            {
+                if (!Guid.TryParse(form.ReceiverId, out var receiverId))
+                {
+                    errorMessage = "Enter a valid receiver account ID.";
+                    return;
+                }
+
+                await AccountApiClient.TransferAsync(
+                    selectedAccountId.Value,
+                    form.CardId.Value,
+                    new TransferRequest
+                    {
+                        ReceiverId = receiverId,
+                        Amount = form.Amount
+                    });
+                successMessage = "Transfer request completed successfully.";
+            }
+        }
+        catch (ApiException exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

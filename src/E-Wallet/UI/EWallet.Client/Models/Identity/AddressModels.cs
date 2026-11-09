@@ -32,3 +32,8 @@ public sealed class UpdateAddressResponse
 {
     public bool IsSuccess { get; set; }
 }
+
+public sealed class GetMyAddressResponse
+{
+    public AddressDto? Address { get; set; }
+}

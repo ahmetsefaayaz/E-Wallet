@@ -29,6 +29,9 @@
                   <Item>
                     <option name="path" value="ApiGateways/YarpApiGateway/appsettings.Local.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="UI/EWallet.Client/wwwroot/appsettings.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>
