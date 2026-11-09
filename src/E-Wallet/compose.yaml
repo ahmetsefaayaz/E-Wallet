@@ -139,6 +139,15 @@
       - notificationapi
     volumes:
       - ${USERPROFILE}\.aspnet\https:/https:ro
+  ewalletclient:
+    image: ewalletclient
+    build:
+      context: .
+      dockerfile: UI/EWallet.Client/Dockerfile
+    depends_on:
+      - yarpapi
+    ports:
+      - "6004:80"
 volumes:
   postgres_identity: 
   postgres_account:
