@@ -5,7 +5,7 @@ using FluentValidation;
 namespace Account.Application.Account.Commands.TransferMoney;
 
 public record TransferMoneyCommand(Guid AccountId, Guid ReceiverAccountId,
-    Guid CardId, decimal Amount): ICommand<OutgoingTransactionResult>;
+    Guid CardId, Guid CurrentUserId, decimal Amount): ICommand<OutgoingTransactionResult>;
 
 public class OutgoingTransactionValidator : AbstractValidator<TransferMoneyCommand>
 {

@@ -1,4 +1,5 @@
-﻿using Account.Application.Account.Queries.GetAccountById;
+using Account.Api.Extensions;
+using Account.Application.Account.Queries.GetAccountById;
 using Account.Application.Dtos;
 using Carter;
 using Mapster;
@@ -12,9 +13,15 @@ public class GetAccountByIdEndpoint: ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("accounts/{id:guid}", async (ISender sender, Guid id) =>
+        app.MapGet("accounts/{id:guid}", async (ISender sender, Guid id, HttpContext httpContext) =>
         {
-            var result = await sender.Send(new GetAccountByIdQuery(id));
+            var userId = httpContext.User.GetCurrentUserId();
+            if (userId is null)
+                return Results.Unauthorized();
+            var result = await sender.Send(new GetAccountByIdQuery(
+                id,
+                userId.Value,
+                httpContext.User.HasClaim("Department", "Account")));
             var response = result.Adapt<GetAccountByIdResponse>();
             return Results.Ok(response);
         })

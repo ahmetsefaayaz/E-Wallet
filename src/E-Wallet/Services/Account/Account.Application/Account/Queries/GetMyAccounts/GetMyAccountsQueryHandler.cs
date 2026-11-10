@@ -13,7 +13,7 @@ public sealed class GetMyAccountsQueryHandler(IAccountDbContext dbContext)
         GetMyAccountsQuery query,
         CancellationToken cancellationToken)
     {
-        var userId = UserId.Of(query.UserId);
+        var userId = UserId.Of(query.CurrentUserId);
         var accounts = await dbContext.Accounts
             .AsNoTracking()
             .Include(account => account.Cards)

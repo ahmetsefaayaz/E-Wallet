@@ -14,7 +14,8 @@ public class WithdrawTransactionCommandHandler(IAccountDbContext dbContext):
         var accountId = AccountId.Of(command.AccountId);
         var account = await dbContext.Accounts
             .Include(a => a.Cards)
-            .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken)
+            .FirstOrDefaultAsync(a => a.Id == accountId
+                && a.UserId == UserId.Of(command.CurrentUserId), cancellationToken)
                 ?? throw new AccountNotFoundException(command.AccountId.ToString());
         if (!account.Cards.Any(c => c.Id == CardId.Of(command.CardId)))
             throw new CardNotFoundException(command.CardId.ToString());

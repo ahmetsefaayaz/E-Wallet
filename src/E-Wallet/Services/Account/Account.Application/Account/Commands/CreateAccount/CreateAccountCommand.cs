@@ -4,13 +4,13 @@ using FluentValidation;
 
 namespace Account.Application.Account.Commands.CreateAccount;
 
-public record CreateAccountCommand(Guid UserId): ICommand<CreateAccountResult>;
+public record CreateAccountCommand(Guid CurrentUserId): ICommand<CreateAccountResult>;
 
 public class CreateAccountCommandValidator : AbstractValidator<CreateAccountCommand>
 {
     public CreateAccountCommandValidator()
     {
-        RuleFor(c => c.UserId).NotNull().NotEmpty().WithMessage("UserId cannot be empty");
+        RuleFor(c => c.CurrentUserId).NotEmpty().WithMessage("Current user id cannot be empty");
     }
 }
 

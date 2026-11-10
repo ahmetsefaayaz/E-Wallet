@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
 using Account.Application.Account.Queries.GetMyAccounts;
 using Account.Application.Dtos;
+using Account.Api.Extensions;
 using Carter;
 using Mapster;
 using MediatR;
@@ -15,19 +15,16 @@ public sealed class GetMyAccountsEndpoint : ICarterModule
     {
         app.MapGet("/accounts/me", async (
                 ISender sender,
-                ClaimsPrincipal user) =>
+                HttpContext httpContext) =>
             {
-                var userIdValue =
-                    user.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                    ?? user.FindFirst("sub")?.Value;
-
-                if (!Guid.TryParse(userIdValue, out var userId))
+                var userId = httpContext.User.GetCurrentUserId();
+                if (userId is null)
                 {
                     return Results.Unauthorized();
                 }
 
                 var result = await sender.Send(
-                    new GetMyAccountsQuery(userId));
+                    new GetMyAccountsQuery(userId.Value));
 
                 var response = result.Adapt<GetMyAccountsResponse>();
 

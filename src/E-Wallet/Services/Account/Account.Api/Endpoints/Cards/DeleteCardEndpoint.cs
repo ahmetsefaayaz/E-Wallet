@@ -1,4 +1,5 @@
-﻿using Account.Application.Account.Commands.DeleteCard;
+﻿using Account.Api.Extensions;
+using Account.Application.Account.Commands.DeleteCard;
 using Carter;
 using Mapster;
 using MediatR;
@@ -10,9 +11,12 @@ public class DeleteCardEndpoint: ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapDelete("accounts/{accountId}/cards/{cardId}", async (ISender sender, Guid accountId, Guid cardId) =>
+        app.MapDelete("accounts/{accountId}/cards/{cardId}", async (ISender sender, Guid accountId, Guid cardId, HttpContext httpContext) =>
         {
-            var result = await sender.Send(new DeleteCardCommand(accountId, cardId));
+            var userId = httpContext.User.GetCurrentUserId();
+            if (userId is null)
+                return Results.Unauthorized();
+            var result = await sender.Send(new DeleteCardCommand(accountId, cardId, userId.Value));
             var response = result.Adapt<DeleteCardResult>();
             return Results.Ok(response);
         })
@@ -21,6 +25,6 @@ public class DeleteCardEndpoint: ICarterModule
         .WithSummary("Delete card")
         .Produces<DeleteCardResult>()
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .RequireAuthorization("IsAdmin");
+        .RequireAuthorization();
     }
 }

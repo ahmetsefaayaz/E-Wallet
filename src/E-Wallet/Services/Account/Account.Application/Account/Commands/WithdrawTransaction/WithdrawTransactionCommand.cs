@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Account.Application.Account.Commands.WithdrawTransaction;
 
-public record WithdrawTransactionCommand(Guid AccountId, Guid CardId, decimal Amount): ICommand<WithdrawTransactionResult>;
+public record WithdrawTransactionCommand(Guid AccountId, Guid CardId, Guid CurrentUserId, decimal Amount): ICommand<WithdrawTransactionResult>;
 
 public class WithdrawTransactionValidator : AbstractValidator<WithdrawTransactionCommand>
 {

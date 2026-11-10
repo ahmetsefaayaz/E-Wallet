@@ -1,4 +1,5 @@
-﻿using Account.Application.Account.Queries.GetTransactionsByAccountId;
+using Account.Api.Extensions;
+using Account.Application.Account.Queries.GetTransactionsByAccountId;
 using Account.Application.Dtos;
 using Carter;
 using Mapster;
@@ -13,9 +14,15 @@ public class GetTransactionsByAccountIdEndpoint: ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("accounts/{id:guid}/transactions", async (ISender sender, Guid id) =>
+        app.MapGet("accounts/{id:guid}/transactions", async (ISender sender, Guid id, HttpContext httpContext) =>
             {
-                var result = await sender.Send(new GetTransactionsByAccountIdQuery(id));
+                var userId = httpContext.User.GetCurrentUserId();
+                if (userId is null)
+                    return Results.Unauthorized();
+                var result = await sender.Send(new GetTransactionsByAccountIdQuery(
+                    id,
+                    userId.Value,
+                    httpContext.User.HasClaim("Department", "Account")));
                 var response = result.Adapt<GetTransactionsByAccountIdResponse>();
                 return Results.Ok(response);
             })

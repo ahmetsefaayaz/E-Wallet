@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+﻿using Notification.Api.Extensions;
 using Carter;
 using Mapster;
 using MediatR;
@@ -13,17 +13,15 @@ public class GetMyNotificationsEndpoint : ICarterModule
     {
         app.MapGet("/notifications/me", async (
                 ISender sender, 
-                ClaimsPrincipal user) =>
+                HttpContext httpContext) =>
             {
-                var userIdValue = user.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                                  ?? user.FindFirst("sub")?.Value;
-
-                if (!Guid.TryParse(userIdValue, out var userId))
+                var userId = httpContext.User.GetCurrentUserId();
+                if (userId is null)
                 {
                     return Results.Unauthorized();
                 }
 
-                var result = await sender.Send(new GetMyNotificationsQuery(userId));
+                var result = await sender.Send(new GetMyNotificationsQuery(userId.Value));
                 var response = result.Adapt<GetMyNotificationsResponse>();
             
                 return Results.Ok(response);

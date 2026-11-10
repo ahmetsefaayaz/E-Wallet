@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Account.Application.Account.Commands.DeleteAccount;
 
-public record DeleteAccountCommand(Guid AccountId): ICommand<DeleteAccountResult>;
+public record DeleteAccountCommand(Guid AccountId, Guid CurrentUserId, bool IsAdmin): ICommand<DeleteAccountResult>;
 
 public class DeleteAccountCommandValidator : AbstractValidator<DeleteAccountCommand>
 {

@@ -1,4 +1,5 @@
-﻿using Account.Application.Account.Commands.DeleteAccount;
+﻿using Account.Api.Extensions;
+using Account.Application.Account.Commands.DeleteAccount;
 using Carter;
 using Mapster;
 using MediatR;
@@ -11,9 +12,15 @@ public class DeleteAccountEndpoint: ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/accounts/{id}", async (Guid id, ISender sender) =>
+        app.MapDelete("/accounts/{id}", async (Guid id, ISender sender, HttpContext httpContext) =>
         {
-            var result = await sender.Send(new DeleteAccountCommand(id));
+            var userId = httpContext.User.GetCurrentUserId();
+            if (userId is null)
+                return Results.Unauthorized();
+            var result = await sender.Send(new DeleteAccountCommand(
+                id,
+                userId.Value,
+                httpContext.User.IsInRole("Admin")));
             var response = result.Adapt<DeleteAccountResponse>();
             return Results.Ok(response);
         })

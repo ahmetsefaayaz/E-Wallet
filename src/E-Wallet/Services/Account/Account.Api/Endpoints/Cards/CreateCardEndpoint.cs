@@ -1,4 +1,5 @@
-﻿using Account.Application.Account.Commands.CreateCard;
+﻿using Account.Api.Extensions;
+using Account.Application.Account.Commands.CreateCard;
 using Account.Application.Dtos;
 using Carter;
 using Mapster;
@@ -12,9 +13,12 @@ public class CreateCardEndpoint: ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("accounts/{id}/cards", async (ISender sender, Guid id, CreateCardRequest request) =>
+        app.MapPost("accounts/{id}/cards", async (ISender sender, Guid id, CreateCardRequest request, HttpContext httpContext) =>
         {
-            var result = await sender.Send(new CreateCardCommand(id, request.Card));
+            var userId = httpContext.User.GetCurrentUserId();
+            if (userId is null)
+                return Results.Unauthorized();
+            var result = await sender.Send(new CreateCardCommand(id, userId.Value, request.Card));
             var response = result.Adapt<CreateCardResponse>();
             return Results.Created($"/accounts/{id}/cards", response);
             

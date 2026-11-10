@@ -3,5 +3,5 @@ using BuildingBlocks.CQRS;
 
 namespace Account.Application.Account.Queries.GetAccountById;
 
-public record GetAccountByIdQuery(Guid AccountId): IQuery<GetAccountByIdResult>;
+public record GetAccountByIdQuery(Guid AccountId, Guid CurrentUserId, bool IsAccountDepartment): IQuery<GetAccountByIdResult>;
 public record GetAccountByIdResult(GetAccountDto Account);

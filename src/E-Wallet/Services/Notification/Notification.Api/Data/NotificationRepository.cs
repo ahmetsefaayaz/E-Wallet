@@ -24,6 +24,16 @@ public class NotificationRepository: INotificationRepository
         return await _notifications.Find(n => n.Id.ToString() == notificationId).FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<Entities.Notification> GetByIdAsync(
+        string notificationId,
+        string userId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _notifications.Find(n =>
+            n.Id.ToString() == notificationId && n.UserId.ToString() == userId)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<IEnumerable<Entities.Notification>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await  _notifications.Find(_ => true).ToListAsync(cancellationToken);

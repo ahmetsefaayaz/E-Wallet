@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Account.Application.Account.Commands.DeleteCard;
 
-public record DeleteCardCommand(Guid AccountId, Guid CardId) : ICommand<DeleteCardResult>;
+public record DeleteCardCommand(Guid AccountId, Guid CardId, Guid CurrentUserId) : ICommand<DeleteCardResult>;
 
 public class DeleteCardCommandValidator : AbstractValidator<DeleteCardCommand>
 {
@@ -16,5 +16,3 @@ public class DeleteCardCommandValidator : AbstractValidator<DeleteCardCommand>
 }
 
 public record DeleteCardResult(bool IsSuccess);
-
-

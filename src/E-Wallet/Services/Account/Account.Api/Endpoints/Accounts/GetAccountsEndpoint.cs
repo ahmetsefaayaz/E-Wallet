@@ -1,4 +1,5 @@
-﻿using Account.Application.Account.Queries.GetAccounts;
+using Account.Api.Extensions;
+using Account.Application.Account.Queries.GetAccounts;
 using Account.Application.Dtos;
 using BuildingBlocks.Pagination;
 using Carter;
@@ -12,9 +13,15 @@ public class GetAccountsEndpoint: ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("accounts", async (ISender sender, [AsParameters] PaginationRequest request) =>
+        app.MapGet("accounts", async (ISender sender, HttpContext httpContext, [AsParameters] PaginationRequest request) =>
             {
-                var result = await sender.Send(new GetAccountsQuery(request));
+                var userId = httpContext.User.GetCurrentUserId();
+                if (userId is null)
+                    return Results.Unauthorized();
+                var result = await sender.Send(new GetAccountsQuery(
+                    request,
+                    userId.Value,
+                    httpContext.User.HasClaim("Department", "Account")));
                 var response = result.Adapt<GetAccountsResponse>();
                 return Results.Ok(response);
             })

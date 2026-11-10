@@ -1,4 +1,5 @@
-﻿using Account.Application.Account.Commands.TransferMoney;
+﻿using Account.Api.Extensions;
+using Account.Application.Account.Commands.TransferMoney;
 using Carter;
 using Mapster;
 using MediatR;
@@ -14,10 +15,13 @@ public class TransferEndpoint: ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("accounts/{accountId}/cards/{cardId}/transfer",
-                async (ISender sender, Guid accountId, Guid cardId, TransferRequest request) =>
+                async (ISender sender, Guid accountId, Guid cardId, TransferRequest request, HttpContext httpContext) =>
                 {
+                    var userId = httpContext.User.GetCurrentUserId();
+                    if (userId is null)
+                        return Results.Unauthorized();
                     var result = await 
-                        sender.Send(new TransferMoneyCommand(accountId, request.ReceiverId, cardId, request.Amount));
+                        sender.Send(new TransferMoneyCommand(accountId, request.ReceiverId, cardId, userId.Value, request.Amount));
                     var response = result.Adapt<TransferResponse>();
                     return Results.Ok(response);
                 })
