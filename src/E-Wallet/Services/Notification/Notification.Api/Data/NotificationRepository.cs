@@ -12,7 +12,7 @@ public class NotificationRepository: INotificationRepository
     public NotificationRepository(IConfiguration configuration)
     {
         var client = new MongoClient(configuration.GetConnectionString("MongoDb"));
-        var database = client.GetDatabase("DatabaseSettings:NotificationDbName");
+        var database = client.GetDatabase(configuration["DatabaseSettings:NotificationDbName"]);
         _notifications = database.GetCollection<Entities.Notification>("Notifications");
     }
     public async Task AddAsync(Entities.Notification notification, CancellationToken cancellationToken = default)
