@@ -14,7 +14,8 @@ public class TransferMoneyCommandHandler(IAccountDbContext dbContext)
         var accountId = AccountId.Of(command.AccountId);
         var outgoingAccount = await dbContext.Accounts
             .Include(a => a.Cards)
-            .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken)
+            .FirstOrDefaultAsync(a => a.Id == accountId
+                && a.UserId == UserId.Of(command.CurrentUserId), cancellationToken)
             ?? throw new AccountNotFoundException(accountId.Value.ToString());
         if (!outgoingAccount.Cards.Any(c => c.Id == CardId.Of(command.CardId)))
             throw new CardNotFoundException(command.CardId.ToString());

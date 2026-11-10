@@ -11,7 +11,7 @@ public class CreateAccountCommandHandler(IAccountDbContext dbContext)
 {
     public async Task<CreateAccountResult> Handle(CreateAccountCommand command, CancellationToken cancellationToken)
     {
-        var userId = UserId.Of(command.UserId);
+        var userId = UserId.Of(command.CurrentUserId);
         if(await dbContext.Accounts.CountAsync(a => a.UserId == userId, cancellationToken) >= 3)
         {
             throw new BadRequestException("User Cannot Create More Than 3 Accounts", "User cannot have more than 3 accounts");

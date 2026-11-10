@@ -31,6 +31,10 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
                 exception.Message,
                 exception.GetType().Name,
                 context.Response.StatusCode = StatusCodes.Status404NotFound),
+            ForbiddenAccessException => (
+                exception.Message,
+                exception.GetType().Name,
+                context.Response.StatusCode = StatusCodes.Status403Forbidden),
             _ => (
                 exception.Message,
                 exception.GetType().Name,

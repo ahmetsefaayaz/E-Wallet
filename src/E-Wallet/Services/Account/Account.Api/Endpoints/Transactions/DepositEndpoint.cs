@@ -1,4 +1,5 @@
-﻿using Account.Application.Account.Commands.DepositTransaction;
+﻿using Account.Api.Extensions;
+using Account.Application.Account.Commands.DepositTransaction;
 using Carter;
 using Mapster;
 using MediatR;
@@ -14,9 +15,12 @@ public class DepositEndpoint: ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("accounts/{accountId}/cards/{cardId}/deposit",
-            async (ISender sender, Guid accountId, Guid cardId, DepositRequest request) =>
+            async (ISender sender, Guid accountId, Guid cardId, DepositRequest request, HttpContext httpContext) =>
             {
-                var result = await sender.Send(new DepositTransactionCommand(accountId, cardId, request.Amount));
+                var userId = httpContext.User.GetCurrentUserId();
+                if (userId is null)
+                    return Results.Unauthorized();
+                var result = await sender.Send(new DepositTransactionCommand(accountId, cardId, userId.Value, request.Amount));
                 var response = result.Adapt<DepositResponse>();
                 return Results.Ok(response);
             })

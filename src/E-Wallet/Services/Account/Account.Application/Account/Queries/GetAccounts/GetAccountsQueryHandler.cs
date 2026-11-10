@@ -1,6 +1,7 @@
 ﻿using Account.Application.Dtos;
 using Account.Application.Extensions;
 using Account.Application.Interfaces;
+using Account.Domain.ValueObjects;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Pagination;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +13,10 @@ public class GetAccountsQueryHandler(IAccountDbContext dbContext)
 {
     public async Task<GetAccountsResult> Handle(GetAccountsQuery query, CancellationToken cancellationToken)
     {
+        var currentUserId = UserId.Of(query.CurrentUserId);
         var accounts = await dbContext
             .Accounts.AsNoTracking()
+            .Where(a => query.IsAccountDepartment || a.UserId == currentUserId)
             .OrderByDescending(a => a.CreatedAt)
             .Include (a => a.Cards)
             .Include (a => a.Transactions)

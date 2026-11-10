@@ -1,4 +1,5 @@
-﻿using Carter;
+using Notification.Api.Extensions;
+using Carter;
 using Mapster;
 using MediatR;
 
@@ -9,9 +10,15 @@ public class GetNotificationByIdEndpoint: ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("notifications/{id:guid}", async (ISender sender, Guid id) =>
+        app.MapGet("notifications/{id:guid}", async (ISender sender, Guid id, HttpContext httpContext) =>
         {
-            var result = await sender.Send(new GetNotificationByIdQuery(id));
+            var userId = httpContext.User.GetCurrentUserId();
+            if (userId is null)
+                return Results.Unauthorized();
+            var result = await sender.Send(new GetNotificationByIdQuery(
+                id,
+                userId.Value,
+                httpContext.User.HasClaim("Department", "Notification")));
             var response = result.Adapt<GetNotificationByIdResponse>();
             return Results.Ok(response);
         })

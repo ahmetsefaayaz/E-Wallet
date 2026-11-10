@@ -26,6 +26,7 @@ public class UpdateAddressEndpoint
             .WithSummary("Updates an address by given ID.")
             .Produces<UpdateAddressResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status404NotFound)
-            .ProducesProblem(StatusCodes.Status500InternalServerError);
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .RequireAuthorization();
     }
 }

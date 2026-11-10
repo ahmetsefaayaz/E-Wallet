@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Account.Application.Account.Commands.DepositTransaction;
 
-public record DepositTransactionCommand(Guid AccountId, Guid CardId, decimal Amount): ICommand<DepositTransactionResult>;
+public record DepositTransactionCommand(Guid AccountId, Guid CardId, Guid CurrentUserId, decimal Amount): ICommand<DepositTransactionResult>;
 
 public class DepositTransactionValidator : AbstractValidator<DepositTransactionCommand>
 {

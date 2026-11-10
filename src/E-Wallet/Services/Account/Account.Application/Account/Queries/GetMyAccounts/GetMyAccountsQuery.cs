@@ -3,7 +3,7 @@ using BuildingBlocks.CQRS;
 
 namespace Account.Application.Account.Queries.GetMyAccounts;
 
-public record GetMyAccountsQuery(Guid UserId)
+public record GetMyAccountsQuery(Guid CurrentUserId)
     : IQuery<GetMyAccountsResult>;
 
 public record GetMyAccountsResult(IEnumerable<GetAccountDto> Accounts);
