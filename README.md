@@ -99,10 +99,6 @@ Shared class libraries used by the microservices:
 
 ## Services & Ports
 
-<p align="center">
-  <img width="1919" height="970" alt="E-Wallet Ports" src="https://github.com/user-attachments/assets/410c8a9d-bc52-4f08-ac09-05c4eca4632e" />
-</p>
-
 | Container | Description | Ports | URL / Info |
 | :--- | :--- | :--- | :--- |
 | **`ewalletclient`** | Blazor Client App | `6004:80` | [http://localhost:6004](http://localhost:6004) |
@@ -183,3 +179,16 @@ E-Wallet/
         ├── compose.yaml                   # Docker Compose file
         └── E-Wallet.sln                   # Solution file
 ```
+<p align="center">
+<img width="1919" height="972" alt="image" src="https://github.com/user-attachments/assets/d82cf1cd-eb06-48a8-b836-61eb3738d115" />
+</p>
+<p align="center">
+  <img width="1919" height="970" alt="E-Wallet Ports" src="https://github.com/user-attachments/assets/410c8a9d-bc52-4f08-ac09-05c4eca4632e" />
+</p>
+
+<p align="center">
+  <img width="1919" height="968" alt="image" src="https://github.com/user-attachments/assets/85edc576-26d5-475e-91da-39b68b658c77" />
+</p>
+<p align="center">
+  <img width="1919" height="971" alt="image" src="https://github.com/user-attachments/assets/337566d4-3d5a-494e-8933-c2f191997208" />
+</p>
