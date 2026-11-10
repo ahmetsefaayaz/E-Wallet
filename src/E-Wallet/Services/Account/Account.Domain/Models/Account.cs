@@ -66,7 +66,7 @@ public class Account : Aggregate<AccountId>
     public Card CreateCard(CardHolderName cardHolderName,
         CardNumber cardNumber, CardExpiryDate cardExpiryDate, CardSecurityNumber cardSecurityNumber)
     {
-        if(_cards.Count > 3) throw new DomainException("maximum 3 cards supported");
+        if(_cards.Count >= 3) throw new DomainException("maximum 3 cards supported");
         var card = new Card(Id, cardHolderName, cardNumber, cardExpiryDate, cardSecurityNumber);
         _cards.Add(card);
         AddDomainEvent(new CardCreatedEvent(UserId, card));

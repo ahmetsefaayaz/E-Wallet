@@ -14,6 +14,7 @@ public class CreateCardCommandHandler(IAccountDbContext dbContext)
     {
         var accountId = AccountId.Of(command.AccountId);
         var account = await dbContext.Accounts
+            .Include(a => a.Cards)
             .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken)
             ?? throw new AccountNotFoundException(command.AccountId.ToString());
         var card = account.CreateCard(CardHolderName.Of(command.Card.CardHolderName), CardNumber.Of(command.Card.CardNumber),

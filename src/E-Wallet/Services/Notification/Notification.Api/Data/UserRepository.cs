@@ -11,7 +11,7 @@ public class UserRepository : IUserRepository
     public UserRepository(IConfiguration configuration)
     {
         var client = new MongoClient(configuration.GetConnectionString("MongoDb"));
-        var database = client.GetDatabase("DatabaseSettings:UserDbName");
+        var database = client.GetDatabase(configuration["DatabaseSettings:UserDbName"]);
         _users = database.GetCollection<User>("Users");
     }
     
