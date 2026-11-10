@@ -9,9 +9,8 @@ public class NotificationRepository: INotificationRepository
 {
     private readonly IMongoCollection<Entities.Notification> _notifications;
 
-    public NotificationRepository(IConfiguration configuration)
+    public NotificationRepository(IConfiguration configuration, IMongoClient client)
     {
-        var client = new MongoClient(configuration.GetConnectionString("MongoDb"));
         var database = client.GetDatabase(configuration["DatabaseSettings:NotificationDbName"]);
         _notifications = database.GetCollection<Entities.Notification>("Notifications");
     }
