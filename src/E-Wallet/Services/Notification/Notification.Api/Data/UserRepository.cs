@@ -8,9 +8,8 @@ public class UserRepository : IUserRepository
 {
     private readonly IMongoCollection<User> _users;
 
-    public UserRepository(IConfiguration configuration)
+    public UserRepository(IConfiguration configuration, IMongoClient client)
     {
-        var client = new MongoClient(configuration.GetConnectionString("MongoDb"));
         var database = client.GetDatabase(configuration["DatabaseSettings:UserDbName"]);
         _users = database.GetCollection<User>("Users");
     }
