@@ -16,5 +16,8 @@ public class AccountConfiguration: IEntityTypeConfiguration<Domain.Models.Accoun
             uId => uId.Value,
             dbId => UserId.Of(dbId)).IsRequired();
         builder.Property(a => a.AccountBalance).IsRequired();
+        builder.Property(a => a.Version)
+            .IsRowVersion()
+            .HasColumnName("xmin"); 
     }
 }

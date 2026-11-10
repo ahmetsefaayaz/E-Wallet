@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Exceptions.Handlers;
@@ -35,6 +36,10 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
                 exception.Message,
                 exception.GetType().Name,
                 context.Response.StatusCode = StatusCodes.Status403Forbidden),
+            DbUpdateConcurrencyException => (
+                exception.Message,
+                exception.GetType().Name,
+                context.Response.StatusCode = StatusCodes.Status409Conflict),
             _ => (
                 exception.Message,
                 exception.GetType().Name,

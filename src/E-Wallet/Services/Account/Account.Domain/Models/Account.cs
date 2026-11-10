@@ -12,8 +12,8 @@ public class Account : Aggregate<AccountId>
     public IReadOnlyList<Card> Cards => _cards.AsReadOnly();
     public IReadOnlyList<Transaction> Transactions => _transactions.AsReadOnly();
     public UserId UserId { get; init; }
-    public decimal AccountBalance { get; private set; }
-
+    public decimal AccountBalance { get; set; }
+    public uint Version { get; private set; }
     private Account() {}
 
     public Account(UserId userId, decimal accountBalance = 0)

@@ -1887,7 +1887,8 @@
           "FluentValidation.AspNetCore": "11.0.0",
           "FluentValidation.DependencyInjectionExtensions": "11.8.0",
           "Mapster": "10.1.0-pre03",
-          "MediatR": "14.2.0"
+          "MediatR": "14.2.0",
+          "Microsoft.EntityFrameworkCore": "8.0.32"
         },
         "compile": {
           "bin/placeholder/BuildingBlocks.dll": {}
