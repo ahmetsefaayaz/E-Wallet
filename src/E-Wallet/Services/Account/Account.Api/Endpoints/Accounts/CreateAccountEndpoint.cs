@@ -5,7 +5,6 @@ using Mapster;
 using MediatR;
 namespace Account.Api.Endpoints.Accounts;
 
-
 public record CreateAccountResponse(Guid AccountId);
 
 public class CreateAccountEndpoint: ICarterModule
@@ -17,7 +16,11 @@ public class CreateAccountEndpoint: ICarterModule
             var userId = httpContext.User.GetCurrentUserId();
             if (userId is null)
                 return Results.Unauthorized();
-            var result = await sender.Send(new CreateAccountCommand(userId.Value));
+            if (!httpContext.Request.Headers.TryGetValue("Idempotency-Key", out var idempotencyKey)
+                || string.IsNullOrWhiteSpace(idempotencyKey))
+                return Results.BadRequest("The Idempotency-Key header is required.");
+            var result = await sender.Send(new CreateAccountCommand(
+                userId.Value, idempotencyKey.ToString()));
             var response = result.Adapt<CreateAccountResponse>();
             return Results.Created($"/accounts/{response.AccountId}", response);
         })
@@ -25,6 +28,7 @@ public class CreateAccountEndpoint: ICarterModule
         .WithDescription("Creates a new account")
         .Produces<CreateAccountResponse>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status409Conflict)
         .RequireAuthorization();
     }
 }

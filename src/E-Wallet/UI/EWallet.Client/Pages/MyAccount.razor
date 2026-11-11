@@ -256,6 +256,7 @@
     private string? errorMessage;
     private string? addressErrorMessage;
     private string? createAccountErrorMessage;
+    private string _idempotencyKey = Guid.NewGuid().ToString();
 
     protected override async Task OnInitializedAsync()
     {
@@ -305,9 +306,9 @@
 
         try
         {
-            var response = await AccountApiClient.CreateAccountAsync();
+            var response = await AccountApiClient.CreateAccountAsync(_idempotencyKey);
             createdAccountId = response.AccountId;
-
+            _idempotencyKey = Guid.NewGuid().ToString();
             var accountsResponse = await AccountApiClient.GetMyAccountsAsync();
             accounts = accountsResponse.Accounts;
         }

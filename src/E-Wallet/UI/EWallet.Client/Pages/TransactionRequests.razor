@@ -186,7 +186,8 @@
     private bool isSubmitting;
     private string? errorMessage;
     private string? successMessage;
-
+    private string _idempotencyKey = Guid.NewGuid().ToString();
+    
     protected override async Task OnInitializedAsync()
     {
         try
@@ -254,20 +255,35 @@
                 var response = await AccountApiClient.DepositAsync(
                     selectedAccountId.Value,
                     form.CardId.Value,
-                    new DepositRequest { Amount = form.Amount });
-                successMessage = response.IsSuccess
-                    ? "Deposit request completed successfully."
-                    : "The deposit request was not successful.";
+                    new DepositRequest { Amount = form.Amount },
+                    _idempotencyKey);
+
+                if (response.IsSuccess)
+                {
+                    successMessage = "Deposit request completed successfully.";
+                    ResetFormForNextTransaction();
+                }
+                else
+                {
+                    errorMessage = "The deposit request was not successful.";
+                }
             }
             else if (selectedOperation == Operation.Withdraw)
             {
                 var response = await AccountApiClient.WithdrawAsync(
                     selectedAccountId.Value,
                     form.CardId.Value,
-                    new WithdrawRequest { Amount = form.Amount });
-                successMessage = response.IsSuccess
-                    ? "Withdraw request completed successfully."
-                    : "The withdraw request was not successful.";
+                    new WithdrawRequest { Amount = form.Amount },
+                    _idempotencyKey);
+                if (response.IsSuccess)
+                {
+                    successMessage = "Withdraw request completed successfully.";
+                    ResetFormForNextTransaction();
+                }
+                else
+                {
+                    errorMessage = "The withdraw request was not successful.";
+                }
             }
             else
             {
@@ -280,12 +296,11 @@
                 await AccountApiClient.TransferAsync(
                     selectedAccountId.Value,
                     form.CardId.Value,
-                    new TransferRequest
-                    {
-                        ReceiverId = receiverId,
-                        Amount = form.Amount
-                    });
+                    new TransferRequest { ReceiverId = receiverId, Amount = form.Amount },
+                    _idempotencyKey);
+                    
                 successMessage = "Transfer request completed successfully.";
+                ResetFormForNextTransaction();
             }
         }
         catch (ApiException exception)
@@ -296,5 +311,11 @@
         {
             isSubmitting = false;
         }
+    }
+    private void ResetFormForNextTransaction()
+    {
+        _idempotencyKey = Guid.NewGuid().ToString();
+        form.Amount = 0;
+        form.ReceiverId = string.Empty;
     }
 }

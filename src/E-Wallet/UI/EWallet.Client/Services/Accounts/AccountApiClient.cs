@@ -60,11 +60,17 @@ public sealed class AccountApiClient
     }
 
     public async Task<CreateAccountResponse> CreateAccountAsync(
+        string? idempotencyKey = null,
         CancellationToken cancellationToken = default)
     {
-        using var response = await _httpClient.PostAsync(
-            "account-service/accounts",
-            content: null,
+        using var request = new HttpRequestMessage(
+            HttpMethod.Post,
+            "account-service/accounts");
+        request.Headers.Add(
+            "Idempotency-Key",
+            idempotencyKey ?? Guid.NewGuid().ToString());
+        using var response = await _httpClient.SendAsync(
+            request,
             cancellationToken);
 
         if (!response.IsSuccessStatusCode)
@@ -246,11 +252,20 @@ public sealed class AccountApiClient
         Guid accountId,
         Guid cardId,
         DepositRequest request,
+        string? idempotencyKey = null,
         CancellationToken cancellationToken = default)
     {
-        using var response = await _httpClient.PostAsJsonAsync(
-            $"account-service/accounts/{accountId}/cards/{cardId}/deposit",
-            request,
+        using var httpRequest = new HttpRequestMessage(
+            HttpMethod.Post,
+            $"account-service/accounts/{accountId}/cards/{cardId}/deposit")
+        {
+            Content = JsonContent.Create(request)
+        };
+        httpRequest.Headers.Add(
+            "Idempotency-Key",
+            idempotencyKey ?? Guid.NewGuid().ToString());
+        using var response = await _httpClient.SendAsync(
+            httpRequest,
             cancellationToken);
 
         if (!response.IsSuccessStatusCode)
@@ -271,11 +286,20 @@ public sealed class AccountApiClient
         Guid accountId,
         Guid cardId,
         WithdrawRequest request,
+        string? idempotencyKey = null,
         CancellationToken cancellationToken = default)
     {
-        using var response = await _httpClient.PostAsJsonAsync(
-            $"account-service/accounts/{accountId}/cards/{cardId}/withdraw",
-            request,
+        using var httpRequest = new HttpRequestMessage(
+            HttpMethod.Post,
+            $"account-service/accounts/{accountId}/cards/{cardId}/withdraw")
+        {
+            Content = JsonContent.Create(request)
+        };
+        httpRequest.Headers.Add(
+            "Idempotency-Key",
+            idempotencyKey ?? Guid.NewGuid().ToString());
+        using var response = await _httpClient.SendAsync(
+            httpRequest,
             cancellationToken);
 
         if (!response.IsSuccessStatusCode)
@@ -296,11 +320,20 @@ public sealed class AccountApiClient
         Guid accountId,
         Guid cardId,
         TransferRequest request,
+        string? idempotencyKey = null,
         CancellationToken cancellationToken = default)
     {
-        using var response = await _httpClient.PostAsJsonAsync(
-            $"account-service/accounts/{accountId}/cards/{cardId}/transfer",
-            request,
+        using var httpRequest = new HttpRequestMessage(
+            HttpMethod.Post,
+            $"account-service/accounts/{accountId}/cards/{cardId}/transfer")
+        {
+            Content = JsonContent.Create(request)
+        };
+        httpRequest.Headers.Add(
+            "Idempotency-Key",
+            idempotencyKey ?? Guid.NewGuid().ToString());
+        using var response = await _httpClient.SendAsync(
+            httpRequest,
             cancellationToken);
 
         if (!response.IsSuccessStatusCode)

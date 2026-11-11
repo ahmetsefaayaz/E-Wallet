@@ -20,13 +20,17 @@ public class TransferEndpoint: ICarterModule
                     var userId = httpContext.User.GetCurrentUserId();
                     if (userId is null)
                         return Results.Unauthorized();
+                    if (!httpContext.Request.Headers.TryGetValue("Idempotency-Key", out var idempotencyKey)
+                        || string.IsNullOrWhiteSpace(idempotencyKey))
+                        return Results.BadRequest("The Idempotency-Key header is required.");
                     var result = await 
-                        sender.Send(new TransferMoneyCommand(accountId, request.ReceiverId, cardId, userId.Value, request.Amount));
+                        sender.Send(new TransferMoneyCommand
+                            (accountId, request.ReceiverId, cardId, userId.Value, request.Amount, idempotencyKey.ToString()));
                     var response = result.Adapt<TransferResponse>();
                     return Results.Ok(response);
                 })
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces<TransferRequest>()
+            .ProducesProblem(StatusCodes.Status409Conflict)
             .WithName("TransferTransaction")
             .WithDescription("Transfer transaction")
             .WithSummary("Transfer transaction")

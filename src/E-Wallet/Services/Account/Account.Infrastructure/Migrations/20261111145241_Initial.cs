@@ -30,6 +30,24 @@ namespace Account.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IdempotencyRecords",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Operation = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Key = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IdempotencyRecords", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Card",
                 columns: table => new
                 {
@@ -87,6 +105,12 @@ namespace Account.Infrastructure.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_IdempotencyRecords_UserId_Operation_Key",
+                table: "IdempotencyRecords",
+                columns: new[] { "UserId", "Operation", "Key" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transaction_AccountId",
                 table: "Transaction",
                 column: "AccountId");
@@ -97,6 +121,9 @@ namespace Account.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Card");
+
+            migrationBuilder.DropTable(
+                name: "IdempotencyRecords");
 
             migrationBuilder.DropTable(
                 name: "Transaction");
