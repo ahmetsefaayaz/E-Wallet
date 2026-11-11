@@ -40,6 +40,10 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
                 exception.Message,
                 exception.GetType().Name,
                 context.Response.StatusCode = StatusCodes.Status409Conflict),
+            DuplicateRequestException => (
+                exception.Message,
+                exception.GetType().Name,
+                context.Response.StatusCode = StatusCodes.Status409Conflict),
             _ => (
                 exception.Message,
                 exception.GetType().Name,

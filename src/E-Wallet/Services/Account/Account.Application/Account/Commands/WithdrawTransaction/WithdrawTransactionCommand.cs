@@ -4,7 +4,8 @@ using FluentValidation;
 
 namespace Account.Application.Account.Commands.WithdrawTransaction;
 
-public record WithdrawTransactionCommand(Guid AccountId, Guid CardId, Guid CurrentUserId, decimal Amount): ICommand<WithdrawTransactionResult>;
+public record WithdrawTransactionCommand(Guid AccountId, Guid CardId, Guid CurrentUserId, decimal Amount, string IdempotencyKey): 
+    IIdempotentCommand<WithdrawTransactionResult>;
 
 public class WithdrawTransactionValidator : AbstractValidator<WithdrawTransactionCommand>
 {
@@ -12,6 +13,8 @@ public class WithdrawTransactionValidator : AbstractValidator<WithdrawTransactio
     {
         RuleFor(c => c.AccountId.ToString()).NotNull().NotEmpty().WithMessage("Account Id is required")
             .Length(10, 100).WithMessage("Account Id must be 10 characters or less than 100 characters");
+        RuleFor(c => c.IdempotencyKey).NotNull().NotEmpty().WithMessage("Idempotency Key is required")
+            .Length(5, 100).WithMessage("Idempotency Key must be 5 characters or less than 100 characters");
         RuleFor(c => c.CardId).NotNull().NotEmpty().WithMessage("CardId is required");
         RuleFor(c => c.Amount).NotNull().NotEmpty().WithMessage("Amount is required")
             .GreaterThan(0).WithMessage("Amount must be greater than 0")

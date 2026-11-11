@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Account.Application.Interfaces;
+using Account.Infrastructure.BackgroundServices;
 using Account.Infrastructure.Data;
 using Account.Infrastructure.Data.Interceptors;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -47,6 +48,8 @@ public static class DependencyInjection
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
             options.UseNpgsql(configuration.GetConnectionString("Database"));
         });
+
+        services.AddHostedService<IdempotencyCleanupJob>();
         
         return services;
     }
