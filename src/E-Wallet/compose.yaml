@@ -5,8 +5,8 @@
     container_name: identitydb
     restart: always
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${IDENTITY_DB_PASSWORD}
+      POSTGRES_USER: ${IDENTITY_DB_USER}
       POSTGRES_DB: IdentityDb
     ports:
       - "5433:5432"
@@ -17,8 +17,8 @@
     container_name: accountdb
     restart: always
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${ACCOUNT_DB_PASSWORD}
+      POSTGRES_USER: ${ACCOUNT_DB_USER}
       POSTGRES_DB: AccountDb
     ports: 
       - "5434:5432"
@@ -37,8 +37,8 @@
     hostname: ewallet-mq
     container_name: messagebroker
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
     restart: always
     ports:
       - "5672:5672"
@@ -65,10 +65,11 @@
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - MessageBroker__Host=amqp://ewallet-mq:5672
-      - MessageBroker__Password=guest
-      - MessageBroker__UserName=guest
-      - ConnectionStrings__Database=Server=identitydb;Database=IdentityDb;Username=postgres;Password=postgres;
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sifre123!
+      - MessageBroker__Password=${RABBITMQ_PASSWORD}
+      - MessageBroker__UserName=${RABBITMQ_USER}
+      - ConnectionStrings__Database=Server=identitydb;Database=IdentityDb;Username=${IDENTITY_DB_USER};Password=${IDENTITY_DB_PASSWORD};
+      - Jwt__Key=${JWT_SECRET}
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${KESTREL_PASSWORD}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
       - ${USERPROFILE}\.aspnet\https:/https:ro
@@ -87,11 +88,12 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=Server=accountdb;Database=AccountDb;Username=postgres;Password=postgres;
+      - ConnectionStrings__Database=Server=accountdb;Database=AccountDb;Username=${ACCOUNT_DB_USER};Password=${ACCOUNT_DB_PASSWORD};
       - MessageBroker__Host=amqp://ewallet-mq:5672
-      - MessageBroker__Password=guest
-      - MessageBroker__UserName=guest
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sifre123!
+      - MessageBroker__Password=${RABBITMQ_PASSWORD}
+      - MessageBroker__UserName=${RABBITMQ_USER}
+      - Jwt__Key=${JWT_SECRET}
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${KESTREL_PASSWORD}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
       - ${USERPROFILE}\.aspnet\https:/https:ro
@@ -113,9 +115,10 @@
       - ConnectionStrings__MongoDb=mongodb://notificationdb:27017
       - SmtpSettings__Host=mailhog
       - MessageBroker__Host=amqp://ewallet-mq:5672
-      - MessageBroker__Password=guest
-      - MessageBroker__UserName=guest
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sifre123!
+      - MessageBroker__Password=${RABBITMQ_PASSWORD}
+      - MessageBroker__UserName=${RABBITMQ_USER}
+      - Jwt__Key=${JWT_SECRET}
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${KESTREL_PASSWORD}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
       - ${USERPROFILE}\.aspnet\https:/https:ro
@@ -131,7 +134,7 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sifre123!
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${KESTREL_PASSWORD}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     depends_on:
       - identityapi
@@ -146,6 +149,10 @@
       dockerfile: UI/EWallet.Client/Dockerfile
     depends_on:
       - yarpapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ApiGateway__BaseUrl=https://localhost:8081
     ports:
       - "6004:80"
 volumes:
