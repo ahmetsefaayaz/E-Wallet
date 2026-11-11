@@ -3,6 +3,7 @@ using Account.Application.Interfaces;
 using Account.Infrastructure.BackgroundServices;
 using Account.Infrastructure.Data;
 using Account.Infrastructure.Data.Interceptors;
+using BuildingBlocks.Messaging.MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -16,7 +17,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        
+        services.AddMessageBroker<AccountDbContext>(configuration);
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
             var validAudiences = configuration.GetSection("Jwt:Audiences").Get<string[]>();
@@ -40,7 +41,6 @@ public static class DependencyInjection
                 context.User.HasClaim("Department", "Account") || context.User.IsInRole("Admin")));
         });
         
-        services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, AuditableInterceptor>();
         services.AddScoped<IAccountDbContext, AccountDbContext>();
         services.AddDbContext<AccountDbContext>((sp, options) =>

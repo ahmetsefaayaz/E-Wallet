@@ -30,7 +30,7 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(LoggingBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
-        services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
+        services.AddMessageBroker<IdentityServiceDbContext>(configuration, Assembly.GetExecutingAssembly());
         services.AddCarter();
         services.AddExceptionHandler<GlobalExceptionHandler>();
         
