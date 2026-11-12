@@ -21,7 +21,7 @@
             <div class="d-flex gap-3">
                 <div class="ew-card px-3 py-2">
                     <div class="ew-stat-label">Total Accounts</div>
-                    <div class="fw-bold fs-5">@accounts.Count</div>
+                    <div class="fw-bold fs-5">@totalItemCount</div>
                 </div>
                 <div class="ew-card px-3 py-2">
                     <div class="ew-stat-label">Managed Volume</div>
@@ -30,6 +30,37 @@
             </div>
         }
     </div>
+
+    @if (!isLoading && totalItemCount > 0)
+    {
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div class="text-muted small">
+                Showing @((pageIndex * pageSize) + 1)-@Math.Min((pageIndex * pageSize) + accounts.Count, totalItemCount)
+                of @totalItemCount accounts
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <label class="text-muted small mb-0" for="pageSize">Per page</label>
+                <select id="pageSize" class="form-select form-select-sm" style="width: auto;"
+                        value="@pageSize" @onchange="HandlePageSizeChangedAsync">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                <button type="button" class="btn btn-sm btn-ew-light"
+                        @onclick="PreviousPageAsync" disabled="@(pageIndex == 0)">
+                    Previous
+                </button>
+                <span class="text-muted small text-nowrap">Page @(pageIndex + 1) of @totalPages</span>
+                <button type="button" class="btn btn-sm btn-ew-light"
+                        @onclick="NextPageAsync" disabled="@(pageIndex >= totalPages - 1)">
+                    Next
+                </button>
+                <input type="number" class="form-control form-control-sm" style="width: 75px;"
+                       min="1" max="@totalPages" value="@(pageIndex + 1)"
+                       @onchange="GoToPageAsync" aria-label="Page number" />
+            </div>
+        </div>
+    }
 
     @if (isLoading)
     {
@@ -75,7 +106,7 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <h5 class="fw-bold mb-0">Account @idx</h5>
+                                        <h5 class="fw-bold mb-0">Account @((pageIndex * pageSize) + idx)</h5>
                                         <span class="text-muted small">Ref #@accMask • Owner #@ownerMask</span>
                                     </div>
                                 </div>
@@ -114,22 +145,79 @@
     private List<Account> accounts = [];
     private bool isLoading = true;
     private string? errorMessage;
+    private int pageIndex;
+    private int pageSize = 10;
+    private long totalItemCount;
+
+    private int totalPages =>
+        totalItemCount == 0
+            ? 1
+            : (int)Math.Ceiling(totalItemCount / (double)pageSize);
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadAccountsAsync();
+    }
+
+    private async Task LoadAccountsAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+
         try
         {
-            var response = await AccountApiClient.GetAccountsAsync();
+            var response = await AccountApiClient.GetAccountsAsync(pageIndex, pageSize);
 
             accounts = response.PaginatedResult?.Data ?? [];
+            totalItemCount = response.PaginatedResult?.TotalItemCount ?? 0;
         }
         catch (ApiException exception)
         {
             errorMessage = exception.Message;
+            accounts = [];
+            totalItemCount = 0;
         }
         finally
         {
             isLoading = false;
         }
+    }
+
+    private async Task PreviousPageAsync()
+    {
+        if (pageIndex == 0)
+            return;
+
+        pageIndex--;
+        await LoadAccountsAsync();
+    }
+
+    private async Task NextPageAsync()
+    {
+        if (pageIndex >= totalPages - 1)
+            return;
+
+        pageIndex++;
+        await LoadAccountsAsync();
+    }
+
+    private async Task HandlePageSizeChangedAsync(ChangeEventArgs args)
+    {
+        if (!int.TryParse(args.Value?.ToString(), out var newPageSize)
+            || newPageSize <= 0)
+            return;
+
+        pageSize = newPageSize;
+        pageIndex = 0;
+        await LoadAccountsAsync();
+    }
+
+    private async Task GoToPageAsync(ChangeEventArgs args)
+    {
+        if (!int.TryParse(args.Value?.ToString(), out var requestedPage))
+            return;
+
+        pageIndex = Math.Clamp(requestedPage - 1, 0, totalPages - 1);
+        await LoadAccountsAsync();
     }
 }
