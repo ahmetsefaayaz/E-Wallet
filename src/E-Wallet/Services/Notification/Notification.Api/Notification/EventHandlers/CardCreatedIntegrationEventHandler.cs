@@ -13,11 +13,11 @@ public class CardCreatedIntegrationEventHandler(INotificationRepository notifica
     public async Task Consume(ConsumeContext<CardCreatedIntegrationEvent> context)
     {
         var @event = context.Message;
-        var notification = await CreateNotification(@event, context.CancellationToken);
-        
-        
         var userMail = await GetUserMail(@event.UserId);
         await SendMail(userMail, @event);
+        
+        
+        var notification = await CreateNotification(@event, context.CancellationToken);
         
     }
 
