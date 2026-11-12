@@ -31,13 +31,23 @@ This repository contains an E-Wallet application built with a microservices arch
 | :--- | :--- |
 | **Framework** | .NET 8.0, ASP.NET Core Minimal APIs, Blazor WebAssembly |
 | **Architecture** | Microservices, Domain-Driven Design (DDD), Clean Architecture, Vertical Slice, CQRS |
+| **Reliability & Data Patterns** | Transactional Outbox Pattern, Idempotency Pattern, Optimistic Concurrency Control |
 | **API & Gateway** | Carter, YARP Reverse Proxy, Rate Limiting (`FixedWindowLimiter`), Swagger / OpenAPI |
 | **Libraries** | MediatR, FluentValidation, Mapster |
-| **Messaging** | RabbitMQ, MassTransit |
+| **Messaging** | RabbitMQ, MassTransit (with EF Core Outbox & Message Retry) |
 | **Databases** | PostgreSQL 17, Entity Framework Core 8, MongoDB |
-| **Authentication** | ASP.NET Core Identity, JWT Bearer Authentication, Role & Claim Authorization |
+| **Authentication** | ASP.NET Core Identity, JWT Bearer Authentication, Role, Claim & Ownership Authorization |
 | **Email** | MailKit (SMTP), MailHog |
 | **Containers** | Docker, Docker Compose, Nginx |
+
+---
+
+## Key Features & Patterns
+
+- **Transactional Outbox Pattern**: Uses MassTransit's Entity Framework Core Outbox (`InboxState`, `OutboxMessage`, `OutboxState`) in both Identity and Account services so database changes and RabbitMQ events are saved atomically in the same transaction.
+- **Idempotency**: Protects critical write operations (Create Account, Deposit, Withdraw, Transfer) from duplicate requests caused by network retries. Uses an `Idempotency-Key` header, MediatR `IdempotencyBehavior`, PostgreSQL `IdempotencyRecords` storage, and a daily `IdempotencyCleanupJob` background service.
+- **Optimistic Concurrency Control**: Uses PostgreSQL's `xmin` row version token on wallet accounts to prevent race conditions and lost balance updates when concurrent transactions occur, returning `409 Conflict` on version mismatch.
+- **Resource Ownership & Security**: Enforces user-level data isolation so users can only access or modify their own accounts, cards, transactions, addresses, and notifications, while admins retain full management access.
 
 ---
 
@@ -50,7 +60,7 @@ Handles user registration, login, roles, claims, and user addresses.
 - CQRS implementation using **MediatR**
 - Validation and logging pipelines with **MediatR** and **FluentValidation**
 - Authentication and authorization with **ASP.NET Core Identity** and **JWT tokens**
-- Publishes `UserRegisteredIntegrationEvent` to RabbitMQ when a user registers
+- Publishes `UserRegisteredIntegrationEvent` to RabbitMQ using the **MassTransit EF Core Outbox** when a user registers or when the default admin is seeded
 - Global exception handling and automatic database seeding
 - **PostgreSQL** database running in Docker
 
@@ -59,9 +69,12 @@ Manages user wallet accounts, cards, balances, and money transactions.
 - Built with **DDD**, **CQRS**, and **Clean Architecture**
 - Uses **Carter** for Minimal API endpoints
 - CQRS commands and queries with **MediatR** and **FluentValidation**
-- Domain models (`Account`, `Card`, `Transaction`), Value Objects, and Domain Events
+- Domain models (`Account`, `Card`, `Transaction`, `IdempotencyRecord`), Value Objects, and Domain Events
 - Supports creating/deleting accounts, managing cards, and running transactions (**Deposit**, **Withdraw**, and **Transfer**)
-- Publishes `CardCreatedIntegrationEvent` and `TransactionCreatedIntegrationEvent` to RabbitMQ using **MassTransit**
+- **Optimistic Concurrency** on `Account` using PostgreSQL `xmin` row versioning
+- **Idempotency** check via `IdempotencyService` and automatic cleanup via `IdempotencyCleanupJob` (`BackgroundService`)
+- Dispatches domain events via `DomainEventDispatcher` and publishes `CardCreatedIntegrationEvent` and `TransactionCreatedIntegrationEvent` through the **MassTransit EF Core Outbox**
+- Automatic entity auditing (`CreatedBy`, `CreatedAt`, `LastModifiedBy`, `LastModified`) via `AuditableInterceptor` and `ICurrentUserId`
 - **PostgreSQL** database running in Docker with EF Core migrations and seed data
 
 ### Notification Microservice (`Notification.Api`)
@@ -72,17 +85,17 @@ Listens for events from other services, sends emails, and saves user notificatio
 - Global exception handling and logging behaviors
 - Consumes integration events (`UserRegisteredIntegrationEvent`, `CardCreatedIntegrationEvent`, `TransactionCreatedIntegrationEvent`) from **RabbitMQ** using **MassTransit**
 - Sends emails through **MailKit** and **MailHog**
-- **MongoDB** database running in Docker
+- **MongoDB** database running in Docker (with singleton `IMongoClient` registration)
 
 ### BuildingBlocks (`BuildingBlocks` & `BuildingBlocks.Messaging`)
 Shared class libraries used by the microservices:
-- **`BuildingBlocks`**: Base CQRS interfaces (`ICommand`, `IQuery`), MediatR validation and logging behaviors, global exception handling, and pagination helpers.
-- **`BuildingBlocks.Messaging`**: Shared RabbitMQ integration event messages and MassTransit setup extensions.
+- **`BuildingBlocks`**: Base CQRS interfaces (`ICommand`, `IQuery`, `IIdempotentCommand`), MediatR pipeline behaviors (`ValidationBehavior`, `LoggingBehavior`, `IdempotencyBehavior`), custom exceptions (`BadRequestException`, `NotFoundException`, `ForbiddenAccessException`, `DuplicateRequestException`, `InternalServerException`), `GlobalExceptionHandler` (handling validation, concurrency, duplicate requests, and access errors), and pagination helpers.
+- **`BuildingBlocks.Messaging`**: Shared RabbitMQ integration event messages and MassTransit setup extensions with **EF Core Outbox** and automatic **Message Retry** configuration.
 
 ### Microservices Communication
 - Asynchronous communication using **RabbitMQ**
 - Uses RabbitMQ Publish/Subscribe Topic Exchange model
-- Uses **MassTransit** as an abstraction over RabbitMQ
+- Uses **MassTransit** with **Entity Framework Outbox** and **Message Retry** policies
 - Shared `BuildingBlocks.Messaging` library referenced across microservices
 
 ### YARP API Gateway (`YarpApiGateway`)
@@ -92,8 +105,9 @@ Shared class libraries used by the microservices:
 
 ### Client App (`EWallet.Client`)
 - **ASP.NET Core Blazor WebAssembly** project
-- Calls the **YARP API Gateway** using `HttpClient`
-- Includes pages for Login, Register, My Account, Cards, Transactions (Deposit, Withdraw, Transfer), Address, Notifications, and Admin management (Users, Roles, Claims)
+- Calls the **YARP API Gateway** over HTTPS using `HttpClient`
+- Sends `Idempotency-Key` headers on account creation and transaction requests to prevent duplicate submissions
+- Includes pages for Login, Register, My Account, Cards, Transactions (Deposit, Withdraw, Transfer), Address, Notifications, and Admin management (Accounts, Users, Roles, Claims)
 
 ---
 
@@ -102,14 +116,14 @@ Shared class libraries used by the microservices:
 | Container | Description | Ports | URL / Info |
 | :--- | :--- | :--- | :--- |
 | **`ewalletclient`** | Blazor Client App | `6004:80` | [http://localhost:6004](http://localhost:6004) |
-| **`yarpapi`** | YARP API Gateway | `6003:8080`, `6063:8081` | [http://localhost:6003](http://localhost:6003) |
+| **`yarpapi`** | YARP API Gateway | `6003:8080`, `6063:8081` | [https://localhost:6063](https://localhost:6063) |
 | **`identityapi`** | Identity Microservice | `6000:8080`, `6060:8081` | [http://localhost:6000/swagger](http://localhost:6000/swagger) |
 | **`accountapi`** | Account Microservice | `6001:8080`, `6061:8081` | [http://localhost:6001/swagger](http://localhost:6001/swagger) |
 | **`notificationapi`** | Notification Microservice | `6002:8080`, `6062:8081` | [http://localhost:6002/swagger](http://localhost:6002/swagger) |
-| **`identitydb`** | PostgreSQL (Identity) | `5433:5432` | DB: `IdentityDb` (`postgres` / `postgres`) |
-| **`accountdb`** | PostgreSQL (Account) | `5434:5432` | DB: `AccountDb` (`postgres` / `postgres`) |
+| **`identitydb`** | PostgreSQL (Identity) | `5433:5432` | DB: `IdentityDb` |
+| **`accountdb`** | PostgreSQL (Account) | `5434:5432` | DB: `AccountDb` |
 | **`notificationdb`** | MongoDB (Notification) | `27017:27017` | `mongodb://localhost:27017` |
-| **`messagebroker`** | RabbitMQ Management | `5672:5672`, `15672:15672` | [http://localhost:15672](http://localhost:15672) (`guest` / `guest`) |
+| **`messagebroker`** | RabbitMQ Management | `5672:5672`, `15672:15672` | [http://localhost:15672](http://localhost:15672) |
 | **`mailhog`** | MailHog Email UI | `1025:1025`, `8025:8025` | [http://localhost:8025](http://localhost:8025) |
 
 ---
@@ -124,17 +138,29 @@ You only need **Docker Desktop** to run the whole project, or you can install an
    cd E-Wallet
    ```
 
-2. **Start Docker Desktop**
+2. **Create a `.env` file** inside the `src/E-Wallet` folder with your environment variables:
+   ```env
+   IDENTITY_DB_USER=postgres
+   IDENTITY_DB_PASSWORD=postgres
+   ACCOUNT_DB_USER=postgres
+   ACCOUNT_DB_PASSWORD=postgres
+   RABBITMQ_USER=guest
+   RABBITMQ_PASSWORD=guest
+   JWT_SECRET=YourSuperSecretJwtKeyWithAtLeast32BytesLength!
+   KESTREL_PASSWORD=YourCertPassword
+   ```
 
-3. **Run Docker Compose** from the `src/E-Wallet` folder:
+3. **Start Docker Desktop**
+
+4. **Run Docker Compose** from the `src/E-Wallet` folder:
    ```bash
    cd src/E-Wallet
    docker compose up --build -d
    ```
 
-4. **Wait for Docker to create and start all containers**
+5. **Wait for Docker to create and start all containers**
 
-5. **Open the Client App**:
+6. **Open the Client App**:
    - Client UI: [http://localhost:6004](http://localhost:6004)
    - MailHog (Emails): [http://localhost:8025](http://localhost:8025)
    - RabbitMQ UI: [http://localhost:15672](http://localhost:15672)
@@ -162,15 +188,15 @@ E-Wallet/
         ├── ApiGateways/
         │   └── YarpApiGateway/            # YARP Reverse Proxy Gateway
         ├── BuildingBlocks/
-        │   ├── BuildingBlocks/            # Shared CQRS, Validation, Logging, Exceptions
-        │   └── BuildingBlocks.Messaging/  # MassTransit & RabbitMQ Events
+        │   ├── BuildingBlocks/            # Shared CQRS, Validation, Logging, Idempotency, Exceptions
+        │   └── BuildingBlocks.Messaging/  # MassTransit, RabbitMQ & Outbox Extensions
         ├── Services/
         │   ├── Identity/
         │   │   └── Identity.Api/          # Identity Microservice
         │   ├── Account/
         │   │   ├── Account.Domain/        # Domain Models, Value Objects, Domain Events
-        │   │   ├── Account.Application/   # CQRS Commands, Queries, Event Handlers
-        │   │   ├── Account.Infrastructure/# EF Core, PostgreSQL, Migrations
+        │   │   ├── Account.Application/   # CQRS Commands, Queries, Idempotency, Event Handlers
+        │   │   ├── Account.Infrastructure/# EF Core, PostgreSQL, Outbox, Background Jobs, Migrations
         │   │   └── Account.Api/           # Minimal API Endpoints
         │   └── Notification/
         │       └── Notification.Api/      # Notification Microservice
@@ -179,13 +205,17 @@ E-Wallet/
         ├── compose.yaml                   # Docker Compose file
         └── E-Wallet.sln                   # Solution file
 ```
+
+---
+
+## Screenshots & Diagrams
+
 <p align="center">
-<img width="1919" height="972" alt="image" src="https://github.com/user-attachments/assets/d82cf1cd-eb06-48a8-b836-61eb3738d115" />
+  <img width="1919" height="972" alt="image" src="https://github.com/user-attachments/assets/d82cf1cd-eb06-48a8-b836-61eb3738d115" />
 </p>
 <p align="center">
   <img width="1919" height="970" alt="E-Wallet Ports" src="https://github.com/user-attachments/assets/410c8a9d-bc52-4f08-ac09-05c4eca4632e" />
 </p>
-
 <p align="center">
   <img width="1919" height="968" alt="image" src="https://github.com/user-attachments/assets/85edc576-26d5-475e-91da-39b68b658c77" />
 </p>
