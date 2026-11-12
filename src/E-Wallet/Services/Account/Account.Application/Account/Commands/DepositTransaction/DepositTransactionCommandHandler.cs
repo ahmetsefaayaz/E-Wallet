@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.DepositTransaction;
 
-public class DepositTransactionCommandHandler(IAccountDbContext dbContext)
+public class DepositTransactionCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
     : ICommandHandler<DepositTransactionCommand, DepositTransactionResult>
 {
     public async Task<DepositTransactionResult> Handle(DepositTransactionCommand command, CancellationToken cancellationToken)
@@ -20,6 +20,7 @@ public class DepositTransactionCommandHandler(IAccountDbContext dbContext)
         if (!account.Cards.Any(c => c.Id == CardId.Of(command.CardId)))
             throw new CardNotFoundException(command.CardId.ToString());
         account.CreateTransaction(CardId.Of(command.CardId), TransactionType.Deposit, command.Amount);
+        await domainEventDispatcher.DispatchAsync(cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
         return new DepositTransactionResult(true);
     }

@@ -30,6 +30,7 @@ public static class Extensions
                     h.Password(configuration["MessageBroker:Password"]!);
                 });
                 cfg.ConfigureEndpoints(context);
+                cfg.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(5)));
             });
         });
         return services;
@@ -50,6 +51,7 @@ public static class Extensions
                     h.Password(configuration["MessageBroker:Password"]!);
                 });
                 cfg.ConfigureEndpoints(context);
+                cfg.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(5)));
             });
         });
         return services;

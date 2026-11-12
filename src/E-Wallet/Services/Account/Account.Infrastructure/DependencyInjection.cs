@@ -2,6 +2,7 @@
 using Account.Application.Interfaces;
 using Account.Infrastructure.BackgroundServices;
 using Account.Infrastructure.Data;
+using Account.Infrastructure.Data.Dispatchers;
 using Account.Infrastructure.Data.Interceptors;
 using BuildingBlocks.Messaging.MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -41,8 +42,9 @@ public static class DependencyInjection
                 context.User.HasClaim("Department", "Account") || context.User.IsInRole("Admin")));
         });
         
+        services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         services.AddScoped<ISaveChangesInterceptor, AuditableInterceptor>();
-        services.AddScoped<IAccountDbContext, AccountDbContext>();
+        services.AddScoped<IAccountDbContext>(provider => provider.GetRequiredService<AccountDbContext>());
         services.AddDbContext<AccountDbContext>((sp, options) =>
         {
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
