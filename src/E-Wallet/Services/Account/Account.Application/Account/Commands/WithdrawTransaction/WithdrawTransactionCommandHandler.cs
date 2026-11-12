@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.WithdrawTransaction;
 
-public class WithdrawTransactionCommandHandler(IAccountDbContext dbContext):
+public class WithdrawTransactionCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher):
     ICommandHandler<WithdrawTransactionCommand, WithdrawTransactionResult>
 {
     public async Task<WithdrawTransactionResult> Handle(WithdrawTransactionCommand command, CancellationToken cancellationToken)
@@ -20,6 +20,7 @@ public class WithdrawTransactionCommandHandler(IAccountDbContext dbContext):
         if (!account.Cards.Any(c => c.Id == CardId.Of(command.CardId)))
             throw new CardNotFoundException(command.CardId.ToString());
         account.CreateTransaction(CardId.Of(command.CardId), TransactionType.Withdrawal, command.Amount);
+        await domainEventDispatcher.DispatchAsync(cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
         return new WithdrawTransactionResult(true);
     }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.CreateCard;
 
-public class CreateCardCommandHandler(IAccountDbContext dbContext)
+public class CreateCardCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
     : ICommandHandler<CreateCardCommand, CreateCardResult>
 {
     public async Task<CreateCardResult> Handle(CreateCardCommand command, CancellationToken cancellationToken)
@@ -21,6 +21,7 @@ public class CreateCardCommandHandler(IAccountDbContext dbContext)
         var card = account.CreateCard(CardHolderName.Of(command.Card.CardHolderName), CardNumber.Of(command.Card.CardNumber),
                        CardExpiryDate.Of(command.Card.CardExpiryDate), CardSecurityNumber.Of(command.Card.CardSecurityNumber))
             ?? throw new InternalServerException("Card could not created");
+        await domainEventDispatcher.DispatchAsync(cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
         return new CreateCardResult(card.Id.Value);
     }

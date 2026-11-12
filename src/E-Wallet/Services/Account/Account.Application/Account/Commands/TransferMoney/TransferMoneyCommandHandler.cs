@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.TransferMoney;
 
-public class TransferMoneyCommandHandler(IAccountDbContext dbContext)
+public class TransferMoneyCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
     : ICommandHandler<TransferMoneyCommand, OutgoingTransactionResult>
 {
     public async Task<OutgoingTransactionResult> Handle(TransferMoneyCommand command, CancellationToken cancellationToken)
@@ -28,6 +28,7 @@ public class TransferMoneyCommandHandler(IAccountDbContext dbContext)
             command.Amount);
         incomingAccount.CreateTransaction(null, TransactionType.IncomingTransfer,
             command.Amount);
+        await domainEventDispatcher.DispatchAsync(cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
         return new OutgoingTransactionResult(true);
     }

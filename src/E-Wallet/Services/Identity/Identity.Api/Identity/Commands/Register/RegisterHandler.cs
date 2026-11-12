@@ -2,6 +2,7 @@
 using BuildingBlocks.Exceptions;
 using BuildingBlocks.Messaging.Events;
 using FluentValidation;
+using Identity.Api.Data;
 using Identity.Api.Entities;
 using MassTransit;
 using Microsoft.AspNetCore.Identity;
@@ -41,7 +42,10 @@ public class RegisterValidator : AbstractValidator<RegisterCommand>
 }
 
 
-internal class RegisterCommandHandler(UserManager<User> userManager, IPublishEndpoint publishEndpoint)
+internal class RegisterCommandHandler (
+    UserManager<User> userManager,
+    IPublishEndpoint publishEndpoint, 
+    IdentityServiceDbContext dbContext) 
     :ICommandHandler<RegisterCommand, RegisterCommandResult>
 {
     public async Task<RegisterCommandResult> Handle(RegisterCommand command, CancellationToken cancellationToken)
@@ -51,6 +55,8 @@ internal class RegisterCommandHandler(UserManager<User> userManager, IPublishEnd
         
         if(!command.Password.Equals(command.ConfirmPassword))
             throw new BadRequestException("Passwords do not match",  command.Password);
+        await using var transaction =
+            await dbContext.Database.BeginTransactionAsync(cancellationToken);
         var user = new User
         {
             UserName = command.UserName,
@@ -66,6 +72,8 @@ internal class RegisterCommandHandler(UserManager<User> userManager, IPublishEnd
             Username = user.UserName
         };
         await publishEndpoint.Publish(integrationEvent, cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
         return new RegisterCommandResult(user.Id);
     }
 }

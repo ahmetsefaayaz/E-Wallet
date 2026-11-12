@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Identity.Api.Entities;
+using MassTransit;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,9 @@ public class IdentityServiceDbContext : IdentityDbContext<User, Role, Guid>
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        builder.AddInboxStateEntity();
+        builder.AddOutboxMessageEntity();
+        builder.AddOutboxStateEntity();
     }
 
 }
