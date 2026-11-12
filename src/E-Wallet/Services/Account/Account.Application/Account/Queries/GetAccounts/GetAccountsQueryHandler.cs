@@ -14,6 +14,7 @@ public class GetAccountsQueryHandler(IAccountDbContext dbContext)
     public async Task<GetAccountsResult> Handle(GetAccountsQuery query, CancellationToken cancellationToken)
     {
         var currentUserId = UserId.Of(query.CurrentUserId);
+        var totalCount = await dbContext.Accounts.LongCountAsync(cancellationToken);
         var accounts = await dbContext
             .Accounts.AsNoTracking()
             .Where(a => query.IsAccountDepartment || a.UserId == currentUserId)
@@ -25,7 +26,7 @@ public class GetAccountsQueryHandler(IAccountDbContext dbContext)
             .ToListAsync(cancellationToken);
         return new GetAccountsResult(new PaginatedResult<GetAccountDto>
             (query.PaginationRequest.PageIndex, query.PaginationRequest.PageSize,
-                accounts.Count, accounts.ToGetAccountsDto()));
+                totalCount, accounts.ToGetAccountsDto()));
         
     }
 }
