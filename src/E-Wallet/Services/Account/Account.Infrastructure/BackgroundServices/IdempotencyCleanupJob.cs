@@ -9,12 +9,17 @@ public class IdempotencyCleanupJob(IServiceProvider serviceProvider) : Backgroun
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
-        using var scope = serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<AccountDbContext>();
-        var yesterday = DateTime.UtcNow.AddDays(-1);
-        await dbContext.IdempotencyRecords
-            .Where(x => x.CreatedAt < yesterday)
-            .ExecuteDeleteAsync(stoppingToken);
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AccountDbContext>();
+            var yesterday = DateTime.UtcNow.AddDays(-1);
+
+            await dbContext.IdempotencyRecords
+                .Where(x => x.CreatedAt < yesterday)
+                .ExecuteDeleteAsync(stoppingToken);
+            
+            await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
+        }
     }
 }

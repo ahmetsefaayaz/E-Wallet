@@ -2,7 +2,7 @@
 
 namespace Account.Domain.ValueObjects;
 
-public class UserId
+public record UserId
 {
     public Guid Value { get; init; }
     private UserId(Guid value) => Value = value;
