@@ -12,9 +12,9 @@ namespace Identity.Api.Identity.Commands.Register;
 public record RegisterCommand(string UserName, string Email, string Password, string ConfirmPassword)
     : ICommand<RegisterCommandResult>;
 
-internal record RegisterCommandResult(Guid Id);
+public record RegisterCommandResult(Guid Id);
 
-public class RegisterValidator : AbstractValidator<RegisterCommand>
+internal sealed class RegisterValidator : AbstractValidator<RegisterCommand>
 {
     public RegisterValidator()
     {
@@ -42,7 +42,7 @@ public class RegisterValidator : AbstractValidator<RegisterCommand>
 }
 
 
-internal class RegisterCommandHandler (
+internal sealed class RegisterCommandHandler (
     UserManager<User> userManager,
     IPublishEndpoint publishEndpoint, 
     IdentityServiceDbContext dbContext) 

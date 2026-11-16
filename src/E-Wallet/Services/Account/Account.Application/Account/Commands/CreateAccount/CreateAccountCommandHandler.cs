@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.CreateAccount;
 
-public class CreateAccountCommandHandler(IAccountDbContext dbContext)
+internal sealed class CreateAccountCommandHandler(IAccountDbContext dbContext)
     : ICommandHandler<CreateAccountCommand, CreateAccountResult>
 {
     public async Task<CreateAccountResult> Handle(CreateAccountCommand command, CancellationToken cancellationToken)

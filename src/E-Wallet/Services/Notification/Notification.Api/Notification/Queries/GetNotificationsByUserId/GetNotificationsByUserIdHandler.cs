@@ -7,7 +7,7 @@ namespace Notification.Api.Notification.Queries.GetNotificationsByUserId;
 public record GetNotificationsByUserIdQuery(Guid UserId, Guid CurrentUserId, bool IsNotificationDepartment): IQuery<GetNotificationsByUserIdResult>;
 public record GetNotificationsByUserIdResult(IEnumerable<Entities.Notification> Notifications);
 
-public class GetNotificationsByUserIdHandler(INotificationRepository notificationRepository)
+internal sealed class GetNotificationsByUserIdHandler(INotificationRepository notificationRepository)
     : IQueryHandler<GetNotificationsByUserIdQuery, GetNotificationsByUserIdResult>
 {
     public async Task<GetNotificationsByUserIdResult> Handle(GetNotificationsByUserIdQuery query, CancellationToken cancellationToken)

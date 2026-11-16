@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.TransferMoney;
 
-public class TransferMoneyCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
+internal sealed class TransferMoneyCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
     : ICommandHandler<TransferMoneyCommand, OutgoingTransactionResult>
 {
     public async Task<OutgoingTransactionResult> Handle(TransferMoneyCommand command, CancellationToken cancellationToken)

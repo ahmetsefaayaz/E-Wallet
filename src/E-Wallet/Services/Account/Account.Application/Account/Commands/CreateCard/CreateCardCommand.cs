@@ -8,7 +8,7 @@ namespace Account.Application.Account.Commands.CreateCard;
 public record CreateCardCommand(Guid AccountId, Guid CurrentUserId, CreateCardDto Card): ICommand<CreateCardResult>;
 public record CreateCardResult(Guid CardId);
 
-public class CreateCardCommandValidator : AbstractValidator<CreateCardCommand>
+internal sealed class CreateCardCommandValidator : AbstractValidator<CreateCardCommand>
 {
     public CreateCardCommandValidator()
     {

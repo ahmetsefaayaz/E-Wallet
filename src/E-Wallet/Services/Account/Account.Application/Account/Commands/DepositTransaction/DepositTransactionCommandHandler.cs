@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.DepositTransaction;
 
-public class DepositTransactionCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
+internal sealed class DepositTransactionCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
     : ICommandHandler<DepositTransactionCommand, DepositTransactionResult>
 {
     public async Task<DepositTransactionResult> Handle(DepositTransactionCommand command, CancellationToken cancellationToken)

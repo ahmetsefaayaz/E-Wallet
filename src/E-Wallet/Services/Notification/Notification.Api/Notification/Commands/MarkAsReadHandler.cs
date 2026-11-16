@@ -6,7 +6,7 @@ namespace Notification.Api.Notification.Commands;
 
 public record MarkAsReadCommand(Guid NotificationId, Guid CurrentUserId) : ICommand<MarkAsReadResult>;
 public record MarkAsReadResult(bool IsSuccess);
-public class MarkAsReadCommandHandler(INotificationRepository notificationRepository)
+internal sealed class MarkAsReadCommandHandler(INotificationRepository notificationRepository)
     : ICommandHandler<MarkAsReadCommand, MarkAsReadResult>
 {
     public async Task<MarkAsReadResult> Handle(MarkAsReadCommand command, CancellationToken cancellationToken)

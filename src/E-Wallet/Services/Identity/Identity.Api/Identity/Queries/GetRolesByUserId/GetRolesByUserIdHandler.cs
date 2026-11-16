@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Api.Identity.Queries.GetRolesByUserId;
 
-internal record GetRolesByUserIdQuery(Guid UserId): IQuery<GetRolesByUserIdResult>;
+public record GetRolesByUserIdQuery(Guid UserId): IQuery<GetRolesByUserIdResult>;
 
-internal record GetRolesByUserIdResult(IEnumerable<string> Roles);
+public record GetRolesByUserIdResult(IEnumerable<string> Roles);
 
 
-internal class GetRolesByUserIdQueryHandler(UserManager<User> userManager): IQueryHandler<GetRolesByUserIdQuery, GetRolesByUserIdResult>
+internal sealed class GetRolesByUserIdQueryHandler(UserManager<User> userManager): IQueryHandler<GetRolesByUserIdQuery, GetRolesByUserIdResult>
 {
     public async Task<GetRolesByUserIdResult> Handle(GetRolesByUserIdQuery query, CancellationToken cancellationToken)
     {

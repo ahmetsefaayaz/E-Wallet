@@ -7,7 +7,7 @@ namespace Account.Application.Account.Commands.DepositTransaction;
 public record DepositTransactionCommand(Guid AccountId, Guid CardId, Guid CurrentUserId, decimal Amount, string IdempotencyKey):
     IIdempotentCommand<DepositTransactionResult>;
 
-public class DepositTransactionValidator : AbstractValidator<DepositTransactionCommand>
+internal sealed class DepositTransactionValidator : AbstractValidator<DepositTransactionCommand>
 {
     public DepositTransactionValidator()
     {

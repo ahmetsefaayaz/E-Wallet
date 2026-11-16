@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Account.Application.Account.EventHandlers.Domain;
 
-public class TransactionCreatedEventHandler(ILogger<TransactionCreatedEventHandler>  logger,
+internal sealed class TransactionCreatedEventHandler(ILogger<TransactionCreatedEventHandler>  logger,
     IPublishEndpoint publishEndpoint)
     : INotificationHandler<TransactionCreatedEvent>
 {

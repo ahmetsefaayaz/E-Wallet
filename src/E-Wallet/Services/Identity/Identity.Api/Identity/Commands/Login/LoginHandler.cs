@@ -14,7 +14,7 @@ namespace Identity.Api.Identity.Commands.Login;
 
 public record LoginCommand(string Email, string Password): ICommand<LoginResult>;
 
-public class LoginValidator : AbstractValidator<LoginCommand>
+internal sealed class LoginValidator : AbstractValidator<LoginCommand>
 {
     public LoginValidator()
     {
@@ -31,9 +31,9 @@ public class LoginValidator : AbstractValidator<LoginCommand>
 
 
 
-internal record LoginResult(string Token);
+public record LoginResult(string Token);
 
-internal class LoginCommandHandler(UserManager<User> userManager, IConfiguration configuration, IJwtCreator jwtCreator)
+internal sealed class LoginCommandHandler(UserManager<User> userManager, IConfiguration configuration, IJwtCreator jwtCreator)
     : ICommandHandler<LoginCommand, LoginResult>
 {
     public async Task<LoginResult> Handle(LoginCommand command, CancellationToken cancellationToken)

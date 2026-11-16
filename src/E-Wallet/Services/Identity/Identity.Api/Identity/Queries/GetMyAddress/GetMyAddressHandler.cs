@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Api.Identity.Queries.GetMyAddress;
 
-internal record GetMyAddressQuery(Guid UserId) : IQuery<GetMyAddressResult>;
+public record GetMyAddressQuery(Guid UserId) : IQuery<GetMyAddressResult>;
 
-internal record GetMyAddressResult(AddressDto Address);
-internal class GetMyAddressQueryHandler(IdentityServiceDbContext dbContext)
+public record GetMyAddressResult(AddressDto Address);
+internal sealed class GetMyAddressQueryHandler(IdentityServiceDbContext dbContext)
     : IQueryHandler<GetMyAddressQuery, GetMyAddressResult>
 {
     public async Task<GetMyAddressResult> Handle(GetMyAddressQuery query, CancellationToken cancellationToken)

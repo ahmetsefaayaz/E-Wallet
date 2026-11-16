@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Queries.GetTransactionsByAccountId;
 
-public class GetTransactionsByAccountIdQueryHandler(IAccountDbContext dbContext)
+internal sealed class GetTransactionsByAccountIdQueryHandler(IAccountDbContext dbContext)
     : IQueryHandler<GetTransactionsByAccountIdQuery, GetTransactionsByAccountIdResult>
 {
     public async Task<GetTransactionsByAccountIdResult> Handle(GetTransactionsByAccountIdQuery query,

@@ -6,7 +6,7 @@ namespace Account.Application.Account.Commands.DeleteCard;
 
 public record DeleteCardCommand(Guid AccountId, Guid CardId, Guid CurrentUserId) : ICommand<DeleteCardResult>;
 
-public class DeleteCardCommandValidator : AbstractValidator<DeleteCardCommand>
+internal sealed class DeleteCardCommandValidator : AbstractValidator<DeleteCardCommand>
 {
     public DeleteCardCommandValidator()
     {

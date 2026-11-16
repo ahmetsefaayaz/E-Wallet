@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Idempotency;
 
-public class IdempotencyService(IAccountDbContext dbContext): IIdempotencyService
+internal sealed class IdempotencyService(IAccountDbContext dbContext): IIdempotencyService
 {
     public async Task<bool> RequestExistsAsync(Guid userId, string operation, string key, CancellationToken cancellationToken)
     {

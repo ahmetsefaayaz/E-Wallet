@@ -6,7 +6,7 @@ namespace Account.Application.Account.Commands.DeleteAccount;
 
 public record DeleteAccountCommand(Guid AccountId, Guid CurrentUserId, bool IsAdmin): ICommand<DeleteAccountResult>;
 
-public class DeleteAccountCommandValidator : AbstractValidator<DeleteAccountCommand>
+internal sealed class DeleteAccountCommandValidator : AbstractValidator<DeleteAccountCommand>
 {
     public DeleteAccountCommandValidator()
     {

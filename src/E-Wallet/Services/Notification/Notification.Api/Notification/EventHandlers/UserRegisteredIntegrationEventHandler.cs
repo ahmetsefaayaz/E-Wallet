@@ -5,7 +5,7 @@ using Notification.Api.Interfaces;
 
 namespace Notification.Api.Notification.EventHandlers;
 
-public class UserRegisteredIntegrationEventHandler(IUserRepository repository, 
+public sealed class UserRegisteredIntegrationEventHandler(IUserRepository repository, 
     ILogger<UserRegisteredIntegrationEventHandler> logger)
     : IConsumer<UserRegisteredIntegrationEvent>
 {

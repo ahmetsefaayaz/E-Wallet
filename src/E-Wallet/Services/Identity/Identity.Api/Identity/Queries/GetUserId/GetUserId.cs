@@ -3,7 +3,7 @@ using Identity.Api.Exceptions;
 
 namespace Identity.Api.Identity.Queries.GetUserId;
 
-public class GetUserId(IHttpContextAccessor accessor): IGetUserId
+internal sealed class GetUserId(IHttpContextAccessor accessor): IGetUserId
 {
 
     public async Task<Guid> GetUserIdFromContext()

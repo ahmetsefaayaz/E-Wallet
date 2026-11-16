@@ -11,7 +11,7 @@ namespace Identity.Api.Identity.Commands.AddRole;
 
 public record AddRoleCommand(Guid UserId, string RoleName): ICommand<AddRoleResult>;
 
-public class AddRoleValidator : AbstractValidator<AddRoleCommand>
+internal sealed class AddRoleValidator : AbstractValidator<AddRoleCommand>
 {
     public AddRoleValidator()
     {
@@ -24,10 +24,10 @@ public class AddRoleValidator : AbstractValidator<AddRoleCommand>
         
     }
 }
-internal record AddRoleResult(bool IsSuccess);
+public record AddRoleResult(bool IsSuccess);
 
 
-internal class AddRoleCommandHandler(UserManager<User> userManager)
+internal sealed class AddRoleCommandHandler(UserManager<User> userManager)
     : ICommandHandler<AddRoleCommand, AddRoleResult>
 {
     public async Task<AddRoleResult> Handle(AddRoleCommand command, CancellationToken cancellationToken)

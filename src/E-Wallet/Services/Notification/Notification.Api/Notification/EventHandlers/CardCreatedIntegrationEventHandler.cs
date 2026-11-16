@@ -6,7 +6,7 @@ using Notification.Api.Interfaces;
 
 namespace Notification.Api.Notification.EventHandlers;
 
-public class CardCreatedIntegrationEventHandler(INotificationRepository notificationRepository, 
+public sealed class CardCreatedIntegrationEventHandler(INotificationRepository notificationRepository, 
     ILogger<CardCreatedIntegrationEventHandler> logger, IUserRepository userRepository, IEmailService emailService)
     : IConsumer<CardCreatedIntegrationEvent>
 {

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Account.Application.Account.EventHandlers.Domain;
 
-public class CardCreatedEventHandler(ILogger<CardCreatedEventHandler> logger, IPublishEndpoint publishEndpoint)
+internal sealed class CardCreatedEventHandler(ILogger<CardCreatedEventHandler> logger, IPublishEndpoint publishEndpoint)
     : INotificationHandler<CardCreatedEvent>
 {
     public async Task Handle(CardCreatedEvent notification, CancellationToken cancellationToken)

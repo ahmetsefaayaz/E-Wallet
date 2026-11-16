@@ -5,7 +5,7 @@ using Notification.Api.Interfaces;
 namespace Notification.Api.Notification.Queries.GetMyNotifications;
 public record GetMyNotificationsQuery(Guid UserId) : IQuery<GetMyNotificationsResult>;
 public record GetMyNotificationsResult(IEnumerable<Entities.Notification> Notifications);
-public class GetMyNotificationsQueryHandler(INotificationRepository notificationRepository)
+internal sealed class GetMyNotificationsQueryHandler(INotificationRepository notificationRepository)
     : IQueryHandler<GetMyNotificationsQuery, GetMyNotificationsResult>
 {
     public async Task<GetMyNotificationsResult> Handle(

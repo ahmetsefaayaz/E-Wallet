@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Queries.GetMyAccounts;
 
-public sealed class GetMyAccountsQueryHandler(IAccountDbContext dbContext)
+internal sealed class GetMyAccountsQueryHandler(IAccountDbContext dbContext)
     : IQueryHandler<GetMyAccountsQuery, GetMyAccountsResult>
 {
     public async Task<GetMyAccountsResult> Handle(

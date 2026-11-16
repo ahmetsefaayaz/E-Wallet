@@ -7,7 +7,7 @@ namespace Account.Application.Account.Commands.TransferMoney;
 public record TransferMoneyCommand(Guid AccountId, Guid ReceiverAccountId,
     Guid CardId, Guid CurrentUserId, decimal Amount, string IdempotencyKey): IIdempotentCommand<OutgoingTransactionResult>;
 
-public class OutgoingTransactionValidator : AbstractValidator<TransferMoneyCommand>
+internal sealed class OutgoingTransactionValidator : AbstractValidator<TransferMoneyCommand>
 {
     public OutgoingTransactionValidator()
     {

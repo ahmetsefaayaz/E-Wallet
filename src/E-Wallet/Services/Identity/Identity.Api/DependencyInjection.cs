@@ -23,7 +23,7 @@ public static class DependencyInjection
         {
             options.UseNpgsql(configuration.GetConnectionString("Database"));
         });
-        services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+        services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssembly(typeof(Program).Assembly);
