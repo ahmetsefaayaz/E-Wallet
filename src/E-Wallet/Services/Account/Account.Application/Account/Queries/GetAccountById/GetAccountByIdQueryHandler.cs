@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Queries.GetAccountById;
 
-public class GetAccountByIdQueryHandler(IAccountDbContext dbContext)
+internal sealed class GetAccountByIdQueryHandler(IAccountDbContext dbContext)
     : IQueryHandler<GetAccountByIdQuery, GetAccountByIdResult>
 {
     public async Task<GetAccountByIdResult> Handle(GetAccountByIdQuery query, CancellationToken cancellationToken)

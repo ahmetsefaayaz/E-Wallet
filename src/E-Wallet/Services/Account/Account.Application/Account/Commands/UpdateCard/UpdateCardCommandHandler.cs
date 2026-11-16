@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.UpdateCard;
 
-public class UpdateCardCommandHandler(IAccountDbContext dbContext)
+internal sealed class UpdateCardCommandHandler(IAccountDbContext dbContext)
     : ICommandHandler<UpdateCardCommand, UpdateCardResult>
 {
     public async Task<UpdateCardResult> Handle(UpdateCardCommand command, CancellationToken cancellationToken)

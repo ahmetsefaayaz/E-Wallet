@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Queries.GetCardsByAccountId;
 
-public class GetCardsByAccountIdQueryHandler(IAccountDbContext dbContext)
+internal sealed class GetCardsByAccountIdQueryHandler(IAccountDbContext dbContext)
     : IQueryHandler<GetCardsByAccountIdQuery, GetCardsByAccountIdResult>
 {
     public async Task<GetCardsByAccountIdResult> Handle(GetCardsByAccountIdQuery query,

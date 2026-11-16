@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.DeleteCard;
 
-public class DeleteCardCommandHandler(IAccountDbContext dbContext):
+internal sealed class DeleteCardCommandHandler(IAccountDbContext dbContext):
     ICommandHandler<DeleteCardCommand, DeleteCardResult>
 {
     public async Task<DeleteCardResult> Handle(DeleteCardCommand command, CancellationToken cancellationToken)

@@ -9,9 +9,9 @@ namespace Identity.Api.Identity.Commands.CreateRole;
 
 public record CreateRoleCommand(string RoleName) : ICommand<CreateRoleResult>;
 
-internal record CreateRoleResult(bool IsSuccess);
+public record CreateRoleResult(bool IsSuccess);
 
-public class CreateRoleValidator : AbstractValidator<CreateRoleCommand>
+internal sealed class CreateRoleValidator : AbstractValidator<CreateRoleCommand>
 {
     public CreateRoleValidator()
     {
@@ -23,7 +23,7 @@ public class CreateRoleValidator : AbstractValidator<CreateRoleCommand>
         
     }
 }
-internal class CreateRoleCommandHandler(RoleManager<Role> roleManager)
+internal sealed class CreateRoleCommandHandler(RoleManager<Role> roleManager)
     : ICommandHandler<CreateRoleCommand, CreateRoleResult>
 {
     public async Task<CreateRoleResult> Handle(CreateRoleCommand command, CancellationToken cancellationToken)

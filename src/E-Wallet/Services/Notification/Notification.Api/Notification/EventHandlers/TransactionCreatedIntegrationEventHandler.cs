@@ -6,7 +6,7 @@ using Notification.Api.Interfaces;
 
 namespace Notification.Api.Notification.EventHandlers;
 
-public class TransactionCreatedIntegrationEventHandler(ILogger<TransactionCreatedIntegrationEventHandler> logger,
+public sealed class TransactionCreatedIntegrationEventHandler(ILogger<TransactionCreatedIntegrationEventHandler> logger,
     INotificationRepository notificationRepository, IUserRepository userRepository, IEmailService emailService)
     :IConsumer<TransactionCreatedIntegrationEvent>
 {

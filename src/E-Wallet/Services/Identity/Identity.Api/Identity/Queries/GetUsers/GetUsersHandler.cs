@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 namespace Identity.Api.Identity.Queries.GetUsers;
 
 
-internal record GetUsersQuery(PaginationRequest PaginationRequest): IQuery<GetUsersResult>;
+public record GetUsersQuery(PaginationRequest PaginationRequest): IQuery<GetUsersResult>;
 
-internal record GetUsersResult(PaginatedResult<UserDto> Users);
+public record GetUsersResult(PaginatedResult<UserDto> Users);
 
-internal class GetUsersQueryHandler(IdentityServiceDbContext dbContext)
+internal sealed class GetUsersQueryHandler(IdentityServiceDbContext dbContext)
     : IQueryHandler<GetUsersQuery, GetUsersResult>
 {
     public async Task<GetUsersResult> Handle(GetUsersQuery query, CancellationToken cancellationToken)

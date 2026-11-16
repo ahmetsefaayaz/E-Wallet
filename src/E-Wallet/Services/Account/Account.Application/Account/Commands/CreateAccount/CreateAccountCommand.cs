@@ -6,7 +6,7 @@ namespace Account.Application.Account.Commands.CreateAccount;
 
 public record CreateAccountCommand(Guid CurrentUserId, string IdempotencyKey): IIdempotentCommand<CreateAccountResult>;
 
-public class CreateAccountCommandValidator : AbstractValidator<CreateAccountCommand>
+internal sealed class CreateAccountCommandValidator : AbstractValidator<CreateAccountCommand>
 {
     public CreateAccountCommandValidator()
     {

@@ -11,9 +11,9 @@ namespace Identity.Api.Identity.Commands.CreateAddress;
 
 public record CreateAddressCommand(Guid UserId, AddressDto Address) : ICommand<CreateAddressResult>;
 
-internal record CreateAddressResult(bool IsSuccess);
+public record CreateAddressResult(bool IsSuccess);
 
-public class CreateAddressValidator : AbstractValidator<CreateAddressCommand>
+internal sealed class CreateAddressValidator : AbstractValidator<CreateAddressCommand>
 {
     public CreateAddressValidator()
     {
@@ -56,7 +56,7 @@ public class CreateAddressValidator : AbstractValidator<CreateAddressCommand>
     }
 }
 
-internal class CreateAddressCommandHandler(IdentityServiceDbContext dbContext)
+internal sealed class CreateAddressCommandHandler(IdentityServiceDbContext dbContext)
     : ICommandHandler<CreateAddressCommand, CreateAddressResult>
 {
     public async Task<CreateAddressResult> Handle(CreateAddressCommand command, CancellationToken cancellationToken)

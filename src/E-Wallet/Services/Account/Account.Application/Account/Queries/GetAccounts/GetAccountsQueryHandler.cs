@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Queries.GetAccounts;
 
-public class GetAccountsQueryHandler(IAccountDbContext dbContext)
+internal sealed class GetAccountsQueryHandler(IAccountDbContext dbContext)
     : IQueryHandler<GetAccountsQuery, GetAccountsResult>
 {
     public async Task<GetAccountsResult> Handle(GetAccountsQuery query, CancellationToken cancellationToken)

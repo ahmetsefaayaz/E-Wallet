@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.DeleteAccount;
 
-public class DeleteAccountCommandHandler(IAccountDbContext dbContext)
+internal sealed class DeleteAccountCommandHandler(IAccountDbContext dbContext)
     : ICommandHandler<DeleteAccountCommand, DeleteAccountResult>
 {
     public async Task<DeleteAccountResult> Handle(DeleteAccountCommand command, CancellationToken cancellationToken)

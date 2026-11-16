@@ -10,7 +10,7 @@ namespace Identity.Api.Identity.Commands.CreateClaim;
 
 public record CreateClaimCommand(Guid UserId, string Type, string Value): ICommand<CreateClaimResult>;
 
-public class CreateClaimValidator : AbstractValidator<CreateClaimCommand>
+internal sealed class CreateClaimValidator : AbstractValidator<CreateClaimCommand>
 {
     public CreateClaimValidator()
     {
@@ -30,9 +30,9 @@ public class CreateClaimValidator : AbstractValidator<CreateClaimCommand>
     }
 }
 
-internal record CreateClaimResult(bool IsSuccess);
+public record CreateClaimResult(bool IsSuccess);
 
-internal class CreateClaimCommandHandler(UserManager<User> userManager)
+internal sealed class CreateClaimCommandHandler(UserManager<User> userManager)
     : ICommandHandler<CreateClaimCommand, CreateClaimResult>
 {
     public async Task<CreateClaimResult> Handle(CreateClaimCommand command, CancellationToken cancellationToken)

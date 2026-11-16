@@ -12,7 +12,7 @@ namespace Identity.Api.Identity.Commands.UpdateAddress;
 public record UpdateAddressCommand(Guid UserId, AddressDto Address) : ICommand<UpdateAddressResult>;
 public record UpdateAddressResult(bool IsSuccess);
 
-public class UpdateValidator : AbstractValidator<UpdateAddressCommand>
+internal sealed class UpdateValidator : AbstractValidator<UpdateAddressCommand>
 {
     public UpdateValidator()
     {
@@ -55,7 +55,7 @@ public class UpdateValidator : AbstractValidator<UpdateAddressCommand>
     }
 }
 
-internal class UpdateAddressHandler(IdentityServiceDbContext dbContext)
+internal sealed class UpdateAddressHandler(IdentityServiceDbContext dbContext)
     : ICommandHandler<UpdateAddressCommand, UpdateAddressResult>
 {
     public async Task<UpdateAddressResult> Handle(UpdateAddressCommand command, CancellationToken cancellationToken)

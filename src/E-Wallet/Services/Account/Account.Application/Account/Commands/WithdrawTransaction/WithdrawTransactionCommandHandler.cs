@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.WithdrawTransaction;
 
-public class WithdrawTransactionCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher):
+internal sealed class WithdrawTransactionCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher):
     ICommandHandler<WithdrawTransactionCommand, WithdrawTransactionResult>
 {
     public async Task<WithdrawTransactionResult> Handle(WithdrawTransactionCommand command, CancellationToken cancellationToken)

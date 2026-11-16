@@ -8,7 +8,7 @@ namespace Account.Application.Account.Commands.UpdateCard;
 public record UpdateCardCommand(Guid AccountId, Guid CardId, Guid CurrentUserId, UpdateCardDto Card): ICommand<UpdateCardResult>;
 public record UpdateCardResult(bool IsSuccess);
 
-public class UpdateCardValidator : AbstractValidator<UpdateCardCommand>
+internal sealed class UpdateCardValidator : AbstractValidator<UpdateCardCommand>
 {
     public UpdateCardValidator()
     {

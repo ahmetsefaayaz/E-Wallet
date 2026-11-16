@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Account.Application.Account.Commands.CreateCard;
 
-public class CreateCardCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
+internal sealed class CreateCardCommandHandler(IAccountDbContext dbContext, IDomainEventDispatcher domainEventDispatcher)
     : ICommandHandler<CreateCardCommand, CreateCardResult>
 {
     public async Task<CreateCardResult> Handle(CreateCardCommand command, CancellationToken cancellationToken)

@@ -7,7 +7,7 @@ namespace Account.Application.Account.Commands.WithdrawTransaction;
 public record WithdrawTransactionCommand(Guid AccountId, Guid CardId, Guid CurrentUserId, decimal Amount, string IdempotencyKey): 
     IIdempotentCommand<WithdrawTransactionResult>;
 
-public class WithdrawTransactionValidator : AbstractValidator<WithdrawTransactionCommand>
+internal sealed class WithdrawTransactionValidator : AbstractValidator<WithdrawTransactionCommand>
 {
     public WithdrawTransactionValidator()
     {

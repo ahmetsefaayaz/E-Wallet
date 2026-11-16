@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Identity.Api.Identity.Commands.Login;
 
 
-internal class JwtCreator: IJwtCreator
+internal sealed class JwtCreator: IJwtCreator
 {
     public async Task<string> GenerateJwtToken(UserManager<User> userManager, User user, IConfiguration configuration)
     {

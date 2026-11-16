@@ -15,7 +15,7 @@ public static class DependencyInjection
     {
 
         services.AddScoped<IIdempotencyService, IdempotencyService>();
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), includeInternalTypes: true);
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
