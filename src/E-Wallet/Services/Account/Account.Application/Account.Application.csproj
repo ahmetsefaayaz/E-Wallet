@@ -17,4 +17,8 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.32" />
     </ItemGroup>
 
+    <ItemGroup>
+      <InternalsVisibleTo Include="Account.UnitTests" />
+    </ItemGroup>
+
 </Project>
