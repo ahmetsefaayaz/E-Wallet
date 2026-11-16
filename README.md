@@ -208,7 +208,7 @@ E-Wallet/
 
 ---
 
-## Screenshots & Diagrams
+## Screenshots
 
 <p align="center">
   <img width="1919" height="972" alt="image" src="https://github.com/user-attachments/assets/d82cf1cd-eb06-48a8-b836-61eb3738d115" />
