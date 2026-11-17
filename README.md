@@ -10,6 +10,8 @@
 [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)](https://www.rabbitmq.com/)
 [![Docker](https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![xUnit](https://img.shields.io/badge/xUnit-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://xunit.net/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions_CI-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
 
 </div>
 
@@ -38,6 +40,7 @@ This repository contains an E-Wallet application built with a microservices arch
 | **Databases** | PostgreSQL 17, Entity Framework Core 8, MongoDB |
 | **Authentication** | ASP.NET Core Identity, JWT Bearer Authentication, Role, Claim & Ownership Authorization |
 | **Email** | MailKit (SMTP), MailHog |
+| **Testing & CI/CD** | xUnit, Moq, MockQueryable.Moq, FluentAssertions, GitHub Actions |
 | **Containers** | Docker, Docker Compose, Nginx |
 
 ---
@@ -109,6 +112,21 @@ Shared class libraries used by the microservices:
 - Sends `Idempotency-Key` headers on account creation and transaction requests to prevent duplicate submissions
 - Includes pages for Login, Register, My Account, Cards, Transactions (Deposit, Withdraw, Transfer), Address, Notifications, and Admin management (Accounts, Users, Roles, Claims)
 
+### Unit Tests & CI Pipeline (`Tests/`)
+Comprehensive unit test suite built with **xUnit**, **Moq**, **MockQueryable.Moq**, and **FluentAssertions**, automatically executed on every push and pull request to `main` via **GitHub Actions** (`.github/workflows/ci.yml`):
+- **`Account.UnitTests`**:
+  - **Domain Tests**: Tests `Account` aggregate business rules (deposits, withdrawals, incoming/outgoing transfers, insufficient balance checks, maximum 3 cards limit, card updates/removals, and domain event raising) as well as DDD Value Objects (`CardNumber`, `CardExpiryDate`, `CardHolderName`, `CardSecurityNumber`, value equality, and validation).
+  - **Application Tests**: Tests CQRS Command & Query Handlers (`CreateCardCommandHandler`, `DepositTransactionCommandHandler`, `WithdrawTransactionCommandHandler`, `TransferMoneyCommandHandler`, `GetAccountByIdQueryHandler`), FluentValidation rules (`OutgoingTransactionValidator`), and Domain Event Handlers (`CardCreatedEventHandler`, `TransactionCreatedEventHandler`).
+- **`Identity.UnitTests`**:
+  - Tests authentication and user management handlers (`LoginCommandHandler`, `RegisterCommandHandler`) and input validators (`LoginValidator`) using mocked `UserManager<User>` and `IJwtCreator`.
+- **`Notification.UnitTests`**:
+  - Tests notification command handlers (`MarkAsReadCommandHandler`) and MassTransit RabbitMQ consumers (`TransactionCreatedIntegrationEventHandler`) verifying email dispatch (`IEmailService`) and MongoDB persistence (`INotificationRepository`).
+
+To run all unit tests locally:
+```bash
+dotnet test src/E-Wallet/E-Wallet.sln
+```
+
 ---
 
 ## Services & Ports
@@ -179,6 +197,9 @@ An admin user is created automatically when the Identity service starts:
 
 ```text
 E-Wallet/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                         # GitHub Actions CI pipeline (build & test)
 ├── diagrams/                              # Architecture diagrams
 ├── ports/                                 # Port mapping diagrams
 ├── postman_collection/                    # Postman collection for API testing
@@ -200,6 +221,10 @@ E-Wallet/
         │   │   └── Account.Api/           # Minimal API Endpoints
         │   └── Notification/
         │       └── Notification.Api/      # Notification Microservice
+        ├── Tests/
+        │   ├── Account.UnitTests/         # Domain & Application unit tests for Account service
+        │   ├── Identity.UnitTests/        # Command & Validator unit tests for Identity service
+        │   └── Notification.UnitTests/    # Command & EventHandler unit tests for Notification service
         ├── UI/
         │   └── EWallet.Client/            # Blazor WebAssembly Client App
         ├── compose.yaml                   # Docker Compose file
