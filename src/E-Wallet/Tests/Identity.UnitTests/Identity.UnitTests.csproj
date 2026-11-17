@@ -22,4 +22,8 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\..\Services\Identity\Identity.Api\Identity.Api.csproj" />
+    </ItemGroup>
+
 </Project>

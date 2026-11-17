@@ -22,4 +22,8 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\..\Services\Notification\Notification.Api\Notification.Api.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -22,4 +22,18 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AServiceProvider_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Fayaza_003FAppData_003FRoaming_003FJetBrains_003FRider2026_002E2_003Fresharper_002Dhost_003FSourcesCache_003F7d81b2d4f22bee75e5438c707251ae43cb0974c207db91ffc159118c84b4eb9_003FServiceProvider_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ATaskContinuation_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Fayaza_003FAppData_003FRoaming_003FJetBrains_003FRider2026_002E2_003Fresharper_002Dhost_003FSourcesCache_003Fb86cdfe19de105ff2eab7d5d4c613fd91b9adfe4f95bd82e2d6db593e6d3ca3_003FTaskContinuation_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ATask_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Fayaza_003FAppData_003FRoaming_003FJetBrains_003FRider2026_002E2_003Fresharper_002Dhost_003FSourcesCache_003Fa77b231cea33ff338c41dc7869d6c493d4dae137ff51e342173efa61d933_003FTask_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3b635c82_002Def73_002D4d22_002D9f4d_002Da017db9be51f/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AccountTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Or&gt;&#xD;
+    &lt;TestAncestor&gt;&#xD;
+      &lt;TestId&gt;xUnit::55A474E6-9A00-4103-906D-B5716931AE77::net8.0::Account.UnitTests.Domain.Models.AccountTests&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::55A474E6-9A00-4103-906D-B5716931AE77::net8.0::Account.UnitTests.Application.Queries.GetAccountById.GetAccountByIdQueryHandlerTests&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::55A474E6-9A00-4103-906D-B5716931AE77::net8.0::Account.UnitTests.Application.Commands.DepositMoney.DepositTransactionCommandHandlerTests&lt;/TestId&gt;&#xD;
+    &lt;/TestAncestor&gt;&#xD;
+    &lt;Project Location="C:\Code\Code\E-Wallet\src\E-Wallet\Tests\Notification.UnitTests" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;Notification.UnitTests&amp;gt;" /&gt;&#xD;
+    &lt;Project Location="C:\Code\Code\E-Wallet\src\E-Wallet\Tests\Identity.UnitTests" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;Identity.UnitTests&amp;gt;" /&gt;&#xD;
+  &lt;/Or&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	
+	
+	
 	</wpf:ResourceDictionary>
