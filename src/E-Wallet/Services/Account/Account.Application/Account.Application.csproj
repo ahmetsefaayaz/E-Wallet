@@ -19,6 +19,7 @@
 
     <ItemGroup>
       <InternalsVisibleTo Include="Account.UnitTests" />
+      <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
     </ItemGroup>
 
 </Project>

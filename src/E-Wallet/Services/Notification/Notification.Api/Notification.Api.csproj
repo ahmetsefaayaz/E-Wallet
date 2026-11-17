@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <InternalsVisibleTo Include="Notification.UnitTests" />
+      <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
     </ItemGroup>
 
     <ItemGroup>

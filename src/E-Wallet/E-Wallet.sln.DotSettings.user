@@ -31,6 +31,7 @@
     &lt;/TestAncestor&gt;&#xD;
     &lt;Project Location="C:\Code\Code\E-Wallet\src\E-Wallet\Tests\Notification.UnitTests" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;Notification.UnitTests&amp;gt;" /&gt;&#xD;
     &lt;Project Location="C:\Code\Code\E-Wallet\src\E-Wallet\Tests\Identity.UnitTests" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;Identity.UnitTests&amp;gt;" /&gt;&#xD;
+    &lt;Project Location="C:\Code\Code\E-Wallet\src\E-Wallet\Tests\Account.UnitTests" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;Account.UnitTests&amp;gt;" /&gt;&#xD;
   &lt;/Or&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	
